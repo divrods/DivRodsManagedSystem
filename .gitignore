@@ -1,0 +1,13 @@
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Optional npm cache directory
+.npm
+
+img
+
+node_modules.zip*
+
+*.zip
