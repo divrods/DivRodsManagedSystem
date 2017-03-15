@@ -4,6 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var nconf = require('nconf');
+var Particle = require('particle-api-js');
+particle = new Particle(), p_token = "";
+nconf.file('../resources/particleconfig.json');
 
 var index = require('./routes/index'),
 users = require('./routes/users'),
@@ -13,6 +17,18 @@ setup = require('./routes/setup');
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
+
+particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
+  function(data){
+    console.log('API call completed on promise resolve: ', data.body.access_token);
+    p_token = data.body.access_token;
+  },
+  function(err) {
+    console.log('API call completed on promise fail: ', err);
+  }
+);
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
