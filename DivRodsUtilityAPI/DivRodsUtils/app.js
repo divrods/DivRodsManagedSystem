@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
+var passport = require('passport');
 var Particle = require('particle-api-js');
 particle = new Particle(), p_token = "";
 nconf.file('../resources/particleconfig.json');
@@ -12,7 +13,8 @@ nconf.file('../resources/particleconfig.json');
 var index = require('./routes/index'),
 users = require('./routes/users'),
 generate = require('./routes/generate'),
-setup = require('./routes/setup');
+setup = require('./routes/setup'),
+onboard = require('./routes/onboard');
 
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
@@ -42,10 +44,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/generate', generate);
 app.use('/setup', setup);
+app.use('/onboard', onboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
