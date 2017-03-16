@@ -18,6 +18,11 @@ router.put('/', function(req,res,next){
     res.send("Not yet implemented.");
 });
 
+//Manual Override of specific config property
+router.put('/prop', function(req,res,next){
+    res.send("Not yet implemented.");
+});
+
 //Manual removal of node from config file, if there's a problematic gallery we need to skip forever?
 router.delete('/', function(req,res,next){
     res.send("Not yet implemented.");

@@ -23,11 +23,11 @@ var app = express();
 
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
-    console.log('API call completed on promise resolve: ', data.body.access_token);
+    console.log('Login succeeded. Token: ', data.body.access_token);
     p_token = data.body.access_token;
   },
   function(err) {
-    console.log('API call completed on promise fail: ', err);
+    console.log('Login failed: ', err);
   }
 );
 
