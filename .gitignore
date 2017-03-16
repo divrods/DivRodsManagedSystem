@@ -13,3 +13,5 @@ node_modules.zip*
 *.zip
 
 particleconfig.json
+config.json
+integrations.json

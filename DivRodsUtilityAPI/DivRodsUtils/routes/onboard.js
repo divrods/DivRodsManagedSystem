@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs');
 current_device = {"Name":"","ID":""};
-current_usersettings = "Distance:3,";
+current_usersettings = "Distance:3,ArtPref:0";
 //GET push an assembled onboarding config to the queued device
 //The kiosk app hits this URL when onboarding is done
 router.get('/', function(req, res, next) {
@@ -11,9 +11,11 @@ router.get('/', function(req, res, next) {
         fnPr.then(
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);
+                wipe();
                 res.send("You're all set! Enjoy your DivRod.");
             }, function (err) {
                 console.log('An error occurred:', err);
+                wipe();
                 res.send("There's a problem with this DivRod! Pick another one. :)");
             });
     }
@@ -33,8 +35,13 @@ router.put('/', function(req,res,next){
 //DELETE manually dequeue a device if there's an issue
 //The kiosk app can call this.
 router.delete('/', function(req,res,next){
-    current_device = {"Name":"","ID":""};
+    wipe();
     res.send("No devices currently queued.");
 });
+
+function wipe(){
+    current_device = {"Name":"","ID":""};
+    current_usersettings = "Distance:3,ArtPref:0";
+}
 
 module.exports = router;

@@ -8,7 +8,8 @@ var nconf = require('nconf');
 var passport = require('passport');
 var Particle = require('particle-api-js');
 particle = new Particle(), p_token = "";
-nconf.file('../resources/particleconfig.json');
+
+nconf.file('../resources/config.json');
 
 var index = require('./routes/index'),
 users = require('./routes/users'),
