@@ -2,12 +2,16 @@ var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs');
 current_device = {"Name":"","ID":""};
-current_usersettings = "Distance:3,ArtPref:0";
+
 //GET push an assembled onboarding config to the queued device
-//The kiosk app hits this URL when onboarding is done
+//The kiosk app hits this URL when onboarding is done. Querystring is a list of configured props.
 router.get('/', function(req, res, next) {
     if(current_device.ID != ""){
-        var fnPr = particle.callFunction({ deviceId: current_device.ID, name: 'do_onboard', argument: current_usersettings, auth: p_token });
+        var settings = "Distance:";
+        settings += req.query.distance;
+        settings += ",";
+        settings += req.query.artpref;
+        var fnPr = particle.callFunction({ deviceId: current_device.ID, name: 'do_onboard', argument: settings, auth: p_token });
         fnPr.then(
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);
@@ -41,7 +45,6 @@ router.delete('/', function(req,res,next){
 
 function wipe(){
     current_device = {"Name":"","ID":""};
-    current_usersettings = "Distance:3,ArtPref:0";
 }
 
 module.exports = router;
