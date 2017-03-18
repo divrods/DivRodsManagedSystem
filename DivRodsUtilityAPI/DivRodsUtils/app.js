@@ -1,7 +1,7 @@
 //Status Code Canon:
 //410 ~ Not yet implemented or feature removed.
-//422 ~ Something wrong with a remote resource (device/file/blob) used by this resource
-//300 ~ Resource is returning a backup version of something
+//422 ~ Something wrong with a remote resource (device/file/blob) used by this endpoint
+//301 ~ Resource is returning a backup version of something
 //200 ~ B.A.U. and intact response from a GET
 //201 ~ B.A.U. and intact responde from a PUT
 //204 ~ Successful DELETE or PATCH
@@ -15,9 +15,10 @@ var bodyParser = require('body-parser');
 var nconf = require('nconf');
 var passport = require('passport');
 var Particle = require('particle-api-js');
-particle = new Particle(), p_token = ""; //TODO: move the token to nconf.
+particle = new Particle();
 
 nconf.file('../resources/config.json');
+nconf.set('particle_token', '');
 
 var index = require('./routes/index'),
 users = require('./routes/users'),
@@ -32,7 +33,7 @@ var app = express();
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
     console.log('Login succeeded. Token: ', data.body.access_token);
-    p_token = data.body.access_token;
+    nconf.set('particle_token', data.body.access_token);
   },
   function(err) {
     console.log('Login failed: ', err);

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs');
+var nconf = require('nconf');
 current_device = {"Name":"","ID":""};
 
 //GET push an assembled onboarding config to the queued device
@@ -11,29 +12,34 @@ router.get('/', function(req, res, next) {
         settings += req.query.distance;
         settings += ",";
         settings += req.query.artpref;
-        var fnPr = particle.callFunction({ deviceId: current_device.ID, name: 'do_onboard', argument: settings, auth: p_token });
-        fnPr.then(
-            function (data) {
-                console.log('Function called succesfully: ', data.body.return_value);
-                wipe();
-                res.status(200).send("You're all set! Enjoy your DivRod.");
-            }, function (err) {
-                console.log('An error occurred:', err);
-                wipe();
-                res.status(422).send("There's a problem with this DivRod! Pick another one. :)");
-            });
+        var pcall = {
+            "func":"do_onboard",
+            "arg":settings,
+            "pass":[200,"Device received config string."],
+            "fail":[422,"There's a problem with this DivRod! Pick another one."]
+        }
+        callParticle(pcall, res);
     }
 });
 
-//PUT a device ID at the top of a queue.
+//PUT a device ID in position for onboarding.
 //The divrod scans the onboarding RFID and hits this URL with its ID.
+//We use the particle cloud to configure the device for the time period it
+//sits in the cradle getting configured.
 router.put('/', function(req,res,next){
     current_device.Name = req.query.devicename;
     current_device.ID = req.query.deviceid;
-    //TODO: call a function on the device with a simple command arg for user feedback.
-    resp = req.query.devicename + " queued for onboarding!"
-    console.log(current_device);
-    res.status(201).send(resp);
+    //call signal_onboard in the firmware to give the user visual feedback.
+    //TODO: we don't really care if this particle call comes back, though. The feedback isn't critical.
+    //Why wait on it to send a response?
+    var pcall = {
+            "func":"signal_onboard",
+            "arg":"",
+            "pass":[201,"This device queued for onboarding."],
+            "fail":[422,"There's a problem with this DivRod! Pick another one."]
+        }
+    callParticle(pcall, res);
+    //could just call with a null res and move on
 });
 
 //DELETE manually dequeue a device if there's an issue
@@ -45,6 +51,20 @@ router.delete('/', function(req,res,next){
 
 function wipe(){
     current_device = {"Name":"","ID":""};
+}
+
+function callParticle(_pcallobj, _res){
+    var fnPr = particle.callFunction({ deviceId: current_device.ID, name: _pcallobj.func, argument: _pcallobj.arg, auth: nconf.get('particle_token') });
+        fnPr.then(
+            function (data) {
+                console.log('Function called succesfully: ', data.body.return_value);
+                wipe(); //gotta move this out
+                if(_res) _res.status(_pcallobj.pass_status).send(_pcallobj.pass_string);
+            }, function (err) {
+                console.log('An error occurred:', err);
+                wipe(); //gotta move this out
+                if(_res) _res.status(_pcallobj.fail_status).send(_pcallobj.fail_string);
+            });
 }
 
 module.exports = router;
