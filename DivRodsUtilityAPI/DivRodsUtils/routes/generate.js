@@ -4,16 +4,16 @@ var async = require('async'), fs = require('fs');
 
 //GET trigger update from tracking API
 router.get('/', function(req, res, next) {
-    res.send("Not yet implemented.");
+    res.status(410).res.send("Not yet implemented.");
 });
 
 //POST new config information and trigger regen?
 router.post('/', function(req,res,next){
-    res.send("Not yet implemented.");
+    res.status(410).res.send("Not yet implemented.");
 });
 
 router.put('/', function(req,res,next){
-    res.send("Not yet implemented.");
+    res.status(410).res.send("Not yet implemented.");
 });
 
 module.exports = router;

@@ -16,11 +16,11 @@ router.get('/', function(req, res, next) {
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);
                 wipe();
-                res.send("You're all set! Enjoy your DivRod.");
+                res.status(200).send("You're all set! Enjoy your DivRod.");
             }, function (err) {
                 console.log('An error occurred:', err);
                 wipe();
-                res.send("There's a problem with this DivRod! Pick another one. :)");
+                res.status(422).send("There's a problem with this DivRod! Pick another one. :)");
             });
     }
 });
@@ -32,15 +32,16 @@ router.put('/', function(req,res,next){
     current_device.ID = req.query.deviceid;
     //TODO: call a function on the device with a simple command arg for user feedback.
     resp = req.query.devicename + " queued for onboarding!"
-    res.send(resp);
     console.log(current_device);
+    res.status(200).send(resp);
+
 });
 
 //DELETE manually dequeue a device if there's an issue
 //The kiosk app can call this.
 router.delete('/', function(req,res,next){
     wipe();
-    res.send("No devices currently queued.");
+    res.status(200).send("No devices currently queued.");
 });
 
 function wipe(){

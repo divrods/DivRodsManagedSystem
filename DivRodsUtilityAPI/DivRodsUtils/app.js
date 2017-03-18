@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var nconf = require('nconf');
 var passport = require('passport');
 var Particle = require('particle-api-js');
-particle = new Particle(), p_token = "";
+particle = new Particle(), p_token = ""; //TODO: move the token to nconf.
 
 nconf.file('../resources/config.json');
 
@@ -30,8 +30,6 @@ particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then
     console.log('Login failed: ', err);
   }
 );
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
