@@ -1,9 +1,10 @@
 //Status Code Canon:
 //410 ~ Not yet implemented or feature removed.
-//204 ~ Successful DELETE or PATCH
 //422 ~ Something wrong with a remote resource (device/file/blob) used by this resource
+//300 ~ Resource is returning a backup version of something
 //200 ~ B.A.U. and intact response from a GET
 //201 ~ B.A.U. and intact responde from a PUT
+//204 ~ Successful DELETE or PATCH
 
 var express = require('express');
 var path = require('path');
@@ -38,12 +39,9 @@ particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then
   }
 );
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,7 +57,6 @@ app.use('/generate', generate);
 app.use('/setup', setup);
 app.use('/onboard', onboard);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
