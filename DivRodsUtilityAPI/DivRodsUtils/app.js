@@ -1,3 +1,10 @@
+//Status Code Canon:
+//410 ~ Not yet implemented or feature removed.
+//204 ~ Successful DELETE or PATCH
+//422 ~ Something wrong with a remote resource (device/file/blob) used by this resource
+//200 ~ B.A.U. and intact response from a GET
+//201 ~ B.A.U. and intact responde from a PUT
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

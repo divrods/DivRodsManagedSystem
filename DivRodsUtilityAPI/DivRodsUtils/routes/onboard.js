@@ -33,15 +33,14 @@ router.put('/', function(req,res,next){
     //TODO: call a function on the device with a simple command arg for user feedback.
     resp = req.query.devicename + " queued for onboarding!"
     console.log(current_device);
-    res.status(200).send(resp);
-
+    res.status(201).send(resp);
 });
 
 //DELETE manually dequeue a device if there's an issue
 //The kiosk app can call this.
 router.delete('/', function(req,res,next){
     wipe();
-    res.status(200).send("No devices currently queued.");
+    res.status(204).send("No devices currently queued.");
 });
 
 function wipe(){

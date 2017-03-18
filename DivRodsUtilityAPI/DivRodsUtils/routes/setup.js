@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
             res.status(204).res.send("Config file is missing or corrupt. Consider PUTting a new one in place.");
             return console.log(err);
         }
-        res.status(410).res.send(data);
+        res.status(200).res.send(data);
     });
 });
 
