@@ -7,21 +7,30 @@
         "configprop2":5,
         "configpropetc":3
     },
+    "visitedgalleries":[
+        "g304",
+        "g305",
+        "g304",
+        "g301"
+    ],
     "visitedworks":[
         {
-            "idno":"12345",
+            "id":"12345",
             "pref":0,
-            "timestamp":""
+            "timestamp":"",
+            "heading":0
         },
         {
-            "idno":"22",
+            "id":"22",
             "pref":1,
-            "timestamp":""
+            "timestamp":"",
+            "heading":0
         },
         {
-            "idno":"3450",
+            "id":"3450",
             "pref":0,
-            "timestamp":""
+            "timestamp":"",
+            "heading":0
         }
     ]
 }
