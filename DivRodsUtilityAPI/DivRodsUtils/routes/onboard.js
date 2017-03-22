@@ -8,9 +8,9 @@ current_device = {"Name":"","ID":""};
 //The kiosk app hits this URL when onboarding is done. Querystring is a list of configured props.
 router.get('/', function(req, res, next) {
     if(current_device.ID != ""){
-        var settings = "Distance:";
+        var settings = "Config Received! Distance:";
         settings += req.query.distance;
-        settings += ",";
+        settings += ", ArtPref";
         settings += req.query.artpref;
         var pcall = {
             "func":"do_onboard",
@@ -33,8 +33,8 @@ router.put('/', function(req,res,next){
     //TODO: we don't really care if this particle call comes back, though. The feedback isn't critical.
     //Why wait on it to send a response?
     var pcall = {
-            "func":"signal_onboard",
-            "arg":"",
+            "func":"show_onboard",
+            "arg":"Show",
             "pass":[201,"This device queued for onboarding."],
             "fail":[422,"There's a problem with this DivRod! Pick another one."]
         }
@@ -50,6 +50,7 @@ router.delete('/', function(req,res,next){
 });
 
 function wipe(){
+    console.log("Wiping device slot...")
     current_device = {"Name":"","ID":""};
 }
 
@@ -58,11 +59,11 @@ function callParticle(_pcallobj, _res){
         fnPr.then(
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);
-                if(_res) _res.status(_pcallobj.pass_status).send(_pcallobj.pass_string);
+                if(_res) _res.status(_pcallobj.pass[0]).send(_pcallobj.pass[1]);
             }, function (err) {
                 console.log('An error occurred:', err);
-                if(_res) _res.status(_pcallobj.fail_status).send(_pcallobj.fail_string);
-            }).then({wipe();}); //do we hit this promise?
+                if(_res) _res.status(_pcallobj.fail[0]).send(_pcallobj.fail[1]);
+            });
 }
 
 module.exports = router;
