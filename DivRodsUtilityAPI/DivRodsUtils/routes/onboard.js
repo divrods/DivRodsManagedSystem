@@ -58,13 +58,11 @@ function callParticle(_pcallobj, _res){
         fnPr.then(
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);
-                wipe(); //gotta move this out
                 if(_res) _res.status(_pcallobj.pass_status).send(_pcallobj.pass_string);
             }, function (err) {
                 console.log('An error occurred:', err);
-                wipe(); //gotta move this out
                 if(_res) _res.status(_pcallobj.fail_status).send(_pcallobj.fail_string);
-            });
+            }).then({wipe();}); //do we hit this promise?
 }
 
 module.exports = router;

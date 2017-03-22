@@ -1,0 +1,27 @@
+{
+    "device":"Minnesota",
+    "timestamp":"",
+    "adherence":10,
+    "deviceconfig":{
+        "configprop1":0,
+        "configprop2":5,
+        "configpropetc":3
+    },
+    "visitedworks":[
+        {
+            "idno":"12345",
+            "pref":0,
+            "timestamp":""
+        },
+        {
+            "idno":"22",
+            "pref":1,
+            "timestamp":""
+        },
+        {
+            "idno":"3450",
+            "pref":0,
+            "timestamp":""
+        }
+    ]
+}
