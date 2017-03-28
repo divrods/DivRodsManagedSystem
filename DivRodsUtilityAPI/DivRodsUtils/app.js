@@ -13,7 +13,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
-var passport = require('passport');
+var basicAuth = require('express-basic-auth');
 var Particle = require('particle-api-js');
 particle = new Particle();
 
@@ -30,6 +30,7 @@ onboard = require('./routes/onboard');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 
+//TODO move this out
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
     console.log('Login succeeded. Token: ', data.body.access_token);
@@ -49,14 +50,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use('/', index);
 app.use('/users', users);
 app.use('/generate', generate);
 app.use('/setup', setup);
 app.use('/onboard', onboard);
+
+var _un = nconf.get('defaultuser');
+app.use(basicAuth({
+    users: { _un: nconf.get('defaultpass') }
+}))
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

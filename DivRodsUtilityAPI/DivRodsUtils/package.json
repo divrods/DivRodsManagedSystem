@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha spec"
   },
   "dependencies": {
     "async": "^2.1.5",
@@ -12,11 +13,13 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "express": "~4.14.1",
+    "express-basic-auth": "^1.0.1",
+    "mocha": "^3.2.0",
     "morgan": "~1.7.0",
     "nconf": "^0.8.4",
     "particle-api-js": "^6.4.3",
-    "passport": "^0.3.2",
     "pug": "~2.0.0-beta10",
-    "serve-favicon": "~2.3.2"
+    "serve-favicon": "~2.3.2",
+    "supertest": "^3.0.0"
   }
 }
