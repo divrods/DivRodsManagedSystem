@@ -47,7 +47,7 @@ data = {
     "280":{"loc": [623,503], "edges":{"264":1, "275":1, "277":1}}
 };
 
-//GET device config
+//GET shortest path between two galleries
 router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
@@ -132,8 +132,11 @@ function _deconstruct_path(tentative_parents, end){
         cursor = tentative_parents[cursor];
     }
     console.log(path.reverse());
-    return path;
+    _map = {};
+    for(i =0; i<path.length; i++){
+        _map[path[i]] = data[path[i]]["loc"];
+    }
+    return _map;
 }
     
-
 module.exports = router;
