@@ -24,6 +24,7 @@ var index = require('./routes/index'),
 users = require('./routes/users'),
 generate = require('./routes/generate'),
 setup = require('./routes/setup'),
+dkpath = require('./routes/path'),
 onboard = require('./routes/onboard');
 
 //Guess who forgets this? Me.
@@ -50,11 +51,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/generate', generate);
-app.use('/setup', setup);
-app.use('/onboard', onboard);
+app.use('/', index),
+app.use('/users', users),
+app.use('/generate', generate),
+app.use('/setup', setup),
+app.use('/onboard', onboard),
+app.use('/path', dkpath);
 
 var _un = nconf.get('defaultuser');
 app.use(basicAuth({

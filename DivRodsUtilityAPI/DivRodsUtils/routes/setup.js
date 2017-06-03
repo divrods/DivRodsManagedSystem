@@ -6,7 +6,7 @@ var async = require('async'), fs = require('fs');
 router.get('/', function(req, res, next) {
     fs.readFile('../resources/drsetup.json', 'utf8', function (err,data) {
         if (err) {
-            res.status(204).res.send("Config file is missing or corrupt. Consider PUTting a new one in place.");
+            res.status(204).send("Config file is missing or corrupt. Consider PUTting a new one in place.");
             return console.log(err);
         }
         res.status(200).res.send(data);

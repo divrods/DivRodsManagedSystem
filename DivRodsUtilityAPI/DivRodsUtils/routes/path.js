@@ -1,6 +1,6 @@
-//var express = require('express');
-//var router = express.Router();
-//var async = require('async'), fs = require('fs');
+var express = require('express');
+var router = express.Router();
+var async = require('async'), fs = require('fs');
 
 data = {
     "205":{"loc": [1013,1803], "edges":{"220":1, "206":1}},
@@ -17,7 +17,7 @@ data = {
     "224":{"loc": [937,1413], "edges":{"229":1, "223":1}},
     "225":{"loc": [1047,1413], "edges":{"226":1, "224":1}},
     "226":{"loc": [1162,1413], "edges":{"227":1, "225":1}},
-    "227":{"loc": [1172,1286], "edges":{"237":1, "226":1, "228":1}},
+    "227":{"loc": [1172,1286], "edges":{"237":1, "226":1}},
     "229":{"loc": [881,1284], "edges":{"239":1, "224":1}},
     "235":{"loc": [1286,1283], "edges":{"214":1, "227":1, "236":1}},
     "236":{"loc": [1280,1170], "edges":{"250":1, "235":1}},
@@ -48,33 +48,34 @@ data = {
 };
 
 //GET device config
-//router.get('/', function(req, res, next) {
-    
-//});
+router.get('/', function(req, res, next) {
+    _start = req.query.start;
+    _end = req.query.end;
+    _path = get_shortest_path(_start, _end, data);
+    res.status(200).send(_path);
+});
 
-function get_shortest_path(start, end, weighted_graph = data){
+function get_shortest_path(start, end, weighted_graph){
     //Calculate the shortest path for a directed weighted graph.
 
     // :param start: starting node
     // :param end: ending node
     // :param weighted_graph: {"node1": {"node2": "weight", ...}, ...}
     // :return: ["START", ... nodes between ..., "END"] or None, if there is no path
-
     //We always need to visit the start
-    nodes_to_visit = {start};
+    nodes_to_visit = {};
+    nodes_to_visit[start] = start;
     visited_nodes = {};
     //Distance from start to start is 0
-    distance_from_start = {start: 0};
+    distance_from_start = {};
+    distance_from_start[start] = 0
     tentative_parents = {};
 
-    while(nodes_to_visit){
-        //The next node should be the one with the smallest weight
-        //This line looks at the nodes to visit, and looks up each node's distance from start, and returns the minimum.
-        //python: current = min([(distance_from_start[node], node) for node in nodes_to_visit])[1];
-        //js below:
-        temp_dists = {}
+    while(Object.keys(nodes_to_visit).length > 0){
+
+        temp_dists = {};
         for(node in nodes_to_visit){
-            if(distance_from_start[node]){
+            if(distance_from_start[node] != undefined){
                 temp_dists[node] = distance_from_start[node];
             }
         }
@@ -83,45 +84,56 @@ function get_shortest_path(start, end, weighted_graph = data){
         for(temp_dist in temp_dists){
             if(min_dist == 0 | temp_dists[temp_dist] <= min_dist){
                 current = temp_dist;
-                min_dist = temp_dists[temp_dist]; //ugly
+                min_dist = temp_dists[temp_dist];
             }
         }
 
         //The end was reached
         if(current == end)
           break;
-        //delete myObject[prop];
         delete nodes_to_visit[current];
         visited_nodes[current] = current;
-
-        //edges = weighted_graph[current]["edges"];
-        //unvisited_neighbours = set(edges).difference(visited_nodes)
-        // for neighbour in unvisited_neighbours:
-        //     neighbour_distance = distance_from_start[current] + \
-        //                          edges[neighbour]
-        //     if neighbour_distance < distance_from_start.get(neighbour,
-        //                                                     float('inf')):
-        //         distance_from_start[neighbour] = neighbour_distance
-        //         tentative_parents[neighbour] = current
-        //         nodes_to_visit.add(neighbour)
-    }
+        edges = {};
+        console.log(current);
+        if(weighted_graph[current]["edges"]){
+            edges = weighted_graph[current]["edges"];
+        }
+        else{
+            break;
+        }
         
-
+        for(unvisited_edge in edges){
+            if(!visited_nodes[unvisited_edge]){
+                neighbor_distance = distance_from_start[current] + edges[unvisited_edge];
+                _dist = 99;
+                if(distance_from_start[unvisited_edge]){
+                    _dist = distance_from_start[unvisited_edge];
+                }
+                if(neighbor_distance < _dist){
+                    distance_from_start[unvisited_edge] = neighbor_distance;
+                    tentative_parents[unvisited_edge] = current;
+                    nodes_to_visit[unvisited_edge] = unvisited_edge;
+                }
+            }
+        }
+    }
     return _deconstruct_path(tentative_parents, end)
 }
-    
-
 
 function _deconstruct_path(tentative_parents, end){
-    // if end not in tentative_parents:
-    //     return None
-    // cursor = end
-    // path = []
-    // while cursor:
-    //     path.append(cursor)
-    //     cursor = tentative_parents.get(cursor)
-    // return list(reversed(path))
+    if(!tentative_parents[end]){
+        return null;
+    }
+
+    cursor = end;
+    path = [];
+    while(cursor){
+        path.push(cursor);
+        cursor = tentative_parents[cursor];
+    }
+    console.log(path.reverse());
+    return path;
 }
     
 
-//module.exports = router;
+module.exports = router;
