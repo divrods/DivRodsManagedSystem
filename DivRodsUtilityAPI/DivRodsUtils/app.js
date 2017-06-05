@@ -5,7 +5,7 @@
 //200 ~ B.A.U. and intact response from a GET
 //201 ~ B.A.U. and intact responde from a PUT
 //204 ~ Successful DELETE or PATCH
-
+var tools = require('./tools.js');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -31,11 +31,13 @@ onboard = require('./routes/onboard');
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
-
+var _SessionMgr = new tools.SessionDictionary(45000);
 //TODO keep a table of MACs matched to session IDs, map and handle creation/destruction here
-var manageDeviceSession = function (req, res, next) {
-  req.SessionWarmth = Date.now();
-  //req.requestTime = Date.now()
+var DeviceSessionManager = function (req, res, next) {
+  //TODO basic auth scheme for filtering known MACs
+  if(req.query.deviceid){
+    _SessionMgr._touch(req.query.deviceid);
+  }
   next()
 }
 
@@ -58,6 +60,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(DeviceSessionManager);
 
 app.use('/', index),
 app.use('/users', users),

@@ -51,8 +51,13 @@ data = {
 router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
-    _path = get_shortest_path(_start, _end, data);
-    res.status(200).send(_path);
+    if(_start & _end){
+        _path = get_shortest_path(_start, _end, data);
+        res.status(200).send(_path);
+    }
+    else{
+        res.status(404).send("Please enclose a valid start and end point.");
+    }
 });
 
 function get_shortest_path(start, end, weighted_graph){
