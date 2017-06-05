@@ -133,11 +133,11 @@ function _deconstruct_path(tentative_parents, end){
     }
     console.log(path.reverse());
     _map = {};
-    i=0;
-    for(i<path.length; i++;){
+    
+    for(i=0; i<path.length; i++){
         _map[path[i]] = data[path[i]]["loc"];
     }
-    _map["steps"] = i;
+    _map["steps"] = path.length;
     return _map;
 }
     

@@ -32,6 +32,13 @@ onboard = require('./routes/onboard');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 
+//TODO keep a table of MACs matched to session IDs, map and handle creation/destruction here
+var manageDeviceSession = function (req, res, next) {
+  req.SessionWarmth = Date.now();
+  //req.requestTime = Date.now()
+  next()
+}
+
 //TODO move this out
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
