@@ -25,6 +25,7 @@ users = require('./routes/users'),
 generate = require('./routes/generate'),
 setup = require('./routes/setup'),
 dkpath = require('./routes/path'),
+status = require('./routes/status'),
 onboard = require('./routes/onboard');
 
 //Guess who forgets this? Me.
@@ -56,7 +57,8 @@ app.use('/users', users),
 app.use('/generate', generate),
 app.use('/setup', setup),
 app.use('/onboard', onboard),
-app.use('/path', dkpath);
+app.use('/path', dkpath),
+app.use('/status', status);
 
 var _un = nconf.get('defaultuser');
 app.use(basicAuth({
