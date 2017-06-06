@@ -138,10 +138,17 @@ function _deconstruct_path(tentative_parents, end){
     }
     console.log(path.reverse());
     _map = {};
+    _allsteps = [];
     
     for(i=0; i<path.length; i++){
-        _map[path[i]] = data[path[i]]["loc"];
+        var _step = {
+            "room": path[i],
+            "coords": data[path[i]]["loc"]
+        };
+        //_map[path[i]] = data[path[i]]["loc"];
+        _allsteps.push(_step);
     }
+    _map["journey"] = _allsteps;
     _map["steps"] = path.length;
     return _map;
 }
