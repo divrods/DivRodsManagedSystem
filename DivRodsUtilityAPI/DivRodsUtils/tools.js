@@ -1,5 +1,6 @@
+//we could rename this to 'persistence'
 const uuidV4 = require('uuid/v4');
-var _ = require('underscore');
+var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2');
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  * Not 100% sure where I'm going with this yet. Needs a middleware.
@@ -94,6 +95,30 @@ class SessionDictionary {
         }
     }
 };
+
+class PrefEngineWrapper{
+    constructor(host){
+        this.Host = host;
+        console.log("Initializing preference engine wrapper...");
+        this.pref_oauth = new ClientOAuth2({
+            clientId: prefengid,
+            clientSecret: prefengsecret,
+            accessTokenUri: '',
+            authorizationUri: '',
+            redirectUri: '',
+            scopes: []
+        });
+    }
+    _turn_in_pref(cb){
+        //send a single preference to get a set of consequents.
+        request.get(
+        this.Host,
+        function (error, response, body) {
+            cb();
+        }
+    );
+    }
+}
 
 module.exports.SessionDictionary = SessionDictionary;
 module.exports.DeviceSession = DeviceSession;
