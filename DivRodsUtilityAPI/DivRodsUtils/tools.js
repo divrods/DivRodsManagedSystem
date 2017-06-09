@@ -14,7 +14,7 @@ class DeviceSession {
         this.BaseRuleSet = {};
         this.RuleSet = {};
         this.PrefHistory = {};
-        this.Location = {};
+        this.Location = "0";
         this.Enabled = true;
         console.log("Initialized device Session...");
     }
@@ -59,17 +59,27 @@ class SessionDictionary {
             found.LastTouched = Date.now();
         }
         else{
-            var _new = new DeviceSession(reqID, Date.now());
+            var _time = Date.now();
+            var _new = new DeviceSession(reqID, _time);
             this.Sessions.push(_new);
         }
         console.log("Touched: ");
         console.log(reqID);
     }
+    _overview(){
+        var out = [];
+        this.Sessions.forEach(function(session){
+            var sample = {
+                "ID": session.SessionID,
+                "Location": session.Location,
+                "Awake": session.Enabled,
+                "Started": new Date(session.Opened).toISOString()
+            }
+            out.push(sample);
+        });
+        return out;
+    }
 };
 
 module.exports.SessionDictionary = SessionDictionary;
 module.exports.DeviceSession = DeviceSession;
-// exports = {
-//     SessionDictionary: SessionDictionary,
-//     DeviceSession: DeviceSession
-// }

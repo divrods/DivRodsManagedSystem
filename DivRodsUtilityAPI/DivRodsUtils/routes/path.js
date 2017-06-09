@@ -145,7 +145,6 @@ function _deconstruct_path(tentative_parents, end){
             "room": path[i],
             "coords": data[path[i]]["loc"]
         };
-        //_map[path[i]] = data[path[i]]["loc"];
         _allsteps.push(_step);
     }
     _map["journey"] = _allsteps;

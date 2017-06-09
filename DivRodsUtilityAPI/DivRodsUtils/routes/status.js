@@ -4,7 +4,8 @@ var async = require('async'), fs = require('fs');
 
 //render a page with some vitals, list device sessions
 router.get('/', function(req, res, next) {
-    res.render('status', { title: 'Hey', message: 'Hello there!' })
+    var session_report = req.app.get('_DeviceSessions')._overview();
+    res.render('status', { title: 'Session Overview', sessions: session_report, message: "Current Sessions (Active and Inactive):" })
 });
 
 //Manual Override of config file

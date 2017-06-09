@@ -31,7 +31,8 @@ onboard = require('./routes/onboard');
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
-var _SessionMgr = new tools.SessionDictionary(45000);
+_SessionMgr = new tools.SessionDictionary(45000);
+app.set('_DeviceSessions', _SessionMgr);
 //TODO keep a table of MACs matched to session IDs, map and handle creation/destruction here
 var DeviceSessionManager = function (req, res, next) {
   //TODO basic auth scheme for filtering known MACs
