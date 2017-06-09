@@ -53,6 +53,7 @@ particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then
   }
 );
 
+FINDhost = nconf.get('trackinghost');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 

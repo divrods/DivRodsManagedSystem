@@ -54,6 +54,9 @@ router.get('/', function(req, res, next) {
     if(_start & _end){
         _path = get_shortest_path(_start, _end, data);
         payload = JSON.stringify(_path);
+        if(req.query.deviceid){
+            req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
+        }
         res.status(200).send(payload);
     }
     else{

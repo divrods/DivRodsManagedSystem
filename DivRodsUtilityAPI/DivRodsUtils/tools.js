@@ -13,8 +13,10 @@ class DeviceSession {
         this.Closed = null;
         this.BaseRuleSet = {};
         this.RuleSet = {};
+        this.RuleSet = {};
         this.PrefHistory = {};
         this.Location = "0";
+        this.CurrentPath = {};
         this.Enabled = true;
         console.log("Initialized device Session...");
     }
@@ -78,6 +80,18 @@ class SessionDictionary {
             out.push(sample);
         });
         return out;
+    }
+    _place(deviceid, location){
+        var found = _.find(this.Sessions, {DeviceID:deviceid});
+        if(found){
+            found.Location = location;
+        }
+    }
+    _update_path(deviceid, path){
+        var found = _.find(this.Sessions, {DeviceID:deviceid});
+        if(found){
+            found.CurrentPath = path;
+        }
     }
 };
 
