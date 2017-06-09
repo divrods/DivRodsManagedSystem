@@ -53,7 +53,8 @@ router.get('/', function(req, res, next) {
     _end = req.query.end;
     if(_start & _end){
         _path = get_shortest_path(_start, _end, data);
-        res.status(200).send(_path);
+        payload = JSON.stringify(_path);
+        res.status(200).send(payload);
     }
     else{
         res.status(404).send("Please enclose a valid start and end point.");
