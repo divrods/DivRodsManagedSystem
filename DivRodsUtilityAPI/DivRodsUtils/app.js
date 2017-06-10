@@ -5,7 +5,7 @@
 //200 ~ B.A.U. and intact response from a GET
 //201 ~ B.A.U. and intact responde from a PUT
 //204 ~ Successful DELETE or PATCH
-var tools = require('./tools.js');
+var persist = require('./persistence.js'), maintain = require('./maintenance.js');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -31,8 +31,10 @@ onboard = require('./routes/onboard');
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
-_SessionMgr = new tools.SessionDictionary(45000);
+_SessionMgr = new persist.SessionDictionary(45000);
+_ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1-5', nconf.get('timezone'));
 app.set('_DeviceSessions', _SessionMgr);
+app.set('_ArtFilter', _ArtFilter);
 //TODO keep a table of MACs matched to session IDs, map and handle creation/destruction here
 var DeviceSessionManager = function (req, res, next) {
   //TODO basic auth scheme for filtering known MACs

@@ -18,6 +18,7 @@
     "mocha": "^3.2.0",
     "morgan": "~1.7.0",
     "nconf": "^0.8.4",
+    "node-cron": "^1.2.0",
     "particle-api-js": "^6.4.3",
     "pug": "~2.0.0-beta10",
     "serve-favicon": "~2.3.2",

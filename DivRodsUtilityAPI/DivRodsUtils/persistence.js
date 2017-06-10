@@ -1,9 +1,8 @@
-//we could rename this to 'persistence'
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2');
+
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
- * Not 100% sure where I'm going with this yet. Needs a middleware.
  */
 class DeviceSession {
     constructor(DeviceMAC, timestamp){

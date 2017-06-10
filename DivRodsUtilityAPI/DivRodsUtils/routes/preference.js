@@ -10,7 +10,7 @@ router.post('/', function(req, res, next) {
             req.query.artid,
             req.query.pref
             );
-        //TODO: locate which gallery the scanned piece is in, and send it back to the device.
+        //TODO: use the global filter to locate which gallery the scanned piece is in, and send it back to the device.
         //Could be really helpful if a device is having trouble locating itself and the user
         //scans a piece.
         //res.status(200).send(devicelocation);
