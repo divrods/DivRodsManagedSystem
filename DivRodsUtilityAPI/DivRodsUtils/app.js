@@ -32,7 +32,7 @@ onboard = require('./routes/onboard');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 _SessionMgr = new persist.SessionDictionary(45000);
-_ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1-5', nconf.get('timezone'));
+_ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1,3,5', nconf.get('timezone'));
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);
 //TODO keep a table of MACs matched to session IDs, map and handle creation/destruction here

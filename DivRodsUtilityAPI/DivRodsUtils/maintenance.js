@@ -17,6 +17,13 @@ class ArtworkFilter {
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     //loop through hits from collection, filter for artids and isondisplay or whatever
+                    var _resp = JSON.parse(response.body);
+                    _resp.hits.forEach(function(element) {
+                        if(element["_id"]){
+                            //Something
+                        }
+                        else continue;
+                    }, this);
                 }
             }
         );
