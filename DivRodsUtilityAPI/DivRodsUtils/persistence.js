@@ -26,7 +26,7 @@ class DeviceSession {
     }
     _get_ruleset(){
 
-    };
+    }
 
     //submit a user's expressed preference about an artwork
     _submit_pref(pref, timestamp){
@@ -79,7 +79,8 @@ class SessionDictionary {
                 "ID": session.SessionID,
                 "Location": session.Location,
                 "Awake": session.Enabled,
-                "Started": new Date(session.Opened).toISOString()
+                "Started": new Date(session.Opened).toISOString(),
+                "Current Path": JSON.stringify(session.CurrentPath, null, 4)
             }
             out.push(sample);
         });
