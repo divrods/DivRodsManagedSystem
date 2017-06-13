@@ -21,6 +21,7 @@
     "node-cron": "^1.2.0",
     "particle-api-js": "^6.4.3",
     "pug": "~2.0.0-beta10",
+    "request": "^2.81.0",
     "serve-favicon": "~2.3.2",
     "supertest": "^3.0.0",
     "underscore": "^1.8.3",

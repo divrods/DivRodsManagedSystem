@@ -1,4 +1,4 @@
-var CronJob = require('cron').CronJob, request = require('request');
+var CronJob = require('node-cron').CronJob, request = require('request');
 
 class ArtworkFilter {
     constructor(_host, _freq, _tz){
@@ -6,9 +6,12 @@ class ArtworkFilter {
         this.cronfreq = _freq;
         this.currently_up = {};
         this.broken_rules = 0;
-        new CronJob(this.cronfreq, function() {
+        this.timezone = _tz;   
+    }
+    _start(){
+        this.cron = new CronJob(this.cronfreq, function() {
             this._refresh();
-        }, null, true, _tz);
+        }, null, true, this.timezone);
     }
     _refresh(){
         //TODO make call to collection service, parse result into artids
@@ -22,7 +25,6 @@ class ArtworkFilter {
                         if(element["_id"]){
                             //Something
                         }
-                        else continue;
                     }, this);
                 }
             }
@@ -36,3 +38,5 @@ class ArtworkFilter {
         //TODO given a single artid, see if it's a valid one that is currently on display
     }
 }
+
+module.exports.ArtworkFilter = ArtworkFilter;
