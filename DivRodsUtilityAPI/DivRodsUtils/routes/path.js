@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async'), fs = require('fs');
+var async = require('async'), fs = require('fs'), _ = require('underscore');
 
 data = {
     "205":{"loc": [1013,1803], "edges":{"220":1, "206":1}},
@@ -51,7 +51,7 @@ data = {
 router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
-    if(_start & _end){
+    if(_start & _end & req.query.deviceid){
         _path = get_shortest_path(_start, _end, data);
         payload = JSON.stringify(_path);
         if(req.query.deviceid){
@@ -59,8 +59,20 @@ router.get('/', function(req, res, next) {
         }
         res.status(200).send(payload);
     }
+    //If I a device experiences an outage during a user's visit, this is one recovery step.
+    //Assuming the device went down without completing the session, it would need to retrieve the latest path
+    //and get back on track.
+    else if(!_start & !_end & req.query.deviceid){
+        payload = _.findWhere(req.app.get('_DeviceSessions').Sessions, {DeviceID: req.query.deviceid})
+        if(payload){
+            res.status(200).send(JSON.stringify(payload.CurrentPath));
+        }
+        else{
+            res.status(200).send("No session available for this device.");
+        }
+    }
     else{
-        res.status(404).send("Please enclose a valid start and end point.");
+        res.status(404).send("Please enclose a valid start and end point, and/or a valid device id.");
     }
 });
 
