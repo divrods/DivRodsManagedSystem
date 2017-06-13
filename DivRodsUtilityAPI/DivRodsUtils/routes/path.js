@@ -51,7 +51,7 @@ data = {
 router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
-    if(_start & _end & req.query.deviceid){
+    if(req.query.deviceid && _start && _end){
         _path = get_shortest_path(_start, _end, data);
         payload = JSON.stringify(_path);
         if(req.query.deviceid){
