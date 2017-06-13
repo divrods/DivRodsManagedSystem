@@ -48,12 +48,16 @@ class SessionDictionary {
                 session.Enabled = false;
             }
         }
+        var clear = 0;
         var i = this.Sessions.length
         while (i--) {
             if(!this.Sessions[i].Enabled){
                 this.Sessions.splice(i,1);
+                clear++;
             }
         }
+        var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
+        winston.log('info', logstring);
     }
     _touch(reqID){
         var found = _.find(this.Sessions, {DeviceID:reqID});

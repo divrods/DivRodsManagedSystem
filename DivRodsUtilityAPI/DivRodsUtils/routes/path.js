@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async'), fs = require('fs'), _ = require('underscore');
+var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston');
 
 data = {
     "205":{"loc": [1013,1803], "edges":{"220":1, "206":1}},
@@ -68,6 +68,8 @@ router.get('/', function(req, res, next) {
             res.status(200).send(JSON.stringify(payload.CurrentPath));
         }
         else{
+            var logstring = 'Device with id ' + req.query.deviceid + ' made a default path retrieval attempt but no session was present.';
+            winston.log('info', logstring);
             res.status(200).send("No session available for this device.");
         }
     }

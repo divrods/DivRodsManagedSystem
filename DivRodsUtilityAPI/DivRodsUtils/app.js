@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 var nconf = require('nconf');
 var basicAuth = require('express-basic-auth');
 var Particle = require('particle-api-js');
+var winston = require('winston');
 particle = new Particle();
 
 nconf.file('../resources/config.json');
@@ -47,11 +48,10 @@ var DeviceSessionManager = function (req, res, next) {
 //TODO move this out
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
-    console.log('Login succeeded. Token: ', data.body.access_token);
     nconf.set('particle_token', data.body.access_token);
   },
   function(err) {
-    console.log('Login failed: ', err);
+    winston.log('error', 'Particle Login failed: ' + err);
   }
 );
 
