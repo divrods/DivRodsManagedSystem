@@ -7,29 +7,38 @@ class ArtworkFilter {
         this.currently_up = {};
         this.broken_rules = 0;
         this.timezone = _tz;   
+        this.validworks = {};
     }
     _start(){
         this.cron = new CronJob(this.cronfreq, function() {
             this._refresh();
         }, null, true, this.timezone);
     }
-    _refresh(){
-        //TODO make call to collection service, parse result into artids
+    _refresh(cb){
+        var validworks = {};
+        var works = 0;
+        var _self = this;
         request.get(
             this.host,
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     //loop through hits from collection, filter for artids and isondisplay or whatever
                     var _resp = JSON.parse(response.body);
-                    _resp.hits.forEach(function(element) {
+                    _resp.hits.hits.forEach(function(element) {
                         if(element["_id"]){
                             //Something
+                            validworks[element["_id"]] = {"title": element["_source"]["title"], "room": element["_source"]["room"]};
                         }
-                    }, this);
+                        console.log(element["_source"]["title"]);
+                        works++;
+                        if(works == _resp.hits.hits.length){
+                            _self.validworks = validworks;
+                        }
+                    });
                 }
             }
         );
-        this.broken_rules = 0;
+
     }
     _filter(_ruleset){
         //TODO filter a whole ruleset and remove any rules pertaining to artwork that isn't on display
