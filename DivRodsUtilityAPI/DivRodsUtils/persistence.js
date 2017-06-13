@@ -80,7 +80,7 @@ class SessionDictionary {
                 "Location": session.Location,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "Current Path": JSON.stringify(session.CurrentPath, null, 4)
+                "Current_Path": JSON.stringify(session.CurrentPath, null, 4)
             }
             out.push(sample);
         });
