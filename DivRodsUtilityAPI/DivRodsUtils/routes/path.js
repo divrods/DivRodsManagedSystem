@@ -196,7 +196,7 @@ function _deconstruct_path(tentative_parents, end){
 function _prune_map(cb){
     pruned = {};
     request.get(
-            "http://" + nconf.get('trackinghost') + "/locations?group=mia2f",
+            "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/locations?group=mia2f",
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     //loop through hits from collection, filter for artids and isondisplay or whatever
