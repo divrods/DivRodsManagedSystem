@@ -49,8 +49,13 @@ base_map = {
 
 active_map = {};
 
-_prune_map(function(){
-    winston.log('info', JSON.stringify(active_map));
+_prune_map(function(error){
+    if(!error){
+        winston.log('info', JSON.stringify(active_map));
+    }else{
+        winston.log('error', error);
+    }
+
 });
 
 //GET shortest path between two galleries
@@ -85,8 +90,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/prune', function(req, res, next){
-    _prune_map(function(){
-        res.status(200).send(active_map);
+    _prune_map(function(error){
+        if(!error){
+                    res.status(200).send(active_map);
+        }
+        else res.status(404).send(error);
     });
 });
 
@@ -213,8 +221,8 @@ function _prune_map(cb){
                         }
                     });
                     active_map = pruned;
-                    cb();
-                }
+                    cb(null);
+                }else{cb(error);}
             }
         );
 }
