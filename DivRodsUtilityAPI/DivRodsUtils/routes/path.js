@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston');
+var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston'), request = require('request'), nconf = require('nconf');
 
-data = {
+base_map = {
     "205":{"loc": [1013,1803], "edges":{"220":1, "206":1}},
     "206":{"loc": [1140,1812], "edges":{"205":1, "217":1}},
     "214":{"loc": [1284,1395], "edges":{"235":1, "215":1}},
@@ -41,18 +41,20 @@ data = {
     "265":{"loc": [508,691], "edges":{"264":1}},
     "275":{"loc": [792,508], "edges":{"280":1, "278":1, "262":1, "275b":1}},
     "275b":{"loc": [799,419], "edges":{ "275":1, "276":1}},
-    "276":{"loc": [766,339], "edges":{"275b":1, "280":1}},
+    "276":{"loc": [766,339], "edges":{"275b":1, "275": 1, "280":1}},
     "277":{"loc": [518,373], "edges":{"280":1, "278":1}},
     "278":{"loc": [434,341], "edges":{"277":1}},
     "280":{"loc": [623,503], "edges":{"264":1, "275":1, "277":1}}
 };
+
+_prune_map();
 
 //GET shortest path between two galleries
 router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
     if(req.query.deviceid && _start && _end){
-        _path = get_shortest_path(_start, _end, data);
+        _path = get_shortest_path(_start, _end, base_map);
         payload = JSON.stringify(_path);
         if(req.query.deviceid){
             req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
@@ -161,13 +163,49 @@ function _deconstruct_path(tentative_parents, end){
     for(i=0; i<path.length; i++){
         var _step = {
             "room": path[i],
-            "coords": data[path[i]]["loc"]
+            "coords": base_map[path[i]]["loc"]
         };
         _allsteps.push(_step);
     }
     _map["journey"] = _allsteps;
     _map["steps"] = path.length;
     return _map;
+}
+
+//pull list of mapped locations from FIND and match them to nodes/edges.
+//cull any nodes in the base map that haven't been mapped using FIND.
+//also pull any edges involving that culled node.
+function _prune_map(){
+    pruned = {};
+    request.get(
+            "http://" + nconf.get('trackinghost') + "/locations?group=mia2f",
+            function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    //loop through hits from collection, filter for artids and isondisplay or whatever
+                    var _resp = JSON.parse(response.body);
+                    _resp.locations.forEach(function(element) {
+                        _name = element.slice( 1 );
+                        corresponding = base_map[_name];
+                        if(corresponding){
+                            pruned[_name] = corresponding;
+                        }
+                    });
+                    Object.keys(pruned).forEach(function(pruned_element){
+                        //prune edges
+                        var _this_element = pruned[pruned_element];
+                        Object.keys(_this_element["edges"]).forEach(function(edge){   
+                            if(!pruned[edge]){
+                                delete _this_element["edges"][edge];
+                            }
+                        });
+                        if(Object.keys(_this_element["edges"]).length == 0){
+                            delete pruned[pruned_element];
+                        }
+                    });
+                    console.log(pruned);
+                }
+            }
+        );
 }
     
 module.exports = router;
