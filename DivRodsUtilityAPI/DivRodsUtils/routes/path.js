@@ -47,7 +47,11 @@ base_map = {
     "280":{"loc": [623,503], "edges":{"264":1, "275":1, "277":1}}
 };
 
-_prune_map();
+active_map = {};
+
+_prune_map(function(){
+    winston.log('info', JSON.stringify(active_map));
+});
 
 //GET shortest path between two galleries
 router.get('/', function(req, res, next) {
@@ -78,6 +82,12 @@ router.get('/', function(req, res, next) {
     else{
         res.status(404).send("Please enclose a valid start and end point, and/or a valid device id.");
     }
+});
+
+router.get('/prune', function(req, res, next){
+    _prune_map(function(){
+        res.status(200).send(active_map);
+    });
 });
 
 function get_shortest_path(start, end, weighted_graph){
@@ -175,7 +185,7 @@ function _deconstruct_path(tentative_parents, end){
 //pull list of mapped locations from FIND and match them to nodes/edges.
 //cull any nodes in the base map that haven't been mapped using FIND.
 //also pull any edges involving that culled node.
-function _prune_map(){
+function _prune_map(cb){
     pruned = {};
     request.get(
             "http://" + nconf.get('trackinghost') + "/locations?group=mia2f",
@@ -202,7 +212,8 @@ function _prune_map(){
                             delete pruned[pruned_element];
                         }
                     });
-                    console.log(pruned);
+                    active_map = pruned;
+                    cb();
                 }
             }
         );
