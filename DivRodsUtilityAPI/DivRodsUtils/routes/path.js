@@ -30,7 +30,7 @@ base_map = {
     "252":{"loc": [1021,1054], "edges":{"251":1, "253":1, "255":1}},
     "253":{"loc": [918,1049], "edges":{"252":1, "239":1}},
     "254":{"loc": [1121,910], "edges":{"250":1, "255":1}},
-    "255":{"loc": [1008,904], "edges":{"247":1, "252":1, "256":1, "254":1}},
+    "255":{"loc": [1008,904], "edges":{"247":1, "252":1, "256":1, "254":1, "261":1}},
     "256":{"loc": [919,934], "edges":{"255":1}},
     "259":{"loc": [1301,643], "edges":{"260":1}},
     "260":{"loc": [1152,643], "edges":{"259":1, "261":1}},
@@ -39,7 +39,7 @@ base_map = {
     "263":{"loc": [732,691], "edges":{"262":1, "264":1}},
     "264":{"loc": [624,691], "edges":{"265":1, "263":1}},
     "265":{"loc": [508,691], "edges":{"264":1}},
-    "275":{"loc": [792,508], "edges":{"280":1, "278":1, "262":1, "275b":1}},
+    "275":{"loc": [792,508], "edges":{"280":1, "278":1, "262":1, "276": 1, "275b":1}},
     "275b":{"loc": [799,419], "edges":{ "275":1, "276":1}},
     "276":{"loc": [766,339], "edges":{"275b":1, "275": 1, "280":1}},
     "277":{"loc": [518,373], "edges":{"280":1, "278":1}},
@@ -64,11 +64,17 @@ router.get('/', function(req, res, next) {
     _end = req.query.end;
     if(req.query.deviceid && _start && _end){
         _path = get_shortest_path(_start, _end, base_map);
-        payload = JSON.stringify(_path);
-        if(req.query.deviceid){
-            req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
+        if(_path){
+            payload = JSON.stringify(_path);
+            if(req.query.deviceid){
+                req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
+            }
+            res.status(200).send(payload);
         }
-        res.status(200).send(payload);
+        else{
+            res.status(200).send("");
+        }
+        
     }
     //If I a device experiences an outage during a user's visit, this is one recovery step.
     //Assuming the device went down without completing the session, it would need to retrieve the latest path
