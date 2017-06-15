@@ -18,7 +18,7 @@ var Particle = require('particle-api-js');
 var winston = require('winston');
 particle = new Particle();
 
-nconf.file('../resources/config.json');
+nconf.file('config.json');
 nconf.set('particle_token', '');
 
 var index = require('./routes/index'),
