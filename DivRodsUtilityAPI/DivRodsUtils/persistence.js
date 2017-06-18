@@ -10,9 +10,8 @@ class DeviceSession {
         this.SessionID = uuidV4();
         this.Opened = timestamp;
         this.LastTouched = timestamp;
-        this.Closed = null;
+        this.Closed = null; //why?
         this.BaseRuleSet = {};
-        this.RuleSet = {};
         this.RuleSet = {};
         this.PrefHistory = {};
         this.Location = "0";
@@ -27,7 +26,10 @@ class DeviceSession {
     _get_ruleset(){
 
     }
-
+    _get_consequent(){
+        //find gallery for consequent
+        //queue gallery for sending to device
+    }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref, timestamp){
 

@@ -8,9 +8,4 @@ router.get('/', function(req, res, next) {
     res.render('status', { title: 'Session Overview', sessions: session_report, message: "Current Sessions (Active and Inactive):" })
 });
 
-//Manual Override of config file
-router.put('/', function(req,res,next){
-    res.status(410).res.send("Not yet implemented.");
-});
-
 module.exports = router;
