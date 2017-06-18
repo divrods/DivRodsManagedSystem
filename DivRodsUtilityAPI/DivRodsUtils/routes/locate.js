@@ -10,6 +10,7 @@ router.post('/', function(req, res, next) {
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var jsonresp = JSON.parse(response.body);
+                //could do some massaging here
                 var devicelocation = jsonresp["location"];
                 console.log(jsonresp["location"])
                 if(req.query.deviceid){
