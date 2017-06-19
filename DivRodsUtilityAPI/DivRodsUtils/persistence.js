@@ -1,5 +1,5 @@
 const uuidV4 = require('uuid/v4');
-var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2');
+var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
 var CronJob = require('cron').CronJob;
 
 /**
@@ -53,11 +53,12 @@ class SessionDictionary {
             this._check_and_clear_expirations();
         }, null, true, _Timezone);
         this.cron.start();
+        this._check_and_clear_expirations();
     }
     _check_and_clear_expirations(){
-        _now = Date.now().getTime();
+        var _now = Date.now();
         for(session in this.Sessions){
-            _stale = Math.abs(_now - session.LastTouched.getTime());
+            var _stale = Math.abs(_now - session.LastTouched.getTime());
             if(_stale > this.Expiration){
                 session.Enabled = false;
             }
