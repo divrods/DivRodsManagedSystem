@@ -8,7 +8,7 @@ router.post('/', function(req, res, next) {
         console.log(req.body);
         request.post(
             "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
-            JSON.stringify(req.body),
+            req.body,
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var jsonresp = JSON.parse(response.body);
