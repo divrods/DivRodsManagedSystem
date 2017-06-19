@@ -10,7 +10,7 @@ router.post('/', function(req, res, next) {
         console.log(req.body);
         console.log(JSON.parse(req.body));
         request.post(
-            "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
+            "ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
             JSON.parse(req.body),
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
