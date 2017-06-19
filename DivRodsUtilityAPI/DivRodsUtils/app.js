@@ -72,8 +72,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-locate.use(bodyParser.raw());
-
 app.use(DeviceSessionManager);
 
 app.use('/', index),

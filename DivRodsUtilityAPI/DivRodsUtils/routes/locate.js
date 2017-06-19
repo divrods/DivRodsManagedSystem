@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+router.use(bodyParser.raw());
 var async = require('async'), fs = require('fs'), request = require('request');
 
 //Just passing a request through to the tracking API and responding with a small packet
@@ -9,7 +10,7 @@ router.post('/', function(req, res, next) {
         var jsonbody = JSON.parse(req.body);
         request.post(
             "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
-            jsonbody,
+            req.body,
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var jsonresp = JSON.parse(response.body);
