@@ -8,7 +8,7 @@ var async = require('async'), fs = require('fs'), request = require('request');
 router.post('/', function(req, res, next) {
     if(req.body && req.query.deviceid){
         console.log(req.body);
-        var jsonbody = JSON.parse(req.body);
+        console.log(JSON.parse(req.body));
         request.post(
             "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
             req.body,
