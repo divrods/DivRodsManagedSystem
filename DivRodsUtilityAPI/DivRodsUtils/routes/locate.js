@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
-router.use(bodyParser.raw());
+//router.use(bodyParser.raw());
 var async = require('async'), fs = require('fs'), request = require('request');
 
 //Just passing a request through to the tracking API and responding with a small packet
