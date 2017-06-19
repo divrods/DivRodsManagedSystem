@@ -10,13 +10,15 @@ class DeviceSession {
         this.SessionID = uuidV4();
         this.Opened = timestamp;
         this.LastTouched = timestamp;
-        this.Closed = null; //why?
+        this.Closed = {}; //why?
         this.BaseRuleSet = {};
         this.RuleSet = {};
         this.PrefHistory = {};
         this.Location = "0";
         this.CurrentPath = {};
+        this.LocHistory = [];
         this.Enabled = true;
+        this.Status = "Normal";
         console.log("Initialized device Session...");
     }
     //submit a record of a session of usage
@@ -34,13 +36,24 @@ class DeviceSession {
     _submit_pref(pref, timestamp){
 
     }
+    _close(reason, timestamp){
+        this.Enabled = false;
+        this.Closed = {"reason":reason, "time": timestamp};
+    }
 };
 
 class SessionDictionary {
-    constructor(expiration){
+    constructor(expiration, cron){
         this.Expiration = expiration;
         this.Sessions = [];
+        this.cronfreq = cron;
         console.log("Initialized session dictionary...");
+        this._start();
+    }
+    _start(){
+        this.cron = new CronJob(this.cronfreq, function() {
+            this._check_and_clear_expirations();
+        }, null, true, this.timezone);
     }
     _check_and_clear_expirations(){
         _now = Date.now().getTime();
@@ -61,9 +74,12 @@ class SessionDictionary {
         var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
         winston.log('info', logstring);
     }
-    _touch(reqID){
+    _touch(reqID, status = null){
         var found = _.find(this.Sessions, {DeviceID:reqID});
         if(found){
+            if(status){
+                found.Status = status;
+            }
             found.LastTouched = Date.now();
         }
         else{
@@ -82,7 +98,8 @@ class SessionDictionary {
                 "Location": session.Location,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "Current_Path": session.CurrentPath
+                "Current_Path": session.CurrentPath,
+                "Status": session.Status
             }
             out.push(sample);
         });
@@ -91,7 +108,9 @@ class SessionDictionary {
     _place(deviceid, location){
         var found = _.find(this.Sessions, {DeviceID:deviceid});
         if(found){
+            _now = Date.now().getTime();
             found.Location = location;
+            found.LocHistory.push({"loc":location, "time":_now});
         }
     }
     _update_path(deviceid, path){

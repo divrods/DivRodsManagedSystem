@@ -32,7 +32,7 @@ onboard = require('./routes/onboard');
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
-_SessionMgr = new persist.SessionDictionary(45000);
+_SessionMgr = new persist.SessionDictionary(45000, '* 1 * * * *');
 _ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1,3,5', nconf.get('timezone'));
 _ArtFilter._refresh();
 app.set('_DeviceSessions', _SessionMgr);
@@ -41,12 +41,15 @@ app.set('_ArtFilter', _ArtFilter);
 var DeviceSessionManager = function (req, res, next) {
   //TODO basic auth scheme for filtering known MACs
   if(req.query.deviceid){
-    _SessionMgr._touch(req.query.deviceid);
+    if(req.query.status){
+      _SessionMgr._touch(req.query.deviceid, req.query.status);
+    }else{
+      _SessionMgr._touch(req.query.deviceid);
+    }
   }
   next()
 }
 
-//TODO move this out
 particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
   function(data){
     nconf.set('particle_token', data.body.access_token);
