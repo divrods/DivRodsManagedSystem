@@ -3,7 +3,7 @@ var router = express.Router();
 var async = require('async'), fs = require('fs'), request = require('request');
 
 //Just passing a request through to the tracking API and responding with a small packet
-router.get('/', function(req, res, next) {
+router.post('/', function(req, res, next) {
     if(req.body && req.query.deviceid){
         console.log(req.body);
         request.post(
