@@ -40,6 +40,7 @@ router.post('/', function(req, res, next) {
         );
     }
     else{
+        console.log("Empty post...");
         res.status(200).send("Please enclose a valid device id and wifi fingerprint.");
     }
 });
