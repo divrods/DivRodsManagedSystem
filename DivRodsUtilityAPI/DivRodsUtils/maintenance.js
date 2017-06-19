@@ -1,20 +1,19 @@
-var CronJob = require('node-cron').CronJob, request = require('request');
+var CronJob = require('cron').CronJob, request = require('request');
 
 class ArtworkFilter {
-    constructor(_host, _freq, _tz){
+    constructor(_host, _freq){
         this.host = _host;
         this.cronfreq = _freq;
         this.currently_up = {};
         this.broken_rules = 0;
-        this.timezone = _tz;   
         this.validworks = {};
-    }
-    _start(){
         this.cron = new CronJob(this.cronfreq, function() {
             this._refresh();
-        }, null, true, this.timezone);
+        }, null, true, _Timezone);
+        this.cron.start();
+        this._refresh();
     }
-    _refresh(cb){
+    _refresh(){
         var validworks = {};
         var works = 0;
         var _self = this;
@@ -29,7 +28,6 @@ class ArtworkFilter {
                             //Something
                             validworks[element["_id"]] = {"title": element["_source"]["title"], "room": element["_source"]["room"]};
                         }
-                        console.log(element["_source"]["title"]);
                         works++;
                         if(works == _resp.hits.hits.length){
                             _self.validworks = validworks;

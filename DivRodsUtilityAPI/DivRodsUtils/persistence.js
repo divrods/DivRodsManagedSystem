@@ -1,5 +1,6 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2');
+var CronJob = require('cron').CronJob;
 
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
@@ -43,17 +44,15 @@ class DeviceSession {
 };
 
 class SessionDictionary {
-    constructor(expiration, cron){
-        this.Expiration = expiration;
+    constructor(_exp, _freq){
+        this.Expiration = _exp;
         this.Sessions = [];
-        this.cronfreq = cron;
+        this.cronfreq = _freq;
         console.log("Initialized session dictionary...");
-        this._start();
-    }
-    _start(){
         this.cron = new CronJob(this.cronfreq, function() {
             this._check_and_clear_expirations();
-        }, null, true, this.timezone);
+        }, null, true, _Timezone);
+        this.cron.start();
     }
     _check_and_clear_expirations(){
         _now = Date.now().getTime();

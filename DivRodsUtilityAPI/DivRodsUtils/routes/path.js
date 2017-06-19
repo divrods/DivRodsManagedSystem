@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston'), request = require('request'), nconf = require('nconf');
 
+black_list = [];
 base_map = {
     "205":{"loc": [1013,1803], "edges":{"220":1, "206":1}},
     "206":{"loc": [1140,1812], "edges":{"205":1, "217":1}},
@@ -55,7 +56,6 @@ _prune_map(function(error){
     }else{
         winston.log('error', error);
     }
-
 });
 
 //GET shortest path between two galleries
@@ -98,11 +98,67 @@ router.get('/', function(req, res, next) {
 router.get('/prune', function(req, res, next){
     _prune_map(function(error){
         if(!error){
-                    res.status(200).send(active_map);
+            res.status(200).send(active_map);
         }
         else res.status(404).send(error);
     });
 });
+
+//Close a gallery- noticed a gallery is closed for construction?
+//Close it here. It updates the filter and triggers a prune.
+router.get('/close', function(req,res,next){
+    if(req.query.galleries){
+        var gals = req.query.galleries.split(',');
+        for(var gallery in gals){
+            var index = black_list.indexOf(gals[gallery]);
+            if(index == -1){
+                black_list.push(gals[gallery]);
+            }
+        }
+        _prune_map(function(error){
+            if(!error){
+                console.log(black_list);
+                res.status(200).send("Closed galleries. New map:" + JSON.stringify(active_map));
+            }
+            else res.status(404).send(error);
+        });
+    }else{
+        res.status(200).send("Please enclose a valid CSL of galleries.");
+    }
+});
+
+//Close a gallery- noticed a gallery is closed for construction?
+//Close it here. It updates the filter and triggers a prune.
+router.get('/open', function(req,res,next){
+    if(req.query.galleries){
+        var gals = req.query.galleries.split(',');
+        for(var gallery in gals){
+            var index = black_list.indexOf(gals[gallery]);
+            if(index != -1){
+                black_list.splice(index, 1);
+            }
+        }
+        _prune_map(function(error){
+            if(!error){
+                console.log(black_list);
+                res.status(200).send("Opened galleries. New map:" + JSON.stringify(active_map));
+            }
+            else res.status(404).send(error);
+        });
+    }else{
+        res.status(200).send("Please enclose a valid CSL of galleries.");
+    }
+});
+
+    router.get('/open/all', function(req,res,next){
+        black_list = [];
+        _prune_map(function(error){
+            if(!error){
+                res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(active_map));
+            }
+            else res.status(404).send(error);
+        });
+    });
 
 function get_shortest_path(start, end, weighted_graph){
     //Calculate the shortest path for a directed weighted graph.
@@ -143,7 +199,6 @@ function get_shortest_path(start, end, weighted_graph){
         delete nodes_to_visit[current];
         visited_nodes[current] = current;
         edges = {};
-        console.log(current);
         if(weighted_graph[current]["edges"]){
             edges = weighted_graph[current]["edges"];
         }
@@ -180,7 +235,6 @@ function _deconstruct_path(tentative_parents, end){
         path.push(cursor);
         cursor = tentative_parents[cursor];
     }
-    console.log(path.reverse());
     _map = {};
     _allsteps = [];
     
@@ -205,10 +259,13 @@ function _prune_map(cb){
             "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/locations?group=mia2f",
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    //loop through hits from collection, filter for artids and isondisplay or whatever
+                    //loop through mapped galleries, seeing if we have an entry for them
                     var _resp = JSON.parse(response.body);
                     _resp.locations.forEach(function(element) {
                         _name = element.slice( 1 );
+                        if(black_list.indexOf(_name) != -1){
+                            return;
+                        }
                         corresponding = base_map[_name];
                         if(corresponding){
                             pruned[_name] = corresponding;

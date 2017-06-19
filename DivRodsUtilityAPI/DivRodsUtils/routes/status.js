@@ -6,6 +6,7 @@ var async = require('async'), fs = require('fs');
 router.get('/overview', function(req, res, next) {
     var session_report = req.app.get('_DeviceSessions')._overview();
     res.render('status', { title: 'Session Overview', sessions: session_report, message: "Current Sessions (Active and Inactive):" })
+    //TODO: serve list of closed galleries and open ones
 });
 
 module.exports = router;
