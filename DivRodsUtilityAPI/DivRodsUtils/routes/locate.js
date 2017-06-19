@@ -5,10 +5,10 @@ var async = require('async'), fs = require('fs'), request = require('request');
 //Just passing a request through to the tracking API and responding with a small packet
 router.post('/', function(req, res, next) {
     if(req.body && req.query.deviceid){
-        console.log(req);
+        console.log(req.body);
         request.post(
             FINDhost,
-            req.body,
+            JSON.stringify(req.body),
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var jsonresp = JSON.parse(response.body);
