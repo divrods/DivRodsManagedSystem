@@ -5,7 +5,7 @@ var async = require('async'), fs = require('fs'), request = require('request');
 //Just passing a request through to the tracking API and responding with a small packet
 router.post('/', function(req, res, next) {
     if(req.body && req.query.deviceid){
-        console.log(req.body);
+        console.log(req);
         request.post(
             FINDhost,
             req.body,
@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
                     res.status(200).send(String(devicelocation));
                 }
                 else{
-                    res.status(200).send("FIND problem.");
+                    res.status(200).send("");
                 }
             }
         );
