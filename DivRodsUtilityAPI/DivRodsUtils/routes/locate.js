@@ -28,6 +28,8 @@ router.post('/', function(req, res, next) {
                     res.status(200).send(String(devicelocation));
                 }
                 else{
+                    console.log(error);
+                    console.log(body);
                     res.status(200).send("");
                 }
             }
