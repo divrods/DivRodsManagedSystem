@@ -49,12 +49,14 @@ class SessionDictionary {
         this.Sessions = [];
         this.cronfreq = _freq;
         console.log("Initialized session dictionary...");
+        var self = this;
         this.cron = new CronJob(this.cronfreq, function() {
             this._check_and_clear_expirations();
-        }, null, true, _Timezone);
+        }, null, true, _Timezone, self);
         this.cron.start();
         this._check_and_clear_expirations();
     }
+
     _check_and_clear_expirations(){
         var _now = Date.now();
         for(session in this.Sessions){
