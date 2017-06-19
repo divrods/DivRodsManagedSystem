@@ -15,6 +15,7 @@ router.post('/', function(req, res, next) {
                     //could do some massaging here
                     var devicelocation = jsonresp["location"];
                     if(devicelocation){
+                        console.log("Device location from FIND: ");
                         console.log(devicelocation);
                     }
                     else{
@@ -24,16 +25,16 @@ router.post('/', function(req, res, next) {
                     if(req.query.deviceid){
                         req.app.get('_DeviceSessions')._place(req.query.deviceid, devicelocation);
                     }
-                    res.status(200).send(str(devicelocation));
+                    res.status(200).send(String(devicelocation));
                 }
                 else{
-                    res.status(422).send("Error returned from FIND. Status code:" + response.statusCode + "Error:" + error);
+                    res.status(200).send("FIND problem.");
                 }
             }
         );
     }
     else{
-        res.status(404).send("Please enclose a valid device id and wifi fingerprint.");
+        res.status(200).send("Please enclose a valid device id and wifi fingerprint.");
     }
 });
 
