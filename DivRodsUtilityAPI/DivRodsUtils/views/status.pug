@@ -14,9 +14,7 @@ block content
             br
             span= "Began: " + element.Started
             br
-            span= "Path Object: (" + element.Current_Path.steps + ")"
-                each step in element.Current_Path.journey
-                    p= "Room " + step.room + ", at " + step.coords
+            span= "Path Object: (" + element.Current_Path + ")"
         br
         br
     else
