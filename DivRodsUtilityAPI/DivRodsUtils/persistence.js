@@ -59,7 +59,7 @@ class SessionDictionary {
 
     _check_and_clear_expirations(){
         var _now = Date.now();
-        for(session in this.Sessions){
+        for(var session in this.Sessions){
             var _stale = Math.abs(_now - session.LastTouched.getTime());
             if(_stale > this.Expiration){
                 session.Enabled = false;
