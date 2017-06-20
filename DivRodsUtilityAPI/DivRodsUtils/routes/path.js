@@ -79,8 +79,6 @@ router.get('/', function(req, res, next) {
             if(req.query.deviceid){
                 req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
             }
-            //var _payload = _compress_path(_path);
-            //console.log(_payload);
             res.status(200).send(payload);
         }
         else{
