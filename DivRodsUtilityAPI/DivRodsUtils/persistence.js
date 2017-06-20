@@ -59,7 +59,7 @@ class SessionDictionary {
 
     _check_and_clear_expirations(){
         var _now = Date.now();
-        for(session in this.Sessions){
+        for(var session in this.Sessions){
             var _stale = Math.abs(_now - session.LastTouched.getTime());
             if(_stale > this.Expiration){
                 session.Enabled = false;
@@ -100,7 +100,7 @@ class SessionDictionary {
                 "Location": session.Location,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "Current_Path": session.CurrentPath,
+                "Current_Path": String(session.CurrentPath),
                 "Status": session.Status
             }
             out.push(sample);

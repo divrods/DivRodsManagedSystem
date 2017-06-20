@@ -27,7 +27,8 @@ generate = require('./routes/generate'),
 setup = require('./routes/setup'),
 dkpath = require('./routes/path'),
 status = require('./routes/status'),
-onboard = require('./routes/onboard');
+onboard = require('./routes/onboard'),
+locate = require('./routes/locate');
 
 //Guess who forgets this? Me.
 //Start command on win: set DEBUG=myapp:* & npm start
@@ -66,6 +67,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
+//app.use(bodyParser.raw(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -79,7 +81,8 @@ app.use('/generate', generate),
 app.use('/setup', setup),
 app.use('/onboard', onboard),
 app.use('/path', dkpath),
-app.use('/status', status);
+app.use('/status', status),
+app.use('/locate', locate);
 
 var _un = nconf.get('defaultuser');
 app.use(basicAuth({
