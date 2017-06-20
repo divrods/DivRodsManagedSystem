@@ -61,9 +61,9 @@ _prune_map(function(error){
 
 //"6.g255:100,100."
 function _compress_path(path_obj){
-    var out = path_obj["steps"] + ".";
+    var out = path_obj["steps"] + "~";
     for(var i=0; i< path_obj["journey"].length; i++){
-        out = out + path_obj["journey"][i]["room"] + ":" + path_obj["journey"][i]["coords"][0] + "," + path_obj["journey"][i]["coords"][1] + ".";
+        out = out + path_obj["journey"][i]["room"] + ":" + path_obj["journey"][i]["coords"][0] + "," + path_obj["journey"][i]["coords"][1] + "~";
     }
     return out;
 }
@@ -79,7 +79,9 @@ router.get('/', function(req, res, next) {
             if(req.query.deviceid){
                 req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
             }
-            res.status(200).send(_compress_path(_path));
+            //var _payload = _compress_path(_path);
+            //console.log(_payload);
+            res.status(200).send(payload);
         }
         else{
             res.status(200).send("");

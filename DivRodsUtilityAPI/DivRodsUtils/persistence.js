@@ -53,8 +53,8 @@ class SessionDictionary {
         this.cron = new CronJob(this.cronfreq, function() {
             this._check_and_clear_expirations();
         }, null, true, _Timezone, self);
-        this.cron.start();
-        this._check_and_clear_expirations();
+        //this.cron.start(); sometimes this thing goes nuts. switch to another lib.
+        //this._check_and_clear_expirations();
     }
 
     _check_and_clear_expirations(){

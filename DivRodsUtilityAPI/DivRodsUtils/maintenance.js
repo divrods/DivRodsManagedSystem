@@ -8,10 +8,10 @@ class ArtworkFilter {
         this.broken_rules = 0;
         this.validworks = {};
         var self = this;
-        this.cron = new CronJob(this.cronfreq, function() {
-            this._refresh();
-        }, null, true, _Timezone, self);
-        this.cron.start();
+        //this.cron = new CronJob(this.cronfreq, function() {
+        //    this._refresh();
+        //}, null, true, _Timezone, self);
+        //this.cron.start();
         this._refresh();
     }
     _refresh(){
