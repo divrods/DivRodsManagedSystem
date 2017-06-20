@@ -100,7 +100,7 @@ class SessionDictionary {
                 "Location": session.Location,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "Current_Path": String(session.CurrentPath),
+                "Current_Path": JSON.stringify(session.CurrentPath),
                 "Status": session.Status
             }
             out.push(sample);
