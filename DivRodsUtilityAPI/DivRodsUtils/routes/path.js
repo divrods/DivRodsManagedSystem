@@ -58,6 +58,15 @@ _prune_map(function(error){
     }
 });
 
+//"6.g255:100,100."
+function _compress_path(path_obj){
+    var out = path_obj["steps"] + ".";
+    for(var i=0; i< path_obj["journey"].length; i++){
+        out = out + path_obj["journey"][i]["room"] + ":" + path_obj["journey"][i]["coords"][0] + "," + path_obj["journey"][i]["coords"][1] + ".";
+    }
+    return out;
+}
+
 //GET shortest path between two galleries
 router.get('/', function(req, res, next) {
     _start = req.query.start;
@@ -69,13 +78,14 @@ router.get('/', function(req, res, next) {
             if(req.query.deviceid){
                 req.app.get('_DeviceSessions')._update_path(req.query.deviceid, _path);
             }
-            res.status(200).send(payload);
+            res.status(200).send(_compress_path(_path));
         }
         else{
             res.status(200).send("");
         }
         
     }
+
     //If I a device experiences an outage during a user's visit, this is one recovery step.
     //Assuming the device went down without completing the session, it would need to retrieve the latest path
     //and get back on track.
