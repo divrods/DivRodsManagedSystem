@@ -83,7 +83,7 @@ router.get('/', function(req, res, next) {
             res.status(200).send(payload);
         }
         else{
-            res.status(200).send("");
+            res.status(200).send("0");
         }
         
     }
