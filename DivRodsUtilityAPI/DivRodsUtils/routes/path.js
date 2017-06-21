@@ -46,7 +46,8 @@ base_map = {
     "277":{"loc": [518,373], "edges":{"280":1, "278":1}},
     "278":{"loc": [434,341], "edges":{"277":1}},
     "280":{"loc": [623,503], "edges":{"264":1, "275":1, "277":1}},
-    "999":{"loc": [200,200], "edges":{"250":1, "262":1}} //spoofed location at my studio
+    "998":{"loc": [200,200], "edges":{"277":1, "999":1}}, //spoofed location at my apartment
+    "999":{"loc": [200,200], "edges":{"250":1, "998":1}} //spoofed location at my studio
 };
 
 active_map = {};
@@ -87,7 +88,7 @@ router.get('/', function(req, res, next) {
         
     }
 
-    //If I a device experiences an outage during a user's visit, this is one recovery step.
+    //If a device experiences an outage during a user's visit, this is one recovery step.
     //Assuming the device went down without completing the session, it would need to retrieve the latest path
     //and get back on track.
     else if(!_start & !_end & req.query.deviceid){
@@ -98,7 +99,8 @@ router.get('/', function(req, res, next) {
         else{
             var logstring = 'Device with id ' + req.query.deviceid + ' made a default path retrieval attempt but no session was present.';
             winston.log('info', logstring);
-            res.status(200).send("No session available for this device.");
+            _path = get_shortest_path("254", "275", base_map);
+            res.status(200).send(JSON.stringify(_path));
         }
     }
     else{
