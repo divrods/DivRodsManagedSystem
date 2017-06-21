@@ -212,8 +212,11 @@ function get_shortest_path(start, end, weighted_graph){
         delete nodes_to_visit[current];
         visited_nodes[current] = current;
         edges = {};
-        if(weighted_graph[current]["edges"]){
-            edges = weighted_graph[current]["edges"];
+        if(weighted_graph[current]){
+            if(weighted_graph[current]["edges"]){
+                edges = weighted_graph[current]["edges"];
+            }
+            else break;
         }
         else{
             break;
