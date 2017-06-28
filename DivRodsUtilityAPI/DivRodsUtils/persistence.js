@@ -23,12 +23,13 @@ class DeviceSession {
         var prefauth = new Buffer(_PrefAuth).toString('base64');
         
         var options = {
-            url: _PrefHost + "/api/rest/v1.0/recommendations",
+            url: _PrefHost + "recommendations",
             headers: {
                 "Content-Type":"application/json",
                 "accept":"application/json",
                 "Authorization":"Basic " + prefauth
-            }
+            },
+            json: true
         };
         //In this GET: get default ruleset from pref engine
         request.get(
@@ -36,7 +37,7 @@ class DeviceSession {
             function (error, response, body) {
                 console.log("Send request to pref engine...");
                 if (!error && response.statusCode == 200) {
-                    var jsonresp = JSON.parse(response.body);
+                    var jsonresp = response.body;
                     var report = jsonresp.results[0]["ant"];
                     console.log(report);
                     console.log("Initialized device Session...");
