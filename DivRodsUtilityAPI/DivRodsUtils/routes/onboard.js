@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs');
-var nconf = require('nconf');
 current_device = {"Name":"","ID":""};
 
 //GET push an assembled onboarding config to the queued device
@@ -55,7 +54,7 @@ function wipe(){
 }
 
 function callParticle(_pcallobj, _res){
-    var fnPr = particle.callFunction({ deviceId: current_device.ID, name: _pcallobj.func, argument: _pcallobj.arg, auth: nconf.get('particle_token') });
+    var fnPr = particle.callFunction({ deviceId: current_device.ID, name: _pcallobj.func, argument: _pcallobj.arg, auth: _ParticleToken });
         fnPr.then(
             function (data) {
                 console.log('Function called succesfully: ', data.body.return_value);

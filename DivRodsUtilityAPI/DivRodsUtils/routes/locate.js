@@ -8,7 +8,7 @@ router.post('/', function(req, res, next) {
     if(req.body && req.query.deviceid){
         //console.log(jstr);
         var options = {
-            url: "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/track",
+            url: _FINDhost + "/track",
             headers: {
                 "content-type":"application/json",
                 "accept":"application/json",

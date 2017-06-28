@@ -12,14 +12,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var nconf = require('nconf');
 var basicAuth = require('express-basic-auth');
 var Particle = require('particle-api-js');
 var winston = require('winston');
 particle = new Particle();
-
-nconf.file('config.json');
-nconf.set('particle_token', '');
 
 var index = require('./routes/index'),
 users = require('./routes/users'),
@@ -36,11 +32,13 @@ locate = require('./routes/locate');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 
-_Timezone = nconf.get('timezone');
-_PrefHost = nconf.get('prefhost');
-_PrefAuth = nconf.get('prefauth');
+_ParticleToken = 0;
+_Timezone = 'America/Chicago';
+_PrefHost = process.env.pref_host;
+_PrefAuth = process.env.pref_auth;
+_FINDhost = process.env.find_host;
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
-_ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1,3,5');
+_ArtFilter = new maintain.ArtworkFilter("https://search.artsmia.org/room:G3*1", '* 30 11 * * 1,3,5'); //process.env.collection_host
 
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);
@@ -57,16 +55,15 @@ var DeviceSessionManager = function (req, res, next) {
   next()
 }
 
-particle.login({username: nconf.get('email'), password: nconf.get('pass')}).then(
+particle.login({username: process.env.photon_email, password: process.env.photon_pw}).then(
   function(data){
-    nconf.set('particle_token', data.body.access_token);
+    _ParticleToken = data.body.access_token;
   },
   function(err) {
     winston.log('error', 'Particle Login failed: ' + err);
   }
 );
 
-FINDhost = nconf.get('trackinghost');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -88,12 +85,6 @@ app.use('/status', status),
 app.use('/goal', goal),
 app.use('/artwork', artwork),
 app.use('/locate', locate);
-
-var _un = nconf.get('defaultuser');
-app.use(basicAuth({
-    users: { _un: nconf.get('defaultpass') }
-}))
-
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

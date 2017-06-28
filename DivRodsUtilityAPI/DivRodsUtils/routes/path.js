@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston'), request = require('request'), nconf = require('nconf');
+var async = require('async'), fs = require('fs'), _ = require('underscore'), winston = require('winston'), request = require('request');
 
 black_list = [];
 base_map = {
