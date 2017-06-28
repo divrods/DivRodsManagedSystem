@@ -20,7 +20,31 @@ class DeviceSession {
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
-        console.log("Initialized device Session...");
+        var prefauth = new Buffer(_PrefAuth).toString('base64');
+        
+        var options = {
+            url: _PrefHost + "/api/rest/v1.0/recommendations",
+            headers: {
+                "Content-Type":"application/json",
+                "accept":"application/json",
+                "Authorization":"Basic " + prefauth
+            }
+        };
+        //In this GET: get default ruleset from pref engine
+        request.get(
+            options,
+            function (error, response, body) {
+                console.log("Send request to pref engine...");
+                if (!error && response.statusCode == 200) {
+                    var jsonresp = JSON.parse(response.body);
+                    var report = jsonresp.results[0]["ant"];
+                    console.log(report);
+                    console.log("Initialized device Session...");
+                }else{
+                    console.log(body);
+                }
+            }
+        );
     }
     //submit a record of a session of usage
     _drop_report(){
@@ -50,9 +74,9 @@ class SessionDictionary {
         this.cronfreq = _freq;
         console.log("Initialized session dictionary...");
         var self = this;
-        this.cron = new CronJob(this.cronfreq, function() {
-            this._check_and_clear_expirations();
-        }, null, true, _Timezone, self);
+        //this.cron = new CronJob(this.cronfreq, function() {
+        //    this._check_and_clear_expirations();
+        //}, null, true, _Timezone, self);
         //this.cron.start(); sometimes this thing goes nuts. switch to another lib.
         //this._check_and_clear_expirations();
     }

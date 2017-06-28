@@ -28,6 +28,8 @@ setup = require('./routes/setup'),
 dkpath = require('./routes/path'),
 status = require('./routes/status'),
 onboard = require('./routes/onboard'),
+goal = require('./routes/goal'),
+artwork = require('./routes/artwork'),
 locate = require('./routes/locate');
 
 //Guess who forgets this? Me.
@@ -35,6 +37,8 @@ locate = require('./routes/locate');
 var app = express();
 
 _Timezone = nconf.get('timezone');
+_PrefHost = nconf.get('prefhost');
+_PrefAuth = nconf.get('prefauth');
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
 _ArtFilter = new maintain.ArtworkFilter(nconf.get('collectionhost'), '* 30 11 * * 1,3,5');
 
@@ -67,7 +71,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-//app.use(bodyParser.raw(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -82,6 +85,8 @@ app.use('/setup', setup),
 app.use('/onboard', onboard),
 app.use('/path', dkpath),
 app.use('/status', status),
+app.use('/goal', goal),
+app.use('/artwork', artwork),
 app.use('/locate', locate);
 
 var _un = nconf.get('defaultuser');
