@@ -1,6 +1,6 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
-var CronJob = require('cron').CronJob;
+var CronJob = require('cron').CronJob, moment = require('moment');
 
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
@@ -135,7 +135,7 @@ class SessionDictionary {
     _place(deviceid, location){
         var found = _.find(this.Sessions, {DeviceID:deviceid});
         if(found){
-            _now = Date.now().getTime();
+            var _now = Date.now();
             found.Location = location;
             found.LocHistory.push({"loc":location, "time":_now});
         }
