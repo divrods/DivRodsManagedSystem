@@ -108,7 +108,7 @@ router.get('/', function(req, res, next) {
     }
 });
 
-    router.get('/next',function(){
+    router.get('/next',function(req, res, next){
         if(active_map){
             var keys = Object.keys(active_map);
             var target = keys[keys.length * Math.random() << 0];
