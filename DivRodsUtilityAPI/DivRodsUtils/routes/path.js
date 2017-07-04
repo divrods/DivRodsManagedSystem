@@ -108,6 +108,17 @@ router.get('/', function(req, res, next) {
     }
 });
 
+    router.get('/next',function(){
+        if(active_map){
+            var keys = Object.keys(active_map);
+            var target = keys[keys.length * Math.random() << 0];
+            res.status(200).send(target);
+        }
+        else{
+            res.status(200).send("275");
+        }
+    });
+
 router.get('/prune', function(req, res, next){
     _prune_map(function(error){
         if(!error){
