@@ -20,32 +20,32 @@ class DeviceSession {
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
-        var prefauth = new Buffer(_PrefAuth).toString('base64');
+        //var prefauth = new Buffer(_PrefAuth).toString('base64');
         
-        var options = {
-            url: _PrefHost + "recommendations",
-            headers: {
-                "Content-Type":"application/json",
-                "accept":"application/json",
-                "Authorization":"Basic " + prefauth
-            },
-            json: true
-        };
+        // var options = {
+        //     url: _PrefHost + "recommendations",
+        //     headers: {
+        //         "Content-Type":"application/json",
+        //         "accept":"application/json",
+        //         "Authorization":"Basic " + prefauth
+        //     },
+        //     json: true
+        // };
         //In this GET: get default ruleset from pref engine
-        request.get(
-            options,
-            function (error, response, body) {
-                console.log("Send request to pref engine...");
-                if (!error && response.statusCode == 200) {
-                    var jsonresp = response.body;
-                    var report = jsonresp.results[0]["ant"];
-                    console.log(report);
-                    console.log("Initialized device Session...");
-                }else{
-                    console.log(body);
-                }
-            }
-        );
+        // request.get(
+        //     options,
+        //     function (error, response, body) {
+        //         console.log("Send request to pref engine...");
+        //         if (!error && response.statusCode == 200) {
+        //             var jsonresp = response.body;
+        //             var report = jsonresp.results[0]["ant"];
+        //             console.log(report);
+        //             console.log("Initialized device Session...");
+        //         }else{
+        //             console.log(body);
+        //         }
+        //     }
+        // );
     }
     //submit a record of a session of usage
     _drop_report(){
