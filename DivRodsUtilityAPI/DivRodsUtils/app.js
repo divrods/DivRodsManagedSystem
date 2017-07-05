@@ -36,7 +36,7 @@ _ParticleToken = 0;
 _Timezone = 'America/Chicago';
 _PrefHost = process.env.pref_host;
 _PrefAuth = process.env.pref_auth;
-_FINDhost = process.env.find_host;
+_FINDhost = "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003";
 
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
 _ArtFilter = new maintain.ArtworkFilter("https://search.artsmia.org/room:G3*1", '* 30 11 * * 1,3,5'); //process.env.collection_host
@@ -56,7 +56,7 @@ var DeviceSessionManager = function (req, res, next) {
   next()
 }
 
-particle.login({username: process.env.photon_email, password: process.env.photon_pw}).then(
+particle.login({username: process.env.photonemail, password: process.env.photonpw}).then(
   function(data){
     _ParticleToken = data.body.access_token;
   },
