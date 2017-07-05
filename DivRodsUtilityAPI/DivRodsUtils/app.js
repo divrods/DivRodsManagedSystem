@@ -37,6 +37,7 @@ _Timezone = 'America/Chicago';
 _PrefHost = process.env.pref_host;
 _PrefAuth = process.env.pref_auth;
 _FINDhost = process.env.find_host;
+
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
 _ArtFilter = new maintain.ArtworkFilter("https://search.artsmia.org/room:G3*1", '* 30 11 * * 1,3,5'); //process.env.collection_host
 
