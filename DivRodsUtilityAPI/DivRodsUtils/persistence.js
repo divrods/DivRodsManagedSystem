@@ -117,6 +117,12 @@ class SessionDictionary {
         console.log("Touched: ");
         console.log(reqID);
     }
+    _get(reqID){
+        var found = _.find(this.Sessions, {DeviceID:reqID});
+        if(found){
+            return found;
+        }
+    }
     _overview(){
         var out = [];
         this.Sessions.forEach(function(session){

@@ -110,6 +110,12 @@ router.get('/', function(req, res, next) {
 
     router.get('/next',function(req, res, next){
         if(active_map){
+            if(req.query.location){
+                //TODO pull from galleries outside immediate neighbors of location
+            }
+            else if(req.device_session.Location){
+                //TODO pull from galleries outside immediate neighbors of location
+            }
             var keys = Object.keys(active_map);
             var target = keys[keys.length * Math.random() << 0];
             res.status(200).send(target);

@@ -52,6 +52,7 @@ var DeviceSessionManager = function (req, res, next) {
     }else{
       _SessionMgr._touch(req.query.deviceid);
     }
+    req.device_session = _SessionMgr._get(req.query.deviceid);
   }
   next()
 }
