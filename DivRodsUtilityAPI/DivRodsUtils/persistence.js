@@ -14,9 +14,10 @@ class DeviceSession {
         this.Closed = {}; //why?
         this.BaseRuleSet = {};
         this.RuleSet = {};
-        this.PrefHistory = {};
+        this.PrefHistory = [];
         this.Location = "0";
         this.CurrentPath = {};
+        this.CurrentPrefTarget = "0";
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
@@ -59,8 +60,13 @@ class DeviceSession {
         //queue gallery for sending to device
     }
     //submit a user's expressed preference about an artwork
-    _submit_pref(pref, timestamp){
-
+    _submit_pref(pref){
+        //log the preference no matter what
+        pref["timestamp"] = moment.now();
+        this.PrefHistory.push(pref);
+        //if(pref["artid"] == CurrentPrefTarget){
+            //we scanned the target. time to crank out a new objective for the user.
+        //}
     }
     _close(reason, timestamp){
         this.Enabled = false;
@@ -170,11 +176,11 @@ class PrefEngineWrapper{
     _turn_in_pref(cb){
         //send a single preference to get a set of consequents.
         request.get(
-        this.Host,
-        function (error, response, body) {
-            cb();
-        }
-    );
+            this.Host,
+            function (error, response, body) {
+                cb();
+            }
+        );
     }
 }
 
