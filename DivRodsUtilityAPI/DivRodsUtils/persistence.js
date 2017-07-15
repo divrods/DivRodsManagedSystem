@@ -2,6 +2,18 @@ const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
 var CronJob = require('cron').CronJob, moment = require('moment');
 
+var testdata2f = {
+    "18424":{"color":"purple", "title":"Sandy", "room":"275", "artid":"18424"},
+    "40428":{"color":"yellow", "title":"Table Lamp", "room":"275", "artid":"40428"},
+    "180":{"color":"red", "title":"Rendezvous", "room":"259", "artid":"180"},
+    "2175":{"color":"blue", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
+    "113158":{"color":"green", "title":"Sunflowers II", "room":"255", "artid":"113158"},
+    "5890":{"color":"purple", "title":"Moccasins", "room":"255", "artid":"5890"},
+    "1224":{"color":"yellow", "title":"Seated Girl", "room":"263", "artid":"1224"},
+    "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263", "artid":"43576"},
+    "40975":{"color":"blue", "title":"Tesla Coil", "room":"264", "artid":"40975"},
+    "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
+};
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
@@ -16,8 +28,10 @@ class DeviceSession {
         this.RuleSet = {};
         this.PrefHistory = [];
         this.Location = "0";
+        this.SetupCode = 1;
         this.CurrentPath = {};
-        this.CurrentPrefTarget = "0";
+        this.InitialPrefTarget = testdata2f["180"];
+        this.CurrentPrefTarget = testdata2f["180"];
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
@@ -64,9 +78,21 @@ class DeviceSession {
         //log the preference no matter what
         pref["timestamp"] = moment.now();
         this.PrefHistory.push(pref);
-        //if(pref["artid"] == CurrentPrefTarget){
+        if(pref["artid"] == this.CurrentPrefTarget["artid"]){
             //we scanned the target. time to crank out a new objective for the user.
-        //}
+            var otherart = Object.keys(testdata2f).filter(function(artid){
+                return artid != pref["artid"] && testdata2f[artid]["room"] != testdata2f[pref["artid"]]["room"];
+            });
+            var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
+            this.CurrentPrefTarget = testdata2f[randomtag];
+            return true;
+        } else {
+            return false;
+        }
+    }
+    _setup(code){
+        //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.
+        this.SetupCode = code;
     }
     _close(reason, timestamp){
         this.Enabled = false;

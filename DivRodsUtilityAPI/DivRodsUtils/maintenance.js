@@ -1,8 +1,8 @@
 var CronJob = require('cron').CronJob, request = require('request');
 
 class ArtworkFilter {
-    constructor(_host, _freq){
-        this.host = _host;
+    constructor(_freq){
+        this.host = _COLLhost2f;
         this.cronfreq = _freq;
         this.currently_up = {};
         this.broken_rules = 0;
@@ -12,7 +12,7 @@ class ArtworkFilter {
         //    this._refresh();
         //}, null, true, _Timezone, self);
         //this.cron.start();
-        this._refresh();
+        //this._refresh();
     }
     _refresh(){
         var validworks = {};

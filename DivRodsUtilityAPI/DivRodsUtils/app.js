@@ -36,10 +36,12 @@ _ParticleToken = 0;
 _Timezone = 'America/Chicago';
 _PrefHost = process.env.pref_host;
 _PrefAuth = process.env.pref_auth;
-_FINDhost = "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003";
+_FINDhost = process.env.tracking_host;
+_COLLhost2f = process.env.collection2f_host;
+_COLLhost3f = process.env.collection3f_host;
 
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
-_ArtFilter = new maintain.ArtworkFilter("https://search.artsmia.org/room:G3*1", '* 30 11 * * 1,3,5'); //process.env.collection_host
+_ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
 
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);

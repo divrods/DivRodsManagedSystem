@@ -16,33 +16,57 @@ var testdata2f = {
     "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264"}
 };
 
+//TODO: get actual non-overlapping values for these.
+var onboardingtags = {
+    "99999999":{"setupcode":1},
+    "99999998":{"setupcode":2}
+}
+
 //POST scanned artwork
-router.get('/', function(req, res, next) {
-    if(req.query.deviceid & req.query.artid & req.query.pref){
-        //TODO lookup session_ID from device id
-        //TODO send 0 or 1 from device and pass thru
-        // var report = prefclient.record_preference(req.query.deviceid, req.query.artid, 1, function(data){
-        //     if(data){
-        //         console.log(data);
-        //         res.send(data);
-        //     }
-        // });
-        res.status(200).send("Got a scanned artwork...");
-    }
+// router.get('/', function(req, res, next) {
+//     if(req.query.deviceid & req.query.artid & req.query.pref){
+//         //TODO lookup session_ID from device id
+//         //TODO send 0 or 1 from device and pass thru
+//         // var report = prefclient.record_preference(req.query.deviceid, req.query.artid, 1, function(data){
+//         //     if(data){
+//         //         console.log(data);
+//         //         res.send(data);
+//         //     }
+//         // });
+//         res.status(200).send("Got a scanned artwork...");
+//     }
+// });
+
+router.get('/default', function(req,res,next){
+    var payload = testdata2f["180"];
+    res.status(200).send(JSON.stringify(payload));
 });
 
 //GET a random new RFID tag to go find. just for testing.
-router.get('/test', function(req,res,next){
-    if(req.query.deviceid && req.query.artid && req.query.pref && testdata2f[req.query.artid]){
-        req.device_session._submit_pref({
-            "artid":req.query.artid,
-            "pref":req.query.pref
-        });
-        var otherart = Object.keys(testdata2f).filter(function(artid){
-            return artid != req.query.artid && testdata2f[artid]["room"] != testdata2f[req.query.artid]["room"];
-        });
-        var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
-        res.status(200).send(JSON.stringify(testdata2f[randomtag]));
+router.get('/', function(req,res,next){
+    if(req.query.deviceid && req.query.artid && req.query.pref){
+        if(testdata2f[req.query.artid]){ //got an art tag
+            var is_target = req.device_session._submit_pref({
+                "artid":req.query.artid,
+                "pref":req.query.pref
+            });
+
+            if(is_target){ //scanned the target tag. great!
+                res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
+            }
+            else { //scanned something else. fine, but dont send a new goal.
+                var payload = {"status":"success"};
+                res.status(200).send(JSON.stringify(payload));
+            }
+        }
+        else if(onboardingtags[req.query.artid]){
+            //TODO: interaction with base ruleset here to get first step. right now just sending id 180.
+            var code = onboardingtags[req.query.artid]["setupcode"];
+            req.device_session._setup(code);
+            var payload = req.device_session["InitialPrefTarget"];
+            payload["setupcode"] = code;
+            res.status(200).send(JSON.stringify(payload));
+        }
     }
     else{
         var payload = testdata2f["180"];
