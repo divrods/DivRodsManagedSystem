@@ -51,15 +51,31 @@ base_map = {
 };
 
 active_map = {};
-
-_prune_map(function(error){
-    if(!error){
-        winston.log('info', JSON.stringify(active_map));
-    }else{
-        winston.log('error', error);
-    }
+_groom_map(base_map, function(){
+    _prune_map(function(error){
+        if(!error){
+            winston.log('info', JSON.stringify(active_map));
+        }else{
+            winston.log('error', error);
+        }
+    });
 });
 
+
+function _groom_map(data, cb){
+    for(var node in Object.keys(data)){
+        node = Object.keys(data)[node]; //lel
+        for(var edge in data[node]["edges"]){
+            var connected = data[edge];
+            if(!connected["edges"].hasOwnProperty(node)){
+                connected["edges"][node] = 1;
+                console.log("Repaired a broken link between node " + node + " and " + edge);
+                //if connected node doesn't mention current node in edges, add it
+            }
+        }
+    }
+    cb();
+}
 //"6.g255:100,100."
 function _compress_path(path_obj){
     var out = path_obj["steps"] + "~";
