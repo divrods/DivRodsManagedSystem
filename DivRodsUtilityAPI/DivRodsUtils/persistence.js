@@ -35,6 +35,10 @@ class DeviceSession {
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
+
+        var randomtag = Object.keys(testdata2f)[Math.floor(Math.random() * Object.keys(testdata2f).length)];
+        this.InitialPrefTarget = testdata2f[randomtag];
+        this.CurrentPrefTarget = testdata2f[randomtag];
         //var prefauth = new Buffer(_PrefAuth).toString('base64');
         
         // var options = {
