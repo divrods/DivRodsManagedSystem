@@ -79,9 +79,7 @@ class DeviceSession {
     }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref){
-        //log the preference no matter what
         pref["timestamp"] = moment.now();
-        this.PrefHistory.push(pref);
         if(pref["artid"] == this.CurrentPrefTarget["artid"]){
             //we scanned the target. time to crank out a new objective for the user.
             var otherart = Object.keys(testdata2f).filter(function(artid){
@@ -89,8 +87,12 @@ class DeviceSession {
             });
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
             this.CurrentPrefTarget = testdata2f[randomtag];
+            pref["target"] = true;
+            this.PrefHistory.push(pref);
             return true;
         } else {
+            pref["target"] = false;
+            this.PrefHistory.push(pref);
             return false;
         }
     }
