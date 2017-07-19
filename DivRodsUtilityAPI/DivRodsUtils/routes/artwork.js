@@ -64,12 +64,12 @@ router.get('/', function(req,res,next){
                 res.status(200).send(JSON.stringify(payload));
             }
         }
-        else if(onboardingtags[req.query.artid]){
+        else if(onboardingtags[req.query.artid] | req.query.artid == 0){
             //TODO: interaction with base ruleset here to get first step. right now just sending id 180.
-            var code = onboardingtags[req.query.artid]["setupcode"];
-            req.device_session._setup(code);
+            //var code = onboardingtags[req.query.artid]["setupcode"];
+            req.device_session._setup(1);
             var payload = req.device_session["InitialPrefTarget"];
-            payload["setupcode"] = code;
+            //payload["setupcode"] = code;
             res.status(200).send(JSON.stringify(payload));
         }
         else { //not one of our tags. could happen.

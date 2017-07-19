@@ -181,7 +181,12 @@ class SessionDictionary {
         if(found){
             var _now = Date.now();
             found.Location = location;
-            found.LocHistory.push({"loc":location, "time":_now});
+            if(found.LocHistory.length < 1){
+                found.LocHistory.push({"loc":location, "time":_now});
+            }
+            else if(found.LocHistory[found.LocHistory.length-1]["loc"] != location){
+                found.LocHistory.push({"loc":location, "time":_now});
+            }
         }
     }
     _update_path(deviceid, path){

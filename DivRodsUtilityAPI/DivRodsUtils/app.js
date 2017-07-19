@@ -37,6 +37,7 @@ _Timezone = 'America/Chicago';
 _PrefHost = process.env.pref_host;
 _PrefAuth = process.env.pref_auth;
 _FINDhost = process.env.tracking_host;
+//_FINDhost = "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003";
 _COLLhost2f = process.env.collection2f_host;
 _COLLhost3f = process.env.collection3f_host;
 
