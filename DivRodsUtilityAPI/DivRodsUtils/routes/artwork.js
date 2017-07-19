@@ -72,6 +72,10 @@ router.get('/', function(req,res,next){
             payload["setupcode"] = code;
             res.status(200).send(JSON.stringify(payload));
         }
+        else { //not one of our tags. could happen.
+            var payload = {"status":"success"};
+            res.status(200).send(JSON.stringify(payload));
+        }
     }
     else{
         var payload = testdata2f["180"];

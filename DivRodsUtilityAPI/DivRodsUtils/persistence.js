@@ -159,16 +159,19 @@ class SessionDictionary {
             return found;
         }
     }
-    _overview(){
+    _overview(pretty){
         var out = [];
         this.Sessions.forEach(function(session){
             var sample = {
                 "ID": session.SessionID,
                 "Location": session.Location,
+                "LocationHistory": session.LocHistory,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "Current_Path": JSON.stringify(session.CurrentPath),
-                "Status": session.Status
+                "CurrentPath": pretty ? JSON.stringify(session.CurrentPath) : session.CurrentPath,
+                "CurrentTarget": session.CurrentPrefTarget["artid"],
+                "Status": session.Status,
+                "ScannedTags": session.PrefHistory
             }
             out.push(sample);
         });

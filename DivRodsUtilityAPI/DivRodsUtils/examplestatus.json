@@ -1,0 +1,91 @@
+[
+    {
+        "ID": "c2343d5a-c609-4edc-93af-8e0aa80e82f4",
+        "Location": "0",
+        "LocationHistory": [],
+        "Awake": true,
+        "Started": "2017-07-19T04:07:59.735Z",
+        "CurrentPath": {
+            "journey": [
+                {
+                    "room": "252",
+                    "coords": [
+                        1021,
+                        1054
+                    ]
+                },
+                {
+                    "room": "255",
+                    "coords": [
+                        1008,
+                        904
+                    ]
+                },
+                {
+                    "room": "261",
+                    "coords": [
+                        1001,
+                        647
+                    ]
+                },
+                {
+                    "room": "262",
+                    "coords": [
+                        854,
+                        634
+                    ]
+                },
+                {
+                    "room": "263",
+                    "coords": [
+                        732,
+                        691
+                    ]
+                }
+            ],
+            "steps": 5
+        },
+        "CurrentTarget": "40975",
+        "Status": "Normal",
+        "ScannedTags": []
+    },
+    {
+        "ID": "c3466135-6c6e-4595-9da5-8d72541f5936",
+        "Location": "0",
+        "LocationHistory": [],
+        "Awake": true,
+        "Started": "2017-07-19T04:08:14.178Z",
+        "CurrentPath": {},
+        "CurrentTarget": "40975",
+        "Status": "Normal",
+        "ScannedTags": [
+            {
+                "artid": "1224",
+                "pref": "1",
+                "timestamp": 1500437332359
+            },
+            {
+                "artid": "180",
+                "pref": "1",
+                "timestamp": 1500437337786
+            }
+        ]
+    },
+    {
+        "ID": "a2419197-0196-48eb-8bca-53d73fa9d7ba",
+        "Location": "0",
+        "LocationHistory": [],
+        "Awake": true,
+        "Started": "2017-07-19T04:09:09.408Z",
+        "CurrentPath": {},
+        "CurrentTarget": "3939",
+        "Status": "Normal",
+        "ScannedTags": [
+            {
+                "artid": "113158",
+                "pref": "1",
+                "timestamp": 1500437349408
+            }
+        ]
+    }
+]
