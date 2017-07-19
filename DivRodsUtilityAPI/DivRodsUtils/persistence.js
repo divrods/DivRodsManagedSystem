@@ -30,14 +30,14 @@ class DeviceSession {
         this.Location = "0";
         this.SetupCode = 1;
         this.CurrentPath = {};
-        this.InitialPrefTarget = testdata2f["180"];
+        //this.InitialPrefTarget = testdata2f["180"];
         this.CurrentPrefTarget = testdata2f["180"];
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
 
         var randomtag = Object.keys(testdata2f)[Math.floor(Math.random() * Object.keys(testdata2f).length)];
-        this.InitialPrefTarget = testdata2f[randomtag];
+        //this.InitialPrefTarget = testdata2f[randomtag];
         this.CurrentPrefTarget = testdata2f[randomtag];
         //var prefauth = new Buffer(_PrefAuth).toString('base64');
         

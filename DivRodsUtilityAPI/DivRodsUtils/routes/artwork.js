@@ -48,6 +48,7 @@ router.get('/default', function(req,res,next){
 });
 
 //GET a random new RFID tag to go find. just for testing.
+//This needs a refactor.
 router.get('/', function(req,res,next){
     if(req.query.deviceid && req.query.artid && req.query.pref){
         if(testdata2f[req.query.artid]){ //got an art tag
@@ -68,7 +69,7 @@ router.get('/', function(req,res,next){
             //TODO: interaction with base ruleset here to get first step. right now just sending id 180.
             //var code = onboardingtags[req.query.artid]["setupcode"];
             req.device_session._setup(1);
-            var payload = req.device_session["InitialPrefTarget"];
+            var payload = req.device_session["CurrentPrefTarget"];
             //payload["setupcode"] = code;
             res.status(200).send(JSON.stringify(payload));
         }
