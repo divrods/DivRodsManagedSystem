@@ -80,21 +80,20 @@ class DeviceSession {
     //submit a user's expressed preference about an artwork
     _submit_pref(pref){
         pref["timestamp"] = moment.now();
-        if(pref["artid"] == this.CurrentPrefTarget["artid"]){
+        var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
+        if(correct){
             //we scanned the target. time to crank out a new objective for the user.
             var otherart = Object.keys(testdata2f).filter(function(artid){
                 return artid != pref["artid"] && testdata2f[artid]["room"] != testdata2f[pref["artid"]]["room"];
             });
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
             this.CurrentPrefTarget = testdata2f[randomtag];
-            pref["target"] = true;
-            this.PrefHistory.push(pref);
-            return true;
+            pref["target"] = correct;
         } else {
-            pref["target"] = false;
-            this.PrefHistory.push(pref);
-            return false;
+            pref["target"] = correct;
         }
+        this.PrefHistory.push(pref);
+        return correct;
     }
     _setup(code){
         //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.
