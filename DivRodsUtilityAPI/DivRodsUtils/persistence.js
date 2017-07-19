@@ -81,16 +81,14 @@ class DeviceSession {
     _submit_pref(pref){
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
+        pref["target"] = correct;
         if(correct){
             //we scanned the target. time to crank out a new objective for the user.
             var otherart = Object.keys(testdata2f).filter(function(artid){
                 return artid != pref["artid"] && testdata2f[artid]["room"] != testdata2f[pref["artid"]]["room"];
             });
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
-            this.CurrentPrefTarget = testdata2f[randomtag];
-            pref["target"] = correct;
-        } else {
-            pref["target"] = correct;
+            this.CurrentPrefTarget = testdata2f[randomtag];   
         }
         this.PrefHistory.push(pref);
         return correct;

@@ -1,10 +1,10 @@
 [
     {
-        "ID": "c2343d5a-c609-4edc-93af-8e0aa80e82f4",
+        "ID": "b3e4c118-9206-48bc-afe7-289d9a674606",
         "Location": "0",
         "LocationHistory": [],
         "Awake": true,
-        "Started": "2017-07-19T04:07:59.735Z",
+        "Started": "2017-07-19T04:36:31.007Z",
         "CurrentPath": {
             "journey": [
                 {
@@ -36,55 +36,41 @@
                     ]
                 },
                 {
-                    "room": "263",
+                    "room": "275",
                     "coords": [
-                        732,
-                        691
+                        792,
+                        508
                     ]
                 }
             ],
             "steps": 5
         },
-        "CurrentTarget": "40975",
-        "Status": "Normal",
-        "ScannedTags": []
-    },
-    {
-        "ID": "c3466135-6c6e-4595-9da5-8d72541f5936",
-        "Location": "0",
-        "LocationHistory": [],
-        "Awake": true,
-        "Started": "2017-07-19T04:08:14.178Z",
-        "CurrentPath": {},
-        "CurrentTarget": "40975",
+        "CurrentTarget": "18424",
         "Status": "Normal",
         "ScannedTags": [
             {
-                "artid": "1224",
+                "artid": "180",
                 "pref": "1",
-                "timestamp": 1500437332359
+                "timestamp": 1500439001958,
+                "target": true
+            },
+            {
+                "artid": "113158",
+                "pref": "1",
+                "timestamp": 1500439009442,
+                "target": true
             },
             {
                 "artid": "180",
                 "pref": "1",
-                "timestamp": 1500437337786
-            }
-        ]
-    },
-    {
-        "ID": "a2419197-0196-48eb-8bca-53d73fa9d7ba",
-        "Location": "0",
-        "LocationHistory": [],
-        "Awake": true,
-        "Started": "2017-07-19T04:09:09.408Z",
-        "CurrentPath": {},
-        "CurrentTarget": "3939",
-        "Status": "Normal",
-        "ScannedTags": [
+                "timestamp": 1500439014070,
+                "target": false
+            },
             {
-                "artid": "113158",
+                "artid": "2175",
                 "pref": "1",
-                "timestamp": 1500437349408
+                "timestamp": 1500439018265,
+                "target": true
             }
         ]
     }
