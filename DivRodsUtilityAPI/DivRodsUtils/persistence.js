@@ -2,23 +2,45 @@ const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
 var CronJob = require('cron').CronJob, moment = require('moment');
 
-var testdata2f = {
-    "18424":{"color":"purple", "title":"Sandy", "room":"275", "artid":"18424"},
-    "40428":{"color":"yellow", "title":"Table Lamp", "room":"275", "artid":"40428"},
-    "180":{"color":"red", "title":"Rendezvous", "room":"259", "artid":"180"},
-    "2175":{"color":"blue", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
-    "113158":{"color":"green", "title":"Sunflowers II", "room":"255", "artid":"113158"},
-    "5890":{"color":"purple", "title":"Moccasins", "room":"255", "artid":"5890"},
-    "1224":{"color":"yellow", "title":"Seated Girl", "room":"263", "artid":"1224"},
-    "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263", "artid":"43576"},
-    "40975":{"color":"blue", "title":"Tesla Coil", "room":"264", "artid":"40975"},
-    "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
-};
+var floortestdata = {
+    "2": {
+        "18424":{"color":"purple", "title":"Sandy", "room":"275", "artid":"18424"},
+        "40428":{"color":"yellow", "title":"Table Lamp", "room":"275", "artid":"40428"},
+        "180":{"color":"red", "title":"Rendezvous", "room":"259", "artid":"180"},
+        "2175":{"color":"blue", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
+        "113158":{"color":"green", "title":"Sunflowers II", "room":"255", "artid":"113158"},
+        "5890":{"color":"purple", "title":"Moccasins", "room":"255", "artid":"5890"},
+        "1224":{"color":"yellow", "title":"Seated Girl", "room":"263", "artid":"1224"},
+        "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263", "artid":"43576"},
+        "40975":{"color":"blue", "title":"Tesla Coil", "room":"264", "artid":"40975"},
+        "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
+    },
+    "3": {
+        "116020":{"color":"purple", "title":"Portrait of Beethoven", "room":"351"},
+        "1320":{"color":"yellow", "title":"Dancer Putting on Her Stocking", "room":"351"},
+        "1509":{"color":"red", "title":"The Birthday Party", "room":"351"},
+        "1240":{"color":"cyan", "title":"Dining Room in the Country", "room":"355"},
+        "802":{"color":"green", "title":"Chestnut Trees at Jas de Bouffon", "room":"355"},
+        "118786":{"color":"purple", "title":"Winter Landscape", "room":"355"},
+        "3267":{"color":"yellow", "title":"Still Life with Pheasants and Plovers", "room":"355"},
+        "1272":{"color":"red", "title":"Port-en Bessin", "room":"355"},
+        "1649":{"color":"cyan", "title":"Portrait of Clementine", "room":"357"},
+        "2276":{"color":"green", "title":"The Algerian", "room":"357"},
+        "10362":{"color":"purple", "title":"Seraglio, Constantinople", "room":"357"},
+        "80860":{"color":"yellow", "title":"Battledore", "room":"357"},
+        "2239":{"color":"red", "title":"On The Thames", "room":"357"},
+        "420":{"color":"cyan", "title":"Mirror", "room":"332"},
+        "99318":{"color":"green", "title":"Side Chair", "room":"332"},
+        "9668":{"color":"purple", "title":"Queen Anne Room", "room":"332"},
+        "6228":{"color":"yellow", "title":"The Lost Pleiad", "room":"332"},
+        "427":{"color":"red", "title":"Highboy", "room":"332"},
+    }
+}
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
 class DeviceSession {
-    constructor(DeviceMAC, timestamp){
+    constructor(DeviceMAC, timestamp, floor = _DefaultFloor){
         this.DeviceID = DeviceMAC;
         this.SessionID = uuidV4();
         this.Opened = timestamp;
@@ -30,15 +52,14 @@ class DeviceSession {
         this.Location = "0";
         this.SetupCode = 1;
         this.CurrentPath = {};
-        //this.InitialPrefTarget = testdata2f["180"];
-        this.CurrentPrefTarget = testdata2f["180"];
+        this.CurrentFloor = floor; //3
+        this.CurrentPrefTarget = {};
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
 
-        var randomtag = Object.keys(testdata2f)[Math.floor(Math.random() * Object.keys(testdata2f).length)];
-        //this.InitialPrefTarget = testdata2f[randomtag];
-        this.CurrentPrefTarget = testdata2f[randomtag];
+        var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
+        this.CurrentPrefTarget = floortestdata[floor][randomtag];
         //var prefauth = new Buffer(_PrefAuth).toString('base64');
         
         // var options = {
@@ -84,14 +105,18 @@ class DeviceSession {
         pref["target"] = correct;
         if(correct){
             //we scanned the target. time to crank out a new objective for the user.
-            var otherart = Object.keys(testdata2f).filter(function(artid){
-                return artid != pref["artid"] && testdata2f[artid]["room"] != testdata2f[pref["artid"]]["room"];
+            var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
+                return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
             });
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
-            this.CurrentPrefTarget = testdata2f[randomtag];   
+            this.CurrentPrefTarget = floortestdata[floor][randomtag];   
         }
         this.PrefHistory.push(pref);
         return correct;
+    }
+    _validate(artid){
+        if(floortestdata[floor][artid]) return true;
+        else return false;
     }
     _setup(code){
         //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.

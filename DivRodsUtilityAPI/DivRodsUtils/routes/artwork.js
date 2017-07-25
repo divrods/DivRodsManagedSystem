@@ -3,20 +3,6 @@ var router = express.Router();
 var async = require('async'), fs = require('fs');
 var prefclient = require('../prefclient.js');
 
-var testdata2f = {
-    "18424":{"color":"purple", "title":"Sandy", "room":"275"},
-    "40428":{"color":"yellow", "title":"Table Lamp", "room":"275"},
-    "180":{"color":"red", "title":"Rendezvous", "room":"259"},
-    "2175":{"color":"cyan", "title":"Collage IX: Landscape", "room":"259"},
-    "113158":{"color":"green", "title":"Sunflowers II", "room":"255"},
-    "5890":{"color":"purple", "title":"Moccasins", "room":"255"},
-    "1224":{"color":"yellow", "title":"Seated Girl", "room":"263"},
-    "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263"},
-    "40975":{"color":"cyan", "title":"Tesla Coil", "room":"264"},
-    "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264"}
-};
-
-//TODO: get actual non-overlapping values for these.
 var onboardingtags = {
     "99999999":{"setupcode":1},
     "99999998":{"setupcode":2}
@@ -42,16 +28,11 @@ router.post('/register', function(req,res,next){
 
 });
 
-router.get('/default', function(req,res,next){
-    var payload = testdata2f["180"];
-    res.status(200).send(JSON.stringify(payload));
-});
-
 //GET a random new RFID tag to go find. just for testing.
 //This needs a refactor.
 router.get('/', function(req,res,next){
     if(req.query.deviceid && req.query.artid && req.query.pref){
-        if(testdata2f[req.query.artid]){ //got an art tag
+        if(req.device_session._validate(req.query.artid)){ //got an art tag
             var is_target = req.device_session._submit_pref({
                 "artid":req.query.artid,
                 "pref":req.query.pref
@@ -79,8 +60,7 @@ router.get('/', function(req,res,next){
         }
     }
     else{
-        var payload = testdata2f["180"];
-        res.status(200).send(JSON.stringify(payload));
+        res.status(404).send("Please enclose a valid deviceid, artid, and preference value.");
     }
 });
 

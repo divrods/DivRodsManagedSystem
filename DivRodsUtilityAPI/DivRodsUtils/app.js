@@ -32,6 +32,7 @@ locate = require('./routes/locate');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 
+_DefaultFloor = "3";
 _ParticleToken = 0;
 _Timezone = 'America/Chicago';
 _PrefHost = process.env.pref_host;
