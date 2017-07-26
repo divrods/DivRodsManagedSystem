@@ -124,8 +124,6 @@ map = {
     }
 };
 
-//TODO: refactor this dumb global
-active_map = {};
 _groom_maps(map, function(){
     _prune_map(function(error){
         if(!error){
@@ -188,9 +186,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/prune', function(req, res, next){
-    _prune_map(function(error){
+    _flr = null;
+    if(req.query.floor){
+        _flr = req.query.floor;
+    }
+    _prune_map(_flr, function(error){
         if(!error){
-            res.status(200).send(active_map);
+            res.status(200).send(map[_flr]["active"]);
         }
         else res.status(404).send(error);
     });
@@ -201,16 +203,32 @@ router.get('/prune', function(req, res, next){
 router.get('/close', function(req,res,next){
     if(req.query.galleries){
         var gals = req.query.galleries.split(',');
+        var floors_affected = [];
         for(var gallery in gals){
+            if(parseInt(gals[gallery]) > 299){
+                if(floors_affected.indexOf("3") == -1){
+                    floors_affected.push("3");
+                }
+            }
+            if(parseInt(gals[gallery]) > 199 && parseInt(gals[gallery]) < 299){
+                if(floors_affected.indexOf("2") == -1){
+                    floors_affected.push("2");
+                }
+            }
             var index = black_list.indexOf(gals[gallery]);
             if(index == -1){
                 black_list.push(gals[gallery]);
             }
         }
+        //TODO clean this up so we get a full reply, even though functionality looks good.
         _prune_map(function(error){
             if(!error){
                 console.log(black_list);
-                res.status(200).send("Closed galleries. New map:" + JSON.stringify(active_map));
+                var reply = {};
+                for(x = 0; x < floors_affected.length; x++){
+                    reply[floors_affected[x]] = map[floors_affected[x]]["active"];
+                }
+                res.status(200).send("Closed galleries. New map:" + JSON.stringify(reply));
             }
             else res.status(404).send(error);
         });
@@ -233,7 +251,7 @@ router.get('/open', function(req,res,next){
         _prune_map(function(error){
             if(!error){
                 console.log(black_list);
-                res.status(200).send("Opened galleries. New map:" + JSON.stringify(active_map));
+                res.status(200).send("Opened galleries. New map:" + JSON.stringify(map["3"]["active"]));
             }
             else res.status(404).send(error);
         });
@@ -246,7 +264,7 @@ router.get('/open', function(req,res,next){
         black_list = [];
         _prune_map(function(error){
             if(!error){
-                res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(active_map));
+                res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(map["3"["active"]]));
             }
             else res.status(404).send(error);
         });
