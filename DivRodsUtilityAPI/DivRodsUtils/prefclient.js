@@ -38,4 +38,35 @@ function record_preference(session_id, art_id, pref, cb){
     );
 }
 
+function refresh_ruleset(session_id, cb){
+    var time = moment().utc().format();
+    //GET /api/rest/v1.0/recommendation
+    //likely hundreds of ant-con sets
+    var prefauth = new Buffer(_PrefAuth).toString('base64');
+    var options = {
+        url: _PrefHost + "recommendation/:" + session_id,
+        headers: {
+            "Content-Type":"application/json",
+            "accept":"application/json",
+            "Authorization":"Basic " + prefauth
+        },
+        json: payload
+    };
+    request.get(
+        options,
+        function(error, response, body){
+            console.log(response);
+            if (!error && response.statusCode == 200) {
+                var jsonresp = response.body;
+                console.log("Success... " + jsonresp);
+                cb(jsonresp);
+            }else{
+                console.log("Failure " + response.json);
+                cb("Problem!");
+            }
+        }
+    )
+}
+
+module.exports.refresh_ruleset = refresh_ruleset;
 module.exports.record_preference = record_preference;

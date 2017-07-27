@@ -1,6 +1,6 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
-var CronJob = require('cron').CronJob, moment = require('moment');
+var CronJob = require('cron').CronJob, moment = require('moment'), prefclient = require('./prefclient.js');
 
 var floortestdata = {
     "2": {
@@ -91,12 +91,9 @@ class DeviceSession {
     _drop_report(){
 
     }
-    _get_ruleset(){
-
-    }
-    _get_consequent(){
-        //find gallery for consequent
-        //queue gallery for sending to device
+    _get_consequent(pref){
+        //TODO based on a pref, look for a likely consequent in the latest association rules,
+        //maybe triggering a refresh. Validate found consequents against tagged works list.
     }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref){
@@ -111,6 +108,9 @@ class DeviceSession {
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
             this.CurrentPrefTarget = floortestdata[floor][randomtag];   
         }
+        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+            //TODO: figure out another endpoint that gets us a consequent.
+        });
         this.PrefHistory.push(pref);
         return correct;
     }
