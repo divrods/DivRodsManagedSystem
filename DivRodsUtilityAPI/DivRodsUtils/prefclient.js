@@ -57,8 +57,7 @@ function refresh_ruleset(cb){
             console.log(response);
             if (!error && response.statusCode == 200) {
                 var jsonresp = response.body;
-                console.log("Success... " + jsonresp);
-                cb(jsonresp);
+                cb(JSON.parse(jsonresp));
             }else{
                 console.log("Failure " + response.json);
                 cb("Problem!");

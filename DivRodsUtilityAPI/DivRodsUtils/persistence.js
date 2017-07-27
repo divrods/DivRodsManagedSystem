@@ -108,9 +108,9 @@ class DeviceSession {
             var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
             this.CurrentPrefTarget = floortestdata[floor][randomtag];   
         }
-        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+        //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
             //TODO: figure out another endpoint that gets us a consequent.
-        });
+        //});
         this.PrefHistory.push(pref);
         return correct;
     }
@@ -129,19 +129,14 @@ class DeviceSession {
 };
 
 class SessionDictionary {
-    constructor(_exp, _freq){
+    constructor(_exp){
         this.Expiration = _exp;
         this.Sessions = [];
-        this.cronfreq = _freq;
         console.log("Initialized session dictionary...");
         var self = this;
         this.ruleset = {};
+        this.rules = [];
         this._update_ruleset();
-        //this.cron = new CronJob(this.cronfreq, function() {
-        //    this._check_and_clear_expirations();
-        //}, null, true, _Timezone, self);
-        //this.cron.start(); sometimes this thing goes nuts. switch to another lib.
-        //this._check_and_clear_expirations();
     }
 
     _check_and_clear_expirations(){
@@ -161,7 +156,7 @@ class SessionDictionary {
             }
         }
         var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
-        winston.log('info', logstring);
+        console.log(logstring);
     }
     _touch(reqID, status = null){
         var found = _.find(this.Sessions, {DeviceID:reqID});
@@ -226,7 +221,17 @@ class SessionDictionary {
         var self = this; //uggghhh
         prefclient.refresh_ruleset(function(data){
             if(data){
-                self.ruleset = data;
+                self.rules = [];
+                for(var rule in data["results"]){
+                    var _rule = data["results"][rule];
+                    var entry = {
+                        "ant":_rule["ant"][0], //see below
+                        "con":_rule["con"][0], //just using the first one for now, TODO fork this here
+                        "confidence":_rule["confidence"]
+                    };
+                    self.rules.push(entry);
+                }
+                console.log(self.rules);
             }
         });
     }

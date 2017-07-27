@@ -38,6 +38,8 @@ _ParticleToken = 0;
 _Timezone = 'America/Chicago';
 if(process.env.pref_host){
   //must be on EB
+  _ParticleEmail = process.env.photonemail;
+  _ParticlePW = process.env.photonpw;
   _PrefHost = process.env.pref_host;
   _PrefAuth = process.env.pref_auth;
   _FINDhost = process.env.tracking_host;
@@ -46,6 +48,8 @@ if(process.env.pref_host){
 }
 else{
   nconf.file('./config.json');
+  _ParticleEmail = nconf.get('email');
+  _ParticlePW = nconf.get('pass');
   _PrefHost = nconf.get('prefhost');
   _PrefAuth = nconf.get('prefauth');
   _FINDhost = nconf.get('trackinghost');
@@ -53,8 +57,15 @@ else{
   _COLLhost3f = nconf.get('collection3f');
 }
 
-_SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
+_SessionMgr = new persist.SessionDictionary(45000);
 _ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
+
+var CronJob = require('cron').CronJob;
+var job = new CronJob('00 30 * * * *', function() {
+  _SessionMgr._check_and_clear_expirations();
+}, null, true, 'America/Chicago');
+
+job.start();
 
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);
@@ -72,7 +83,7 @@ var DeviceSessionManager = function (req, res, next) {
   next()
 }
 
-particle.login({username: process.env.photonemail, password: process.env.photonpw}).then(
+particle.login({username: _ParticleEmail, password: _ParticlePW}).then(
   function(data){
     _ParticleToken = data.body.access_token;
   },
