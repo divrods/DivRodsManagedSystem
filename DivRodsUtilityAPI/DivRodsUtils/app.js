@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 var basicAuth = require('express-basic-auth');
 var Particle = require('particle-api-js');
 var winston = require('winston');
+var nconf = require('nconf');
 particle = new Particle();
 
 var index = require('./routes/index'),
@@ -35,12 +36,22 @@ var app = express();
 _DefaultFloor = "3";
 _ParticleToken = 0;
 _Timezone = 'America/Chicago';
-_PrefHost = process.env.pref_host;
-_PrefAuth = process.env.pref_auth;
-_FINDhost = process.env.tracking_host;
-//_FINDhost = "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003";
-_COLLhost2f = process.env.collection2f_host;
-_COLLhost3f = process.env.collection3f_host;
+if(process.env.pref_host){
+  //must be on EB
+  _PrefHost = process.env.pref_host;
+  _PrefAuth = process.env.pref_auth;
+  _FINDhost = process.env.tracking_host;
+  _COLLhost2f = process.env.collection2f_host;
+  _COLLhost3f = process.env.collection3f_host;
+}
+else{
+  nconf.file('./config.json');
+  _PrefHost = nconf.get('prefhost');
+  _PrefAuth = nconf.get('prefauth');
+  _FINDhost = nconf.get('trackinghost');
+  _COLLhost2f = nconf.get('collection2f');
+  _COLLhost3f = nconf.get('collection3f');
+}
 
 _SessionMgr = new persist.SessionDictionary(45000, '* 30 * * * *');
 _ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');

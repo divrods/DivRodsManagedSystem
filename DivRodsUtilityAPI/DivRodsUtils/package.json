@@ -19,6 +19,7 @@
     "mocha": "^3.2.0",
     "moment": "^2.18.1",
     "morgan": "~1.7.0",
+    "nconf": "^0.8.4",
     "particle-api-js": "^6.4.3",
     "pug": "~2.0.0-beta10",
     "request": "^2.81.0",

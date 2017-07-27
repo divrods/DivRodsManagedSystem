@@ -38,19 +38,18 @@ function record_preference(session_id, art_id, pref, cb){
     );
 }
 
-function refresh_ruleset(session_id, cb){
+function refresh_ruleset(cb){
     var time = moment().utc().format();
     //GET /api/rest/v1.0/recommendation
     //likely hundreds of ant-con sets
     var prefauth = new Buffer(_PrefAuth).toString('base64');
     var options = {
-        url: _PrefHost + "recommendation/:" + session_id,
+        url: _PrefHost + "recommendation",
         headers: {
             "Content-Type":"application/json",
             "accept":"application/json",
             "Authorization":"Basic " + prefauth
-        },
-        json: payload
+        }
     };
     request.get(
         options,
