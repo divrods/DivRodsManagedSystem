@@ -44,7 +44,7 @@ function refresh_ruleset(cb){
     //likely hundreds of ant-con sets
     var prefauth = new Buffer(_PrefAuth).toString('base64');
     var options = {
-        url: _PrefHost + "recommendation",
+        url: _PrefHost + "recommendations",
         headers: {
             "Content-Type":"application/json",
             "accept":"application/json",

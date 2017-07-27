@@ -135,7 +135,8 @@ class SessionDictionary {
         this.cronfreq = _freq;
         console.log("Initialized session dictionary...");
         var self = this;
-        //this._update_ruleset();
+        this.ruleset = {};
+        this._update_ruleset();
         //this.cron = new CronJob(this.cronfreq, function() {
         //    this._check_and_clear_expirations();
         //}, null, true, _Timezone, self);
@@ -222,9 +223,10 @@ class SessionDictionary {
         }
     }
     _update_ruleset(){
+        var self = this; //uggghhh
         prefclient.refresh_ruleset(function(data){
             if(data){
-                this.ruleset = data;
+                self.ruleset = data;
             }
         });
     }
