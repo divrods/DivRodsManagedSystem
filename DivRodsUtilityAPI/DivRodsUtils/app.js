@@ -61,11 +61,16 @@ _SessionMgr = new persist.SessionDictionary(45000);
 _ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
 
 var CronJob = require('cron').CronJob;
-var job = new CronJob('00 30 * * * *', function() {
+var sessionjob = new CronJob('00 30 * * * *', function() {
   _SessionMgr._check_and_clear_expirations();
 }, null, true, 'America/Chicago');
 
-job.start();
+var artfilterjob = new CronJob('00 30 11 * * 1,3,5', function() {
+  _ArtFilter._refresh();
+}, null, true, 'America/Chicago');
+
+sessionjob.start();
+artfilterjob.start();
 
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);
