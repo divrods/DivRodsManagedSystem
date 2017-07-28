@@ -60,32 +60,6 @@ class DeviceSession {
 
         var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
         this.CurrentPrefTarget = floortestdata[floor][randomtag];
-        //var prefauth = new Buffer(_PrefAuth).toString('base64');
-        var thing = "";
-        // var options = {
-        //     url: _PrefHost + "recommendations",
-        //     headers: {
-        //         "Content-Type":"application/json",
-        //         "accept":"application/json",
-        //         "Authorization":"Basic " + prefauth
-        //     },
-        //     json: true
-        // };
-        //In this GET: get default ruleset from pref engine
-        // request.get(
-        //     options,
-        //     function (error, response, body) {
-        //         console.log("Send request to pref engine...");
-        //         if (!error && response.statusCode == 200) {
-        //             var jsonresp = response.body;
-        //             var report = jsonresp.results[0]["ant"];
-        //             console.log(report);
-        //             console.log("Initialized device Session...");
-        //         }else{
-        //             console.log(body);
-        //         }
-        //     }
-        // );
     }
     //submit a record of a session of usage
     _drop_report(){
