@@ -62,7 +62,7 @@ _ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
 
 var CronJob = require('cron').CronJob;
 var sessionjob = new CronJob('00 30 * * * *', function() {
-  _SessionMgr._check_and_clear_expirations();
+  //_SessionMgr._check_and_clear_expirations();
 }, null, true, 'America/Chicago');
 
 var artfilterjob = new CronJob('00 30 11 * * 1,3,5', function() {

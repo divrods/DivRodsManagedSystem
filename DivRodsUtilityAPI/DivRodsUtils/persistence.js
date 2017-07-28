@@ -16,24 +16,24 @@ var floortestdata = {
         "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
     },
     "3": {
-        "116020":{"color":"purple", "title":"Portrait of Beethoven", "room":"351"},
-        "1320":{"color":"yellow", "title":"Dancer Putting on Her Stocking", "room":"351"},
-        "1509":{"color":"red", "title":"The Birthday Party", "room":"351"},
-        "1240":{"color":"cyan", "title":"Dining Room in the Country", "room":"355"},
-        "802":{"color":"green", "title":"Chestnut Trees at Jas de Bouffon", "room":"355"},
-        "118786":{"color":"purple", "title":"Winter Landscape", "room":"355"},
-        "3267":{"color":"yellow", "title":"Still Life with Pheasants and Plovers", "room":"355"},
-        "1272":{"color":"red", "title":"Port-en Bessin", "room":"355"},
-        "1649":{"color":"cyan", "title":"Portrait of Clementine", "room":"357"},
-        "2276":{"color":"green", "title":"The Algerian", "room":"357"},
-        "10362":{"color":"purple", "title":"Seraglio, Constantinople", "room":"357"},
-        "80860":{"color":"yellow", "title":"Battledore", "room":"357"},
-        "2239":{"color":"red", "title":"On The Thames", "room":"357"},
-        "420":{"color":"cyan", "title":"Mirror", "room":"332"},
-        "99318":{"color":"green", "title":"Side Chair", "room":"332"},
-        "9668":{"color":"purple", "title":"Queen Anne Room", "room":"332"},
-        "6228":{"color":"yellow", "title":"The Lost Pleiad", "room":"332"},
-        "427":{"color":"red", "title":"Highboy", "room":"332"},
+        "116020":{"color":"purple", "title":"Portrait of Beethoven", "room":"351", "artid":"116020"},
+        "1320":{"color":"yellow", "title":"Dancer Putting on Her Stocking", "room":"351", "artid":"1320"},
+        "1509":{"color":"red", "title":"The Birthday Party", "room":"351", "artid":"1509"},
+        "1240":{"color":"cyan", "title":"Dining Room in the Country", "room":"355", "artid":"1240"},
+        "802":{"color":"green", "title":"Chestnut Trees at Jas de Bouffon", "room":"355", "artid":"802"},
+        "118786":{"color":"purple", "title":"Winter Landscape", "room":"355", "artid":"118786"},
+        "3267":{"color":"yellow", "title":"Still Life with Pheasants and Plovers", "room":"355", "artid":"3267"},
+        "1272":{"color":"red", "title":"Port-en Bessin", "room":"355", "artid":"1272"},
+        "1649":{"color":"cyan", "title":"Portrait of Clementine", "room":"357", "artid":"1649"},
+        "2276":{"color":"green", "title":"The Algerian", "room":"357", "artid":"2276"},
+        "10362":{"color":"purple", "title":"Seraglio, Constantinople", "room":"357", "artid":"10362"},
+        "80860":{"color":"yellow", "title":"Battledore", "room":"357", "artid":"80860"},
+        "2239":{"color":"red", "title":"On The Thames", "room":"357", "artid":"2239"},
+        "420":{"color":"cyan", "title":"Mirror", "room":"368", "artid":"420"},
+        "99318":{"color":"green", "title":"Side Chair", "room":"368", "artid":"99318"},
+        "9668":{"color":"purple", "title":"Queen Anne Room", "room":"368", "artid":"9668"},
+        "6228":{"color":"yellow", "title":"The Lost Pleiad", "room":"368", "artid":"6228"},
+        "427":{"color":"red", "title":"Highboy", "room":"379", "artid":"427"}
     }
 }
 /**
@@ -61,7 +61,7 @@ class DeviceSession {
         var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
         this.CurrentPrefTarget = floortestdata[floor][randomtag];
         //var prefauth = new Buffer(_PrefAuth).toString('base64');
-        
+        var thing = "";
         // var options = {
         //     url: _PrefHost + "recommendations",
         //     headers: {
@@ -96,7 +96,7 @@ class DeviceSession {
         //maybe triggering a refresh. Validate found consequents against tagged works list.
     }
     //submit a user's expressed preference about an artwork
-    _submit_pref(pref){
+    _submit_pref(pref, floor = "3"){
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
@@ -115,7 +115,8 @@ class DeviceSession {
         return correct;
     }
     _validate(artid){
-        if(floortestdata[floor][artid]) return true;
+        //TODO get floor for artwork here
+        if(floortestdata["3"][artid]) return true;
         else return false;
     }
     _setup(code){

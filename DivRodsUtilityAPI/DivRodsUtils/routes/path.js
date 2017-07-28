@@ -125,7 +125,7 @@ map = {
 };
 
 _groom_maps(map, function(){
-    _prune_map(function(error){
+    _prune_map("3", function(error){
         if(!error){
             winston.log('info', JSON.stringify(map["3"]["active"]));
         }else{
@@ -167,7 +167,7 @@ router.get('/', function(req, res, next) {
     _start = req.query.start;
     _end = req.query.end;
     if(req.query.deviceid && _start && _end){
-        _path = get_shortest_path(_start, _end, base_map2f);
+        _path = get_shortest_path(_start, _end, map["3"]["active"]);
         if(_path){
             payload = JSON.stringify(_path);
             if(req.query.deviceid){
@@ -186,7 +186,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/prune', function(req, res, next){
-    _flr = null;
+    _flr = "3";
     if(req.query.floor){
         _flr = req.query.floor;
     }
@@ -221,7 +221,7 @@ router.get('/close', function(req,res,next){
             }
         }
         //TODO clean this up so we get a full reply, even though functionality looks good.
-        _prune_map(function(error){
+        _prune_map("3", function(error){
             if(!error){
                 console.log(black_list);
                 var reply = {};
@@ -248,7 +248,7 @@ router.get('/open', function(req,res,next){
                 black_list.splice(index, 1);
             }
         }
-        _prune_map(function(error){
+        _prune_map("3", function(error){
             if(!error){
                 console.log(black_list);
                 res.status(200).send("Opened galleries. New map:" + JSON.stringify(map["3"]["active"]));
@@ -262,7 +262,7 @@ router.get('/open', function(req,res,next){
 
     router.get('/open/all', function(req,res,next){
         black_list = [];
-        _prune_map(function(error){
+        _prune_map("3", function(error){
             if(!error){
                 res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(map["3"["active"]]));
             }
@@ -354,7 +354,7 @@ function _deconstruct_path(tentative_parents, end){
     for(i=0; i<path.length; i++){
         var _step = {
             "room": path[i],
-            "coords": base_map2f[path[i]]["loc"]
+            "coords": map["3"]["active"][path[i]]["loc"]
         };
         _allsteps.unshift(_step);
     }
@@ -366,8 +366,11 @@ function _deconstruct_path(tentative_parents, end){
 //pull list of mapped locations from FIND and match them to nodes/edges.
 //cull any nodes in the base map that haven't been mapped using FIND.
 //also pull any edges involving that culled node.
-function _prune_map(cb, floor="3"){
+function _prune_map(floor, cb){
     pruned = {};
+    if(floor == undefined | !floor){
+        floor = "3";
+    }
     request.get(
             "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/locations?group=mia" + floor + "f",
             function (error, response, body) {

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  p= message
+  ul
+    each element in sessions
+        div
+            span= "Session ID: " + element.ID
+            br
+            span= "Location: " + element.Location
+            br
+            span= "Active? " + element.Awake
+            br
+            span= "Began: " + element.Started
+            br
+            span= "Current Target: " + element.CurrentTarget
+            br
+            span= "Path Object: (" + element.CurrentPath + ")"
+        br
+        br
+    else
+        p There are currently no sessions.
