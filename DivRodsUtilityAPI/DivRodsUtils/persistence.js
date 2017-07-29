@@ -45,14 +45,14 @@ class DeviceSession {
         this.SessionID = uuidV4();
         this.Opened = timestamp;
         this.LastTouched = timestamp;
-        this.Closed = {}; //why?
+        this.Closed = {};
         this.BaseRuleSet = {};
         this.RuleSet = {};
         this.PrefHistory = [];
         this.Location = "0";
         this.SetupCode = 1;
         this.CurrentPath = {};
-        this.CurrentFloor = floor; //3
+        this.CurrentFloor = floor;
         this.CurrentPrefTarget = {};
         this.LocHistory = [];
         this.Enabled = true;
@@ -69,8 +69,14 @@ class DeviceSession {
         //TODO based on a pref, look for a likely consequent in the latest association rules,
         //maybe triggering a refresh. Validate found consequents against tagged works list.
     }
+    _change_floor(floor){
+        this.CurrentFloor = floor;
+    }
     //submit a user's expressed preference about an artwork
-    _submit_pref(pref, floor = "3"){
+    _submit_pref(pref, floor){
+        if(!floor | floor == undefined){
+            floor = this.CurrentFloor;
+        }
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
@@ -89,8 +95,7 @@ class DeviceSession {
         return correct;
     }
     _validate(artid){
-        //TODO get floor for artwork here
-        if(floortestdata["3"][artid]) return true;
+        if(floortestdata[this.CurrentFloor][artid]) return true;
         else return false;
     }
     _setup(code){
@@ -116,8 +121,9 @@ class SessionDictionary {
 
     _check_and_clear_expirations(){
         var _now = Date.now();
-        for(var session in this.Sessions){
-            var _stale = Math.abs(_now - session.LastTouched.getTime());
+        for(var index in this.Sessions){
+            var session = this.Sessions[index];
+            var _stale = Math.abs(_now - session.LastTouched);
             if(_stale > this.Expiration){
                 session.Enabled = false;
             }
@@ -144,6 +150,7 @@ class SessionDictionary {
         else{
             var _time = Date.now();
             var _new = new DeviceSession(reqID, _time);
+            _new.LastTouched = Date.now();
             this.Sessions.push(_new);
         }
         console.log("Touched: ");
