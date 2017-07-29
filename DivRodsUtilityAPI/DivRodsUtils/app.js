@@ -57,7 +57,7 @@ else{
   _COLLhost3f = nconf.get('collection3f');
 }
 
-_SessionMgr = new persist.SessionDictionary(45000);
+_SessionMgr = new persist.SessionDictionary(95000);
 _ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
 
 var cron = require('node-cron');
