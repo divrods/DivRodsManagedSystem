@@ -32,8 +32,6 @@ var idtags = [ //TODO get this from somewhere
         {"artid":"427", "color":"red"},
 ];
 
-var taggedworks = [];
-
 class ArtworkFilter {
     constructor(_freq){
         this.host = _COLLhost3f; //why discriminate between floors here?
@@ -41,6 +39,8 @@ class ArtworkFilter {
         this.currently_up = {};
         this.broken_rules = 0;
         this.validworks = {};
+        this.taggedworks = [];
+        this.closed_galleries = [];
         var self = this;
         this._refresh(function(data){
             console.log(data);
@@ -65,7 +65,7 @@ class ArtworkFilter {
                             });
                             if(matched_tag){
                                 var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
-                                taggedworks.push({"artid": element["_id"], "color": matched_tag["color"], "room": gallery})
+                                _self.taggedworks.push({"artid": element["_id"], "color": matched_tag["color"], "room": gallery, "available": true})
                             }
                         }
                         works++;
@@ -74,18 +74,32 @@ class ArtworkFilter {
                         }
                     });
                 }
-                cb(taggedworks);
+                cb(_self.taggedworks);
             }
         );
-
     }
-    _filter(_ruleset){
-        //TODO filter a whole ruleset and remove any rules pertaining to artwork that isn't on display
+    _update_galleries(_galleries, _access){
+        if(_galleries.length < 1){
+            this.taggedworks.forEach(function(artwork){
+                artwork.available = true;
+            });
+            return;
+        }
+        var all_affected = [];
+        _galleries.forEach(function(room){
+            var affected = _.filter(this.taggedworks, function(o){
+                return o["room"] == element["_id"];
+            });
+            all_affected = all_affected.concat(affected);
+        });
+        all_affected.forEach(function(artwork){
+            artwork.available = _access;
+        });
     }
     _check(_artid){
-        if(_.find(taggedworks, function(o){o["artid"] == _artid})) return true;
+        var found = _.find(taggedworks, function(o){o["artid"] == _artid});
+        if(found) return found;
         else return false;
-        //TODO given a single artid, see if it's a valid one that is currently on display
     }
 }
 

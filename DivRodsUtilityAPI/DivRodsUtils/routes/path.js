@@ -202,6 +202,7 @@ router.get('/prune', function(req, res, next){
 router.get('/close', function(req,res,next){
     if(req.query.galleries){
         var gals = req.query.galleries.split(',');
+        _ArtFilter._update_galleries(gals, false);
         var floors_affected = [];
         for(var gallery in gals){
             if(parseInt(gals[gallery]) > 299){
@@ -241,6 +242,7 @@ router.get('/close', function(req,res,next){
 router.get('/open', function(req,res,next){
     if(req.query.galleries){
         var gals = req.query.galleries.split(',');
+        _ArtFilter._update_galleries(gals, true);
         for(var gallery in gals){
             var index = black_list.indexOf(gals[gallery]);
             if(index != -1){
@@ -261,6 +263,7 @@ router.get('/open', function(req,res,next){
 
     router.get('/open/all', function(req,res,next){
         black_list = [];
+        _ArtFilter._update_galleries(black_list, true);
         _prune_map("3", function(error){
             if(!error){
                 res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(map["3"["active"]]));
@@ -271,12 +274,6 @@ router.get('/open', function(req,res,next){
 
 function get_shortest_path(start, end, weighted_graph){
     //Calculate the shortest path for a directed weighted graph.
-
-    // :param start: starting node
-    // :param end: ending node
-    // :param weighted_graph: {"node1": {"node2": "weight", ...}, ...}
-    // :return: ["START", ... nodes between ..., "END"] or None, if there is no path
-    //We always need to visit the start
     nodes_to_visit = {};
     nodes_to_visit[start] = start;
     visited_nodes = {};
