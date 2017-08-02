@@ -146,7 +146,6 @@ function _groom_maps(data, cb){
                 if(!connected["edges"].hasOwnProperty(node)){
                     connected["edges"][node] = 1;
                     console.log("Repaired a broken link between node " + node + " and " + edge);
-                    //if connected node doesn't mention current node in edges, add it
                 }
             }
         }

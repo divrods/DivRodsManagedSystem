@@ -2,17 +2,49 @@ const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
 var CronJob = require('cron').CronJob, moment = require('moment'), prefclient = require('./prefclient.js');
 
+var idtags = [
+        {"artid":"18424", "color":"purple"}, //2f starts
+        {"artid":"40428", "color":"yellow"},
+        {"artid":"180", "color":"red"},
+        {"artid":"2175", "color":"cyan"},
+        {"artid":"113158", "color":"green"},
+        {"artid":"5890", "color":"purple"},
+        {"artid":"1224", "color":"yellow"},
+        {"artid":"43576", "color":"red"},
+        {"artid":"40975", "color":"cyan"},
+        {"artid":"3939", "color":"green"},
+        {"artid":"3939", "color":"green"},
+        {"artid":"116020", "color":"purple"}, //3f starts
+        {"artid":"1320", "color":"yellow"},
+        {"artid":"1509", "color":"red"},
+        {"artid":"1240", "color":"cyan"},
+        {"artid":"802", "color":"green"},
+        {"artid":"118786", "color":"purple"},
+        {"artid":"3267", "color":"yellow"},
+        {"artid":"1272", "color":"red"},
+        {"artid":"1649", "color":"cyan"},
+        {"artid":"2276", "color":"green"},
+        {"artid":"10362", "color":"purple"},
+        {"artid":"80860", "color":"yellow"},
+        {"artid":"2239", "color":"red"},
+        {"artid":"420", "color":"cyan"},
+        {"artid":"99318", "color":"green"},
+        {"artid":"9668", "color":"purple"},
+        {"artid":"6228", "color":"yellow"},
+        {"artid":"427", "color":"red"},
+]
+    
 var floortestdata = {
     "2": {
         "18424":{"color":"purple", "title":"Sandy", "room":"275", "artid":"18424"},
         "40428":{"color":"yellow", "title":"Table Lamp", "room":"275", "artid":"40428"},
         "180":{"color":"red", "title":"Rendezvous", "room":"259", "artid":"180"},
-        "2175":{"color":"blue", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
+        "2175":{"color":"cyan", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
         "113158":{"color":"green", "title":"Sunflowers II", "room":"255", "artid":"113158"},
         "5890":{"color":"purple", "title":"Moccasins", "room":"255", "artid":"5890"},
         "1224":{"color":"yellow", "title":"Seated Girl", "room":"263", "artid":"1224"},
         "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263", "artid":"43576"},
-        "40975":{"color":"blue", "title":"Tesla Coil", "room":"264", "artid":"40975"},
+        "40975":{"color":"cyan", "title":"Tesla Coil", "room":"264", "artid":"40975"},
         "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
     },
     "3": {
@@ -243,59 +275,5 @@ class PrefEngineWrapper{
     }
 }
 
-name_map={
-    "AB":"",
-    "Al":"",
-    "AZ":"",
-    "AR":"",
-    "CA":"",
-    "CO":"",
-    "CN":"",
-    "DE":"",
-    "FL":"",
-    "GA":"",
-    "HI":"",
-    "ID":"",
-    "IL":"",
-    "IN":"",
-    "IA":"",
-    "KS":"",
-    "KY":"",
-    "LA":"",
-    "ME":"",
-    "MD":"",
-    "MA":"",
-    "MI":"",
-    "MN":"",
-    "MS":"",
-    "MO":"",
-    "MT":"",
-    "NE":"",
-    "NV":"",
-    "NH":"",
-    "NJ":"",
-    "NM":"",
-    "NY":"",
-    "NC":"",
-    "ND":"",
-    "OH":"",
-    "OK":"",
-    "OR":"",
-    "PA":"",
-    "RI":"",
-    "SC":"",
-    "SD":"",
-    "TN":"",
-    "TX":"",
-    "UT":"",
-    "VT":"",
-    "VA":"",
-    "WA":"",
-    "WV":"",
-    "WI":"",
-    "WY":""
-}
-
-module.exports.NameMap = name_map;
 module.exports.SessionDictionary = SessionDictionary;
 module.exports.DeviceSession = DeviceSession;
