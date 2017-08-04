@@ -58,7 +58,7 @@ else{
 }
 
 _SessionMgr = new persist.SessionDictionary(95000);
-_ArtFilter = new maintain.ArtworkFilter('* 30 11 * * 1,3,5');
+_ArtFilter = new maintain.ArtworkFilter();
 
 var cron = require('node-cron');
 cron.schedule('*/5 * * * *', function(){

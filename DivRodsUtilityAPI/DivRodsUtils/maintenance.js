@@ -33,12 +33,11 @@ var idtags = [ //TODO get this from somewhere
 ];
 
 class ArtworkFilter {
-    constructor(_freq){
+    constructor(){
         this.host = _COLLhost3f; //why discriminate between floors here?
-        this.cronfreq = _freq;
         this.currently_up = {};
         this.broken_rules = 0;
-        this.validworks = {};
+        this.validworks = [];
         this.taggedworks = [];
         this.closed_galleries = [];
         var self = this;
@@ -47,7 +46,7 @@ class ArtworkFilter {
         });
     }
     _refresh(cb){
-        var validworks = {};
+        var validworks = [];
         var works = 0;
         var _self = this;
         request.get(
@@ -59,7 +58,7 @@ class ArtworkFilter {
                     _resp.hits.hits.forEach(function(element) {
                         if(element["_id"]){
                             //Something
-                            validworks[element["_id"]] = {"title": element["_source"]["title"], "room": element["_source"]["room"], "artid": element["_source"]["_id"]};
+                            validworks.push({"title": element["_source"]["title"], "room": element["_source"]["room"], "artid": element["_source"]["_id"]});
                             var matched_tag = _.find(idtags, function(o){
                                 return o["artid"] == element["_id"];
                             });
@@ -100,6 +99,12 @@ class ArtworkFilter {
         var found = _.find(taggedworks, function(o){o["artid"] == _artid});
         if(found) return found;
         else return false;
+    }
+    _overview(){
+        if(this.taggedworks.length > 0){
+            return this.taggedworks;
+        }
+        return "No valid works found.";
     }
 }
 

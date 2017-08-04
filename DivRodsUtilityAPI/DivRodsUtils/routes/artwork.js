@@ -28,6 +28,11 @@ router.post('/register', function(req,res,next){
 
 });
 
+router.get('/all', function(req,res,next){
+    var payload = _ArtFilter._overview();
+    res.status(200).send(JSON.stringify(payload));
+});
+
 //GET a random new RFID tag to go find. just for testing.
 //This needs a refactor.
 router.get('/', function(req,res,next){
