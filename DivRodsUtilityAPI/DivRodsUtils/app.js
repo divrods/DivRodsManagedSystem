@@ -84,6 +84,14 @@ var DeviceSessionManager = function (req, res, next) {
   next()
 }
 
+var CORS = function(req,res,next){
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+}
+
 particle.login({username: _ParticleEmail, password: _ParticlePW}).then(
   function(data){
     _ParticleToken = data.body.access_token;
@@ -103,6 +111,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(DeviceSessionManager);
+app.use(CORS);
 
 app.use('/', index),
 app.use('/users', users),
