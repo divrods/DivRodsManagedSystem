@@ -75,9 +75,9 @@ var DeviceSessionManager = function (req, res, next) {
   //TODO basic auth scheme for filtering known MACs
   if(req.query.deviceid){
     if(req.query.status){
-      _SessionMgr._touch(req.query.deviceid, req.query.status);
+      _SessionMgr._touch(req.query.deviceid, _SessionMgr, req.query.status);
     }else{
-      _SessionMgr._touch(req.query.deviceid);
+      _SessionMgr._touch(req.query.deviceid, _SessionMgr);
     }
     req.device_session = _SessionMgr._get(req.query.deviceid);
   }

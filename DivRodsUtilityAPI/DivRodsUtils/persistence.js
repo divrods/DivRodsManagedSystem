@@ -72,7 +72,7 @@ var floortestdata = {
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
 class DeviceSession {
-    constructor(DeviceMAC, timestamp, floor = _DefaultFloor){
+    constructor(DeviceMAC, timestamp, session_dict, floor = _DefaultFloor){
         this.DeviceID = DeviceMAC;
         this.SessionID = uuidV4();
         this.Opened = timestamp;
@@ -89,9 +89,12 @@ class DeviceSession {
         this.LocHistory = [];
         this.Enabled = true;
         this.Status = "Normal";
+        this.Manager = session_dict;
 
-        var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
-        this.CurrentPrefTarget = floortestdata[floor][randomtag];
+        //var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
+        //this.CurrentPrefTarget = floortestdata[floor][randomtag];
+        //TODO redo this initial setting.
+        this.CurrentPrefTarget = _.last(this.Manager.rules)["ant"]; 
     }
     //submit a record of a session of usage
     _drop_report(){
@@ -144,7 +147,6 @@ class SessionDictionary {
     constructor(_exp){
         this.Expiration = _exp;
         this.Sessions = [];
-        console.log("Initialized session dictionary...");
         var self = this;
         this.ruleset = {};
         this.rules = [];
@@ -171,7 +173,7 @@ class SessionDictionary {
         var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
         console.log(logstring);
     }
-    _touch(reqID, status = null){
+    _touch(reqID, dict, status = null){
         var found = _.find(this.Sessions, {DeviceID:reqID});
         if(found){
             if(status){
@@ -181,7 +183,7 @@ class SessionDictionary {
         }
         else{
             var _time = Date.now();
-            var _new = new DeviceSession(reqID, _time);
+            var _new = new DeviceSession(reqID, dict, _time);
             _new.LastTouched = Date.now();
             this.Sessions.push(_new);
         }
@@ -232,7 +234,7 @@ class SessionDictionary {
         }
     }
     _update_ruleset(){
-        var self = this; //uggghhh
+        var self = this;
         prefclient.refresh_ruleset(function(data){
             if(data){
                 self.rules = [];
@@ -245,6 +247,7 @@ class SessionDictionary {
                     };
                     self.rules.push(entry);
                 }
+                self.rules = _.sortBy(self.rules, "confidence");
                 console.log(self.rules);
             }
         });
