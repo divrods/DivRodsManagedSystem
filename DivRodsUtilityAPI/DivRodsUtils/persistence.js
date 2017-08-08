@@ -116,12 +116,18 @@ class DeviceSession {
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
         if(correct){
+            var matchedpref = _.find(this.Manager.rules, {ant:pref["artid"]});
+            if(matchedpref){
+                _next = matchedpref["con"];
+            } else{
+                var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
+                    return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
+                });
+                _next = otherart[Math.floor(Math.random() * otherart.length)];
+            }
             //we scanned the target. time to crank out a new objective for the user.
-            var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
-                return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
-            });
-            var randomtag = otherart[Math.floor(Math.random() * otherart.length)];
-            this.CurrentPrefTarget = floortestdata[floor][randomtag];   
+            this.CurrentPrefTarget = _.find(_ArtFilter.taggedworks, {artid:_next}); 
+            //this.CurrentPrefTarget = floortestdata[floor][randomtag];   
         }
         //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
             //TODO: figure out another endpoint that gets us a consequent.
