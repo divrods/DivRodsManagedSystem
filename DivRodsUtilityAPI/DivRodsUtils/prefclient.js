@@ -54,7 +54,7 @@ function refresh_ruleset(cb){
     request.get(
         options,
         function(error, response, body){
-            console.log(response);
+            //console.log(response);
             if (!error && response.statusCode == 200) {
                 var jsonresp = response.body;
                 cb(JSON.parse(jsonresp));

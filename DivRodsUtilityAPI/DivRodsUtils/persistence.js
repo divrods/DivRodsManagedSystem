@@ -1,73 +1,32 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
-var CronJob = require('cron').CronJob, moment = require('moment'), prefclient = require('./prefclient.js');
+var moment = require('moment'), prefclient = require('./prefclient.js');
 
 var idtags = [
-        {"artid":"18424", "color":"purple"}, //2f starts
-        {"artid":"40428", "color":"yellow"},
-        {"artid":"180", "color":"red"},
-        {"artid":"2175", "color":"cyan"},
-        {"artid":"113158", "color":"green"},
-        {"artid":"5890", "color":"purple"},
-        {"artid":"1224", "color":"yellow"},
-        {"artid":"43576", "color":"red"},
-        {"artid":"40975", "color":"cyan"},
-        {"artid":"3939", "color":"green"},
-        {"artid":"3939", "color":"green"},
-        {"artid":"116020", "color":"purple"}, //3f starts
-        {"artid":"1320", "color":"yellow"},
-        {"artid":"1509", "color":"red"},
-        {"artid":"1240", "color":"cyan"},
-        {"artid":"802", "color":"green"},
-        {"artid":"118786", "color":"purple"},
-        {"artid":"3267", "color":"yellow"},
-        {"artid":"1272", "color":"red"},
-        {"artid":"1649", "color":"cyan"},
-        {"artid":"2276", "color":"green"},
-        {"artid":"10362", "color":"purple"},
-        {"artid":"80860", "color":"yellow"},
-        {"artid":"2239", "color":"red"},
-        {"artid":"420", "color":"cyan"},
-        {"artid":"99318", "color":"green"},
-        {"artid":"9668", "color":"purple"},
-        {"artid":"6228", "color":"yellow"},
-        {"artid":"427", "color":"red"},
-]
-    
-var floortestdata = {
-    "2": {
-        "18424":{"color":"purple", "title":"Sandy", "room":"275", "artid":"18424"},
-        "40428":{"color":"yellow", "title":"Table Lamp", "room":"275", "artid":"40428"},
-        "180":{"color":"red", "title":"Rendezvous", "room":"259", "artid":"180"},
-        "2175":{"color":"cyan", "title":"Collage IX: Landscape", "room":"259", "artid":"2175"},
-        "113158":{"color":"green", "title":"Sunflowers II", "room":"255", "artid":"113158"},
-        "5890":{"color":"purple", "title":"Moccasins", "room":"255", "artid":"5890"},
-        "1224":{"color":"yellow", "title":"Seated Girl", "room":"263", "artid":"1224"},
-        "43576":{"color":"red", "title":"Sailor's Holiday", "room":"263", "artid":"43576"},
-        "40975":{"color":"cyan", "title":"Tesla Coil", "room":"264", "artid":"40975"},
-        "3939":{"color":"green", "title":"Bricklayer, 1928", "room":"264", "artid":"3939"}
-    },
-    "3": {
-        "116020":{"color":"purple", "title":"Portrait of Beethoven", "room":"351", "artid":"116020"},
-        "1320":{"color":"yellow", "title":"Dancer Putting on Her Stocking", "room":"351", "artid":"1320"},
-        "1509":{"color":"red", "title":"The Birthday Party", "room":"351", "artid":"1509"},
-        "1240":{"color":"cyan", "title":"Dining Room in the Country", "room":"355", "artid":"1240"},
-        "802":{"color":"green", "title":"Chestnut Trees at Jas de Bouffon", "room":"355", "artid":"802"},
-        "118786":{"color":"purple", "title":"Winter Landscape", "room":"355", "artid":"118786"},
-        "3267":{"color":"yellow", "title":"Still Life with Pheasants and Plovers", "room":"355", "artid":"3267"},
-        "1272":{"color":"red", "title":"Port-en Bessin", "room":"355", "artid":"1272"},
-        "1649":{"color":"cyan", "title":"Portrait of Clementine", "room":"357", "artid":"1649"},
-        "2276":{"color":"green", "title":"The Algerian", "room":"357", "artid":"2276"},
-        "10362":{"color":"purple", "title":"Seraglio, Constantinople", "room":"357", "artid":"10362"},
-        "80860":{"color":"yellow", "title":"Battledore", "room":"357", "artid":"80860"},
-        "2239":{"color":"red", "title":"On The Thames", "room":"357", "artid":"2239"},
-        "420":{"color":"cyan", "title":"Mirror", "room":"368", "artid":"420"},
-        "99318":{"color":"green", "title":"Side Chair", "room":"368", "artid":"99318"},
-        "9668":{"color":"purple", "title":"Queen Anne Room", "room":"368", "artid":"9668"},
-        "6228":{"color":"yellow", "title":"The Lost Pleiad", "room":"368", "artid":"6228"},
-        "427":{"color":"red", "title":"Highboy", "room":"379", "artid":"427"}
-    }
-}
+        {"artid":"111619", "color":"purple"},
+        {"artid":"492", "color":"yellow"},
+        {"artid":"3903", "color":"red"},
+        {"artid":"31412", "color":"cyan"},
+        {"artid":"31377", "color":"green"},
+        {"artid":"66176", "color":"purple"},
+        {"artid":"9671", "color":"yellow"},
+        {"artid":"3908", "color":"red"},
+        {"artid":"3220", "color":"cyan"},
+        {"artid":"191", "color":"green"},
+        {"artid":"118619", "color":"green"},
+        {"artid":"4688", "color":"purple"},
+        {"artid":"17169", "color":"yellow"},
+        {"artid":"60752", "color":"red"},
+        {"artid":"802", "color":"cyan"},
+        {"artid":"1163", "color":"green"},
+        {"artid":"1808", "color":"purple"},
+        {"artid":"1773", "color":"yellow"},
+        {"artid":"14011", "color":"red"},
+        {"artid":"589", "color":"cyan"},
+        {"artid":"1372", "color":"green"},
+        {"artid":"1378", "color":"purple"}
+];
+
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
@@ -94,7 +53,8 @@ class DeviceSession {
         //var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
         //this.CurrentPrefTarget = floortestdata[floor][randomtag];
         //TODO redo this initial setting.
-        this.CurrentPrefTarget = _.last(this.Manager.rules)["ant"]; 
+        var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
+        this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
     }
     //submit a record of a session of usage
     _drop_report(){
@@ -116,27 +76,31 @@ class DeviceSession {
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
         if(correct){
+            var pref_string = (pref["pref"] == "n") ? pref["artid"] + ":0" : pref["artid"] + ":1";
             //var matchedpref = _.find(this.Manager.rules, {ant:pref["artid"]});
             var matchedprefs = _.filter(this.Manager.rules, function(o){
-                return o["ant"] == pref["artid"];
+                return o["ant"] == pref_string;
             });
             if(matchedprefs){
                 //get hydrated artwork objects for these consequent IDs
-                var matchedart = _.filter(this.Manager.art_filter.taggedworks, function(k){
-                    //return k["artid"] == pref["artid"];
-                    if (matchedprefs.some(function(e){ e["artid"] == k["artid"]})) {
-                        return e;
-                    }
+                var matched_valid_artworks = [];
+                var self = this;
+                matchedprefs.forEach(function(matched){
+                    var con_id = matched["con"].slice(0,-2);
+                    var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id});
+                    if(mva) matched_valid_artworks.push(mva);
                 });
-                this.Manager.art_filter.taggedworks
-                _next = matchedprefs[0]["con"];
+                _next = matchedprefs[0]["con"].slice(0,-2);
             } else{
+                return correct;
+                //TODO redo this. no more test data, refer to session dictionary's tagged works list.
+                //this.Manager.art_filter
+                //look for a different artid that is in a different gallery.
                 var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
                     return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
                 });
                 _next = otherart[Math.floor(Math.random() * otherart.length)];
             }
-            //we scanned the target. time to crank out a new objective for the user.
             this.CurrentPrefTarget = _.find(_ArtFilter.taggedworks, {artid:_next}); 
             //this.CurrentPrefTarget = floortestdata[floor][randomtag];   
         }
@@ -146,8 +110,8 @@ class DeviceSession {
         this.PrefHistory.push(pref);
         return correct;
     }
-    _validate(artid){
-        if(floortestdata[this.CurrentFloor][artid]) return true;
+    _validate(_artid){
+        if(_.find(this.Manager.art_filter.taggedworks, {artid:_artid})) return true;
         else return false;
     }
     _setup(code){
@@ -201,7 +165,7 @@ class SessionDictionary {
         }
         else{
             var _time = Date.now();
-            var _new = new DeviceSession(reqID, dict, _time);
+            var _new = new DeviceSession(reqID, _time, dict);
             _new.LastTouched = Date.now();
             this.Sessions.push(_new);
         }
@@ -256,6 +220,7 @@ class SessionDictionary {
         prefclient.refresh_ruleset(function(data){
             if(data){
                 self.rules = [];
+                var all_ids = [];
                 for(var rule in data["results"]){
                     var _rule = data["results"][rule];
                     var entry = {
@@ -263,9 +228,13 @@ class SessionDictionary {
                         "con":_rule["con"][0], //just using the first one for now, TODO fork this here
                         "confidence":_rule["confidence"]
                     };
+                    all_ids.push(_rule["ant"][0]);
                     self.rules.push(entry);
                 }
                 self.rules = _.sortBy(self.rules, "confidence");
+                var uniques = _.uniq(all_ids);
+                //console.log("Unique ids in pref ruleset:");
+                //console.log(uniques);
                 console.log(self.rules);
             }
         });

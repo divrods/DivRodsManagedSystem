@@ -1,36 +1,29 @@
-var CronJob = require('cron').CronJob, request = require('request'), _ = require('underscore');
+var request = require('request'), _ = require('underscore');
 
-var idtags = [ //TODO get this from somewhere
-        {"artid":"18424", "color":"purple"}, //2f starts
-        {"artid":"40428", "color":"yellow"},
-        {"artid":"180", "color":"red"},
-        {"artid":"2175", "color":"cyan"},
-        {"artid":"113158", "color":"green"},
-        {"artid":"5890", "color":"purple"},
-        {"artid":"1224", "color":"yellow"},
-        {"artid":"43576", "color":"red"},
-        {"artid":"40975", "color":"cyan"},
-        {"artid":"3939", "color":"green"},
-        {"artid":"3939", "color":"green"},
-        {"artid":"116020", "color":"purple"}, //3f starts
-        {"artid":"1320", "color":"yellow"},
-        {"artid":"1509", "color":"red"},
-        {"artid":"1240", "color":"cyan"},
-        {"artid":"802", "color":"green"},
-        {"artid":"118786", "color":"purple"},
-        {"artid":"3267", "color":"yellow"},
-        {"artid":"1272", "color":"red"},
-        {"artid":"1649", "color":"cyan"},
-        {"artid":"2276", "color":"green"},
-        {"artid":"10362", "color":"purple"},
-        {"artid":"80860", "color":"yellow"},
-        {"artid":"2239", "color":"red"},
-        {"artid":"420", "color":"cyan"},
-        {"artid":"99318", "color":"green"},
-        {"artid":"9668", "color":"purple"},
-        {"artid":"6228", "color":"yellow"},
-        {"artid":"427", "color":"red"},
-];
+var idtags = [
+        {"artid":"111619", "color":"purple"},
+        {"artid":"492", "color":"yellow"},
+        {"artid":"3903", "color":"red"},
+        {"artid":"31412", "color":"cyan"},
+        {"artid":"31377", "color":"green"},
+        {"artid":"66176", "color":"purple"},
+        {"artid":"9671", "color":"yellow"},
+        {"artid":"3908", "color":"red"},
+        {"artid":"3220", "color":"cyan"},
+        {"artid":"191", "color":"green"},
+        {"artid":"118619", "color":"green"},
+        {"artid":"4688", "color":"purple"},
+        {"artid":"17169", "color":"yellow"},
+        {"artid":"60752", "color":"red"},
+        {"artid":"802", "color":"cyan"},
+        {"artid":"1163", "color":"green"},
+        {"artid":"1808", "color":"purple"},
+        {"artid":"1773", "color":"yellow"},
+        {"artid":"14011", "color":"red"},
+        {"artid":"589", "color":"cyan"},
+        {"artid":"1372", "color":"green"},
+        {"artid":"1378", "color":"purple"}
+]
 
 class ArtworkFilter {
     constructor(){
