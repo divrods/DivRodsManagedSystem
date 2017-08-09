@@ -116,9 +116,20 @@ class DeviceSession {
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
         if(correct){
-            var matchedpref = _.find(this.Manager.rules, {ant:pref["artid"]});
-            if(matchedpref){
-                _next = matchedpref["con"];
+            //var matchedpref = _.find(this.Manager.rules, {ant:pref["artid"]});
+            var matchedprefs = _.filter(this.Manager.rules, function(o){
+                return o["ant"] == pref["artid"];
+            });
+            if(matchedprefs){
+                //get hydrated artwork objects for these consequent IDs
+                var matchedart = _.filter(this.Manager.art_filter.taggedworks, function(k){
+                    //return k["artid"] == pref["artid"];
+                    if (matchedprefs.some(function(e){ e["artid"] == k["artid"]})) {
+                        return e;
+                    }
+                });
+                this.Manager.art_filter.taggedworks
+                _next = matchedprefs[0]["con"];
             } else{
                 var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
                     return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
@@ -150,12 +161,13 @@ class DeviceSession {
 };
 
 class SessionDictionary {
-    constructor(_exp){
+    constructor(_exp, _art_filter){
         this.Expiration = _exp;
         this.Sessions = [];
         var self = this;
         this.ruleset = {};
         this.rules = [];
+        this.art_filter = _art_filter;
         this._update_ruleset();
     }
 
@@ -212,7 +224,7 @@ class SessionDictionary {
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
                 "CurrentPath": pretty ? JSON.stringify(session.CurrentPath) : session.CurrentPath,
-                "CurrentTarget": session.CurrentPrefTarget["artid"],
+                "CurrentTarget": JSON.stringify(session.CurrentPrefTarget),
                 "Status": session.Status,
                 "ScannedTags": session.PrefHistory
             }
