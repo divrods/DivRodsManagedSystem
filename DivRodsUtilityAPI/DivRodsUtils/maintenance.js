@@ -23,7 +23,7 @@ var idtags = [
         {"artid":"589", "color":"cyan"},
         {"artid":"1372", "color":"green"},
         {"artid":"1378", "color":"purple"}
-]
+];
 
 class ArtworkFilter {
     constructor(){

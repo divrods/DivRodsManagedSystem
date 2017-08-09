@@ -60,6 +60,10 @@ class DeviceSession {
     _drop_report(){
 
     }
+    _refresh_target(){ //emergency target grab
+        var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
+        this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
+    }
     _get_consequent(pref){
         //TODO based on a pref, look for a likely consequent in the latest association rules,
         //maybe triggering a refresh. Validate found consequents against tagged works list.
@@ -72,6 +76,14 @@ class DeviceSession {
         if(!floor | floor == undefined){
             floor = this.CurrentFloor;
         }
+        if(!this.CurrentPrefTarget){
+            _refresh_target();
+        }
+        if(self.PrefHistory.length > 12){
+            //Temporary...
+            self.PrefHistory = [];
+        }
+        var _next = "";
         var self = this;
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
@@ -82,15 +94,24 @@ class DeviceSession {
             var matchedprefs = _.filter(this.Manager.rules, function(o){
                 return o["ant"] == pref_string;
             });
-            if(matchedprefs){
+            if(matchedprefs.length > 1){
                 //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
                 matchedprefs.forEach(function(matched){
                     var con_id = matched["con"].slice(0,-2);
                     var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id});
-                    if(mva) matched_valid_artworks.push(mva);
+                    var alreadyscanned = _.find(self.PrefHistory, {artid:con_id});
+                    if(mva && !alreadyscanned) matched_valid_artworks.push(mva);
+                    if(alreadyscanned){ //TODO refactor this is hideous
+                        var artobj = _.find(self.Manager.art_filter.taggedworks, {artid:pref["artid"]});
+                        var otherart = self.Manager.art_filter.taggedworks.filter(function(tagged){
+                            return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
+                        });
+                        _next = otherart[Math.floor(Math.random() * otherart.length)];
+                    }
                 });
-                _next = matchedprefs[0]["con"].slice(0,-2);
+                if(_next == "") _next = matched_valid_artworks[0];
+                //_next = matchedprefs[0]["con"].slice(0,-2);
             } else{
                 //look for a different artid that is in a different gallery.
                 var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
@@ -99,7 +120,7 @@ class DeviceSession {
                 });
                 _next = otherart[Math.floor(Math.random() * otherart.length)];
             }
-            this.CurrentPrefTarget = _.find(_ArtFilter.taggedworks, {artid:_next});  
+            this.CurrentPrefTarget = _next;  
         }
         //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
             //TODO: figure out another endpoint that gets us a consequent.
