@@ -72,6 +72,7 @@ class DeviceSession {
         if(!floor | floor == undefined){
             floor = this.CurrentFloor;
         }
+        var self = this;
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
@@ -84,7 +85,6 @@ class DeviceSession {
             if(matchedprefs){
                 //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
-                var self = this;
                 matchedprefs.forEach(function(matched){
                     var con_id = matched["con"].slice(0,-2);
                     var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id});
@@ -92,17 +92,14 @@ class DeviceSession {
                 });
                 _next = matchedprefs[0]["con"].slice(0,-2);
             } else{
-                return correct;
-                //TODO redo this. no more test data, refer to session dictionary's tagged works list.
-                //this.Manager.art_filter
                 //look for a different artid that is in a different gallery.
-                var otherart = Object.keys(floortestdata[floor]).filter(function(artid){
-                    return artid != pref["artid"] && floortestdata[floor][artid]["room"] != floortestdata[floor][pref["artid"]]["room"];
+                var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
+                var otherart = this.Manager.art_filter.taggedworks.filter(function(tagged){
+                    return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
                 });
                 _next = otherart[Math.floor(Math.random() * otherart.length)];
             }
-            this.CurrentPrefTarget = _.find(_ArtFilter.taggedworks, {artid:_next}); 
-            //this.CurrentPrefTarget = floortestdata[floor][randomtag];   
+            this.CurrentPrefTarget = _.find(_ArtFilter.taggedworks, {artid:_next});  
         }
         //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
             //TODO: figure out another endpoint that gets us a consequent.
