@@ -12,7 +12,6 @@ var idtags = [
         {"artid":"9671", "color":"yellow"},
         {"artid":"3908", "color":"red"},
         {"artid":"3220", "color":"cyan"},
-        {"artid":"191", "color":"green"},
         {"artid":"118619", "color":"green"},
         {"artid":"4688", "color":"purple"},
         {"artid":"17169", "color":"yellow"},

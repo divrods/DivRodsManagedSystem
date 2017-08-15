@@ -10,7 +10,6 @@ var idtags = [
         {"artid":"9671", "color":"yellow"},
         {"artid":"3908", "color":"red"},
         {"artid":"3220", "color":"cyan"},
-        {"artid":"191", "color":"green"},
         {"artid":"118619", "color":"green"},
         {"artid":"4688", "color":"purple"},
         {"artid":"17169", "color":"yellow"},
@@ -70,6 +69,7 @@ class ArtworkFilter {
             }
         );
     }
+    //TODO this will get overridden on a refresh call. have to persist it.
     _update_galleries(_galleries, _access){
         var self = this;
         if(_galleries.length < 1){
