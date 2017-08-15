@@ -53,7 +53,8 @@ class DeviceSession {
         //var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
         //this.CurrentPrefTarget = floortestdata[floor][randomtag];
         //TODO redo this initial setting.
-        var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
+        var initial_target_id = _.sample(this.Manager.rules)["ant"].slice(0,-2); 
+        //var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
     }
     //submit a record of a session of usage
@@ -73,6 +74,7 @@ class DeviceSession {
     }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref, floor){
+        var self = this;
         if(!floor | floor == undefined){
             floor = this.CurrentFloor;
         }
@@ -84,7 +86,6 @@ class DeviceSession {
             self.PrefHistory = [];
         }
         var _next = "";
-        var self = this;
         pref["timestamp"] = moment.now();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
@@ -94,6 +95,7 @@ class DeviceSession {
             var matchedprefs = _.filter(this.Manager.rules, function(o){
                 return o["ant"] == pref_string;
             });
+            //TODO this filtering is totally in the wrong class. This is something the session dictionary should do.
             if(matchedprefs.length > 1){
                 //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
@@ -102,7 +104,7 @@ class DeviceSession {
                     var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id});
                     var alreadyscanned = _.find(self.PrefHistory, {artid:con_id});
                     if(mva && !alreadyscanned) matched_valid_artworks.push(mva);
-                    if(alreadyscanned){ //TODO refactor this is hideous
+                    if(alreadyscanned){
                         var artobj = _.find(self.Manager.art_filter.taggedworks, {artid:pref["artid"]});
                         var otherart = self.Manager.art_filter.taggedworks.filter(function(tagged){
                             return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
@@ -110,8 +112,10 @@ class DeviceSession {
                         _next = otherart[Math.floor(Math.random() * otherart.length)];
                     }
                 });
-                if(_next == "") _next = matched_valid_artworks[0];
-                //_next = matchedprefs[0]["con"].slice(0,-2);
+                if(_next == "") {
+                    _next = matched_valid_artworks[0];
+                    _next["preftype"] = "rule";
+                }
             } else{
                 //look for a different artid that is in a different gallery.
                 var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
@@ -119,6 +123,7 @@ class DeviceSession {
                     return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
                 });
                 _next = otherart[Math.floor(Math.random() * otherart.length)];
+                _next["preftype"] = "random";
             }
             this.CurrentPrefTarget = _next;  
         }
