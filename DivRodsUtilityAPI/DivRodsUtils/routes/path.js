@@ -368,7 +368,7 @@ function _prune_map(floor, cb){
         floor = "3";
     }
     request.get(
-            "http://ec2-54-209-226-130.compute-1.amazonaws.com:18003/locations?group=mia" + floor + "f",
+            "http://ec2-52-205-211-230.compute-1.amazonaws.com:18003/locations?group=mia" + floor + "f",
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     //loop through mapped galleries, seeing if we have an entry for them
