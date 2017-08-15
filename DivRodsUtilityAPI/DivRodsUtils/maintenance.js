@@ -71,15 +71,16 @@ class ArtworkFilter {
         );
     }
     _update_galleries(_galleries, _access){
+        var self = this;
         if(_galleries.length < 1){
-            this.taggedworks.forEach(function(artwork){
+            self.taggedworks.forEach(function(artwork){
                 artwork.available = true;
             });
             return;
         }
         var all_affected = [];
         _galleries.forEach(function(room){
-            var affected = _.filter(this.taggedworks, function(o){
+            var affected = _.filter(self.taggedworks, function(o){
                 return o["room"] == element["_id"];
             });
             all_affected = all_affected.concat(affected);
@@ -89,7 +90,8 @@ class ArtworkFilter {
         });
     }
     _check(_artid){
-        var found = _.find(taggedworks, function(o){o["artid"] == _artid});
+        var self = this;
+        var found = _.find(self.taggedworks, function(o){o["artid"] == _artid});
         if(found) return found;
         else return false;
     }
