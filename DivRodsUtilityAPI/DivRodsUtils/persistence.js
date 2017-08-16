@@ -153,6 +153,7 @@ class SessionDictionary {
         var self = this;
         this.ruleset = {};
         this.rules = [];
+        this.session_archive = [];
         this.art_filter = _art_filter;
         this._update_ruleset();
     }
@@ -170,12 +171,23 @@ class SessionDictionary {
         var i = this.Sessions.length
         while (i--) {
             if(!this.Sessions[i].Enabled){
+                this.session_archive.push(this.Sessions[i]);
                 this.Sessions.splice(i,1);
                 clear++;
             }
         }
         var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
         console.log(logstring);
+    }
+    _cycle(reqID){
+        var self = this;
+        var found = _.find(self.Sessions, {DeviceID:reqID});
+        if(found){
+            found.Enabled = false;
+            self.session_archive.push(found);
+            self.Sessions = _.without(self.Sessions, _.findWhere(self.Sessions, {SessionID:found.SessionID}));
+        }
+        _touch(reqID, self);
     }
     _touch(reqID, dict, status = null){
         var found = _.find(this.Sessions, {DeviceID:reqID});

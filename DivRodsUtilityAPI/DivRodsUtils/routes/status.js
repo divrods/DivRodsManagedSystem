@@ -14,4 +14,9 @@ router.get('/json', function(req,res,next){
     res.status(200).send(JSON.stringify(session_report));
 });
 
+router.get('/history', function(req,res,next){
+    var session_history = req.app.get('_DeviceSessions').session_archive;
+    res.status(200).send(JSON.stringify(session_history));
+});
+
 module.exports = router;
