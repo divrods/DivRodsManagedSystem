@@ -108,9 +108,9 @@ class DeviceSession {
             }
             this.CurrentPrefTarget = _next;  
         }
-        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
-            console.log(data);
-        });
+        //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+        //   console.log(data);
+        //});
         this.PrefHistory.push(pref);
         return correct;
     }
