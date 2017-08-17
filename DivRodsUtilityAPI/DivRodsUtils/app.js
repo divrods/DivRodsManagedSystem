@@ -27,6 +27,7 @@ status = require('./routes/status'),
 onboard = require('./routes/onboard'),
 goal = require('./routes/goal'),
 artwork = require('./routes/artwork'),
+device = require('./routes/device'),
 locate = require('./routes/locate');
 
 //Guess who forgets this? Me.
@@ -122,6 +123,7 @@ app.use('/path', dkpath),
 app.use('/status', status),
 app.use('/goal', goal),
 app.use('/artwork', artwork),
+app.use('/device', device),
 app.use('/locate', locate);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
