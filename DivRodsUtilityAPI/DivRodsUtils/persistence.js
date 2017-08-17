@@ -48,28 +48,13 @@ class DeviceSession {
         this.Enabled = true;
         this.Status = "Normal";
         this.Manager = session_dict;
-
-        //var randomtag = Object.keys(floortestdata[floor])[Math.floor(Math.random() * Object.keys(floortestdata[floor]).length)];
-        //this.CurrentPrefTarget = floortestdata[floor][randomtag];
         //TODO redo this initial setting.
         var initial_target_id = _.sample(this.Manager.rules)["ant"].slice(0,-2); 
-        //var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
-    }
-    //submit a record of a session of usage
-    _drop_report(){
-
     }
     _refresh_target(){ //emergency target grab
         var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
-    }
-    _get_consequent(pref){
-        //TODO based on a pref, look for a likely consequent in the latest association rules,
-        //maybe triggering a refresh. Validate found consequents against tagged works list.
-    }
-    _change_floor(floor){
-        this.CurrentFloor = floor;
     }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref, floor){
@@ -126,9 +111,9 @@ class DeviceSession {
             }
             this.CurrentPrefTarget = _next;  
         }
-        //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
-            //TODO: figure out another endpoint that gets us a consequent.
-        //});
+        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+            console.log(data);
+        });
         this.PrefHistory.push(pref);
         return correct;
     }
@@ -287,15 +272,6 @@ class PrefEngineWrapper{
             redirectUri: '',
             scopes: []
         });
-    }
-    _turn_in_pref(cb){
-        //send a single preference to get a set of consequents.
-        request.get(
-            this.Host,
-            function (error, response, body) {
-                cb();
-            }
-        );
     }
 }
 
