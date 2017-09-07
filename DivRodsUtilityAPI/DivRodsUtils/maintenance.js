@@ -34,6 +34,9 @@ class ArtworkFilter {
             console.log(data);
         });
     }
+    ///Asks the mia's collection what's on the third floor.
+    ///Parses it against what we have tagged, and creates a
+    ///list of artworks that are tagged + on display.
     _refresh(cb){
         var validworks = [];
         var works = 0;
@@ -46,7 +49,6 @@ class ArtworkFilter {
                     var _resp = JSON.parse(response.body);
                     _resp.hits.hits.forEach(function(element) {
                         if(element["_id"]){
-                            //Something
                             validworks.push({"title": element["_source"]["title"], "room": element["_source"]["room"], "artid": element["_source"]["_id"]});
                             var matched_tag = _.find(idtags, function(o){
                                 return o["artid"] == element["_id"];

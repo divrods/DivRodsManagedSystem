@@ -2,27 +2,6 @@ const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
 var moment = require('moment'), prefclient = require('./prefclient.js');
 
-var idtags = [
-        {"artid":"111619", "color":"purple"},
-        {"artid":"492", "color":"yellow"},
-        {"artid":"3903", "color":"red"},
-        {"artid":"31412", "color":"cyan"},
-        {"artid":"31377", "color":"green"},
-        {"artid":"66176", "color":"purple"},
-        {"artid":"9671", "color":"yellow"},
-        {"artid":"3908", "color":"red"},
-        {"artid":"3220", "color":"cyan"},
-        {"artid":"4688", "color":"purple"},
-        {"artid":"17169", "color":"yellow"},
-        {"artid":"60752", "color":"red"},
-        {"artid":"802", "color":"cyan"},
-        {"artid":"1163", "color":"green"},
-        {"artid":"14011", "color":"red"},
-        {"artid":"589", "color":"cyan"},
-        {"artid":"1372", "color":"green"},
-        {"artid":"1378", "color":"purple"}
-];
-
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
@@ -45,7 +24,7 @@ class DeviceSession {
         this.Enabled = true;
         this.Status = "Normal";
         this.Manager = session_dict;
-        //TODO redo this initial setting.
+
         var initial_target_id = _.sample(this.Manager.rules)["ant"].slice(0,-2); 
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
     }

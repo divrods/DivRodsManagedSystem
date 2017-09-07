@@ -133,7 +133,6 @@ _groom_maps(map, function(){
     });
 });
 
-
 function _groom_maps(data, cb){
     for(var floor in Object.keys(data)){
         var _floor = Object.keys(data)[floor];

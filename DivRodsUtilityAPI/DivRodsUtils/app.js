@@ -73,7 +73,6 @@ cron.schedule('30 11 * * 1,3,5', function(){
 app.set('_DeviceSessions', _SessionMgr);
 app.set('_ArtFilter', _ArtFilter);
 var DeviceSessionManager = function (req, res, next) {
-  //TODO basic auth scheme for filtering known MACs
   if(req.query.deviceid){
     if(req.query.status){
       _SessionMgr._touch(req.query.deviceid, _SessionMgr, req.query.status);
