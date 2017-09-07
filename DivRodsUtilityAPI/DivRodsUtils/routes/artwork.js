@@ -2,11 +2,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async'), fs = require('fs');
 var prefclient = require('../prefclient.js');
-
-var onboardingtags = {
-    "99999999":{"setupcode":1},
-    "99999998":{"setupcode":2}
-}
+var museum = require('../museum.js');
 
 //POST scanned artwork
 // router.get('/', function(req, res, next) {
@@ -43,6 +39,12 @@ router.get('/', function(req,res,next){
                 "pref":req.query.pref
             });
 
+            //override command from device which was probably in fallback mode.
+            if(req.query.oride != 0){
+                req.device_session._refresh_target();
+                var payload = {"status":"success"};
+                res.status(200).send(JSON.stringify(payload));
+            }
             if(is_target){ //scanned the target tag. great!
                 res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
             }
@@ -51,8 +53,7 @@ router.get('/', function(req,res,next){
                 res.status(200).send(JSON.stringify(payload));
             }
         }
-        else if(onboardingtags[req.query.artid] | req.query.artid == 0){
-            //TODO: interaction with base ruleset here to get first step. right now just sending id 180.
+        else if(museum.onboardingtags[req.query.artid] | req.query.artid == 0){
             //var code = onboardingtags[req.query.artid]["setupcode"];
             req.device_session._setup(1);
             var payload = req.device_session["CurrentPrefTarget"];
