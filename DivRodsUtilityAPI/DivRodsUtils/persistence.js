@@ -28,9 +28,10 @@ class DeviceSession {
         var initial_target_id = _.sample(this.Manager.rules)["ant"].slice(0,-2); 
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
     }
-    _refresh_target(){ //emergency target grab
+    _refresh_target(cb){ //emergency target grab
         var initial_target_id = _.last(this.Manager.rules)["ant"].slice(0,-2);
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
+        if(cb) cb();
     }
     //submit a user's expressed preference about an artwork
     _submit_pref(pref, floor){
@@ -39,7 +40,7 @@ class DeviceSession {
             floor = this.CurrentFloor;
         }
         if(!this.CurrentPrefTarget){
-            _refresh_target();
+            _refresh_target(null);
         }
         if(self.PrefHistory.length > 12){
             //Temporary...

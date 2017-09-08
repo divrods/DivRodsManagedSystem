@@ -41,9 +41,9 @@ router.get('/', function(req,res,next){
 
             //override command from device which was probably in fallback mode.
             if(req.query.oride != 0){
-                req.device_session._refresh_target();
-                var payload = {"status":"success"};
-                res.status(200).send(JSON.stringify(payload));
+                req.device_session._refresh_target(function(){
+                    res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
+                });
             }
             if(is_target){ //scanned the target tag. great!
                 res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
@@ -66,7 +66,7 @@ router.get('/', function(req,res,next){
         }
     }
     else{
-        res.status(404).send("Please enclose a valid deviceid, artid, and preference value.");
+        res.status(404).send("Bad ID");
     }
 });
 
