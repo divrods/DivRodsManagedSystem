@@ -44,7 +44,7 @@ class ArtworkFilter {
         request.get(
             this.host,
             function (error, response, body) {
-                if (!error && response.statusCode == 200) {
+                if (!error && response.statusCode == 200 && JSON.parse(response.body).hits.hits) {
                     //loop through hits from collection, filter for artids and isondisplay or whatever
                     var _resp = JSON.parse(response.body);
                     _resp.hits.hits.forEach(function(element) {
@@ -63,6 +63,10 @@ class ArtworkFilter {
                             _self.validworks = validworks;
                         }
                     });
+                }
+                else{
+                    console.log("No reply from collection API.");
+                    //TODO: logging and notification.
                 }
                 cb(_self.taggedworks);
             }
