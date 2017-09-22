@@ -42,7 +42,7 @@ class DeviceSession {
         if(!this.CurrentPrefTarget){
             _refresh_target(null);
         }
-        if(self.PrefHistory.length > 12){
+        if(self.PrefHistory.length > 5){
             //Temporary...
             self.PrefHistory = [];
         }
