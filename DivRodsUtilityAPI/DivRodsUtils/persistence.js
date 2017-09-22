@@ -185,7 +185,6 @@ class SessionDictionary {
                 "Started": new Date(session.Opened).toISOString(),
                 "CurrentPath": pretty ? JSON.stringify(session.CurrentPath) : session.CurrentPath,
                 "CurrentTarget": JSON.stringify(session.CurrentPrefTarget),
-                "Status": session.Status,
                 "ScannedTags": session.PrefHistory
             }
             out.push(sample);
@@ -201,8 +200,8 @@ class SessionDictionary {
                 "LocationHistory": session.LocHistory,
                 "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
-                "CurrentPath": pretty ? JSON.stringify(session.CurrentPath) : session.CurrentPath,
-                "CurrentTarget": JSON.stringify(session.CurrentPrefTarget),
+                "CurrentPath": session.CurrentPath,
+                "CurrentTarget": session.CurrentPrefTarget,
                 "Status": session.Status,
                 "ScannedTags": session.PrefHistory
             }
