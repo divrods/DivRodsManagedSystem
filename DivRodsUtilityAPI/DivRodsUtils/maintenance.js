@@ -1,25 +1,4 @@
-var request = require('request'), _ = require('underscore');
-
-var idtags = [
-        {"artid":"111619", "color":"purple"},
-        {"artid":"492", "color":"yellow"},
-        {"artid":"3903", "color":"red"},
-        {"artid":"31412", "color":"cyan"},
-        {"artid":"31377", "color":"green"},
-        {"artid":"66176", "color":"purple"},
-        {"artid":"9671", "color":"yellow"},
-        {"artid":"3908", "color":"red"},
-        {"artid":"3220", "color":"cyan"},
-        {"artid":"4688", "color":"purple"},
-        {"artid":"17169", "color":"yellow"},
-        {"artid":"60752", "color":"red"},
-        {"artid":"802", "color":"cyan"},
-        {"artid":"1163", "color":"green"},
-        {"artid":"14011", "color":"red"},
-        {"artid":"589", "color":"cyan"},
-        {"artid":"1372", "color":"green"},
-        {"artid":"1378", "color":"purple"}
-];
+var request = require('request'), _ = require('underscore'), museum = require('./museum.js');
 
 class ArtworkFilter {
     constructor(){
@@ -50,7 +29,7 @@ class ArtworkFilter {
                     _resp.hits.hits.forEach(function(element) {
                         if(element["_id"]){
                             validworks.push({"title": element["_source"]["title"], "room": element["_source"]["room"], "artid": element["_source"]["_id"]});
-                            var matched_tag = _.find(idtags, function(o){
+                            var matched_tag = _.find(museum.idtags, function(o){
                                 return o["artid"] == element["_id"];
                             });
                             if(matched_tag){

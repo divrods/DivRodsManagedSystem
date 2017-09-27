@@ -118,25 +118,623 @@ var map = {
 };
 
 var idtags = [
-    {"artid":"111619", "color":"purple"},
-    {"artid":"492", "color":"yellow"},
-    {"artid":"3903", "color":"red"},
-    {"artid":"31412", "color":"cyan"},
-    {"artid":"31377", "color":"green"},
-    {"artid":"66176", "color":"purple"},
-    {"artid":"9671", "color":"yellow"},
-    {"artid":"3908", "color":"red"},
-    {"artid":"3220", "color":"cyan"},
-    {"artid":"4688", "color":"purple"},
-    {"artid":"17169", "color":"yellow"},
-    {"artid":"60752", "color":"red"},
-    {"artid":"802", "color":"cyan"},
-    {"artid":"1163", "color":"green"},
-    {"artid":"14011", "color":"red"},
-    {"artid":"589", "color":"cyan"},
-    {"artid":"1372", "color":"green"},
-    {"artid":"1378", "color":"purple"}
-];
+    {
+        "color": "red",
+        "artid": "4441"
+    },
+    {
+        "color": "orange",
+        "artid": "5995"
+    },
+    {
+        "color": "green",
+        "artid": "62770"
+    },
+    {
+        "color": "blue ",
+        "artid": "19689"
+    },
+    {
+        "color": "purple",
+        "artid": "5694"
+    },
+    {
+        "color": "red",
+        "artid": "1862"
+    },
+    {
+        "color": "orange",
+        "artid": "4196"
+    },
+    {
+        "color": "green",
+        "artid": "108705"
+    },
+    {
+        "color": "blue ",
+        "artid": "3321"
+    },
+    {
+        "color": "purple",
+        "artid": "5102"
+    },
+    {
+        "color": "red",
+        "artid": "263"
+    },
+    {
+        "color": "orange",
+        "artid": "83269"
+    },
+    {
+        "color": "green",
+        "artid": "106831"
+    },
+    {
+        "color": "blue ",
+        "artid": "5683"
+    },
+    {
+        "color": "purple",
+        "artid": "47"
+    },
+    {
+        "color": "red",
+        "artid": "2900"
+    },
+    {
+        "color": "orange",
+        "artid": "303"
+    },
+    {
+        "color": "green",
+        "artid": "31427"
+    },
+    {
+        "color": "blue ",
+        "artid": "1263"
+    },
+    {
+        "color": "purple",
+        "artid": "2490"
+    },
+    {
+        "color": "red",
+        "artid": "98954"
+    },
+    {
+        "color": "orange",
+        "artid": "118808"
+    },
+    {
+        "color": "green",
+        "artid": "2421"
+    },
+    {
+        "color": "blue ",
+        "artid": "2505"
+    },
+    {
+        "color": "red",
+        "artid": "10593"
+    },
+    {
+        "color": "orange",
+        "artid": "1727"
+    },
+    {
+        "color": "green",
+        "artid": "4398"
+    },
+    {
+        "color": "blue ",
+        "artid": "1227"
+    },
+    {
+        "color": "purple",
+        "artid": "2570"
+    },
+    {
+        "color": "red",
+        "artid": "1463"
+    },
+    {
+        "color": "orange",
+        "artid": "1629"
+    },
+    {
+        "color": "green",
+        "artid": "99368"
+    },
+    {
+        "color": "blue ",
+        "artid": "10451"
+    },
+    {
+        "color": "purple",
+        "artid": "1402"
+    },
+    {
+        "color": "red",
+        "artid": "1665"
+    },
+    {
+        "color": "orange",
+        "artid": "8776"
+    },
+    {
+        "color": "green",
+        "artid": "2245"
+    },
+    {
+        "color": "blue ",
+        "artid": "1487"
+    },
+    {
+        "color": "purple",
+        "artid": "1494"
+    },
+    {
+        "color": "red",
+        "artid": "3057"
+    },
+    {
+        "color": "orange",
+        "artid": "521"
+    },
+    {
+        "color": "green",
+        "artid": "1375"
+    },
+    {
+        "color": "blue ",
+        "artid": "9688"
+    },
+    {
+        "color": "purple",
+        "artid": "518"
+    },
+    {
+        "color": "red",
+        "artid": "3217"
+    },
+    {
+        "color": "orange",
+        "artid": "2507"
+    },
+    {
+        "color": "green",
+        "artid": "22277"
+    },
+    {
+        "color": "blue ",
+        "artid": "90349"
+    },
+    {
+        "color": "purple",
+        "artid": "2730"
+    },
+    {
+        "color": "red",
+        "artid": "51935"
+    },
+    {
+        "color": "green",
+        "artid": "49879"
+    },
+    {
+        "color": "blue ",
+        "artid": "43605"
+    },
+    {
+        "color": "purple",
+        "artid": "52346"
+    },
+    {
+        "color": "red",
+        "artid": "109138"
+    },
+    {
+        "color": "orange",
+        "artid": "47086"
+    },
+    {
+        "color": "green",
+        "artid": "113261"
+    },
+    {
+        "color": "blue ",
+        "artid": "59510"
+    },
+    {
+        "color": "red",
+        "artid": "53"
+    },
+    {
+        "color": "orange",
+        "artid": "1226"
+    },
+    {
+        "color": "green",
+        "artid": "1978"
+    },
+    {
+        "color": "blue ",
+        "artid": "6239"
+    },
+    {
+        "color": "purple",
+        "artid": "109318"
+    },
+    {
+        "color": "red",
+        "artid": "98269"
+    },
+    {
+        "color": "orange",
+        "artid": "593"
+    },
+    {
+        "color": "green",
+        "artid": "689"
+    },
+    {
+        "color": "blue ",
+        "artid": "98274"
+    },
+    {
+        "color": "purple",
+        "artid": "1565"
+    },
+    {
+        "color": "red",
+        "artid": "44"
+    },
+    {
+        "color": "orange",
+        "artid": "452"
+    },
+    {
+        "color": "green",
+        "artid": "45"
+    },
+    {
+        "color": "blue ",
+        "artid": "4763"
+    },
+    {
+        "color": "red",
+        "artid": "6228"
+    },
+    {
+        "color": "orange",
+        "artid": "420"
+    },
+    {
+        "color": "green",
+        "artid": "96502"
+    },
+    {
+        "color": "blue ",
+        "artid": "427"
+    },
+    {
+        "color": "purple",
+        "artid": "1217"
+    },
+    {
+        "color": "red",
+        "artid": "63571"
+    },
+    {
+        "color": "orange",
+        "artid": "4817"
+    },
+    {
+        "color": "green",
+        "artid": "2614"
+    },
+    {
+        "color": "blue ",
+        "artid": "4248"
+    },
+    {
+        "color": "purple",
+        "artid": "82237"
+    },
+    {
+        "color": "red",
+        "artid": "123223"
+    },
+    {
+        "color": "orange",
+        "artid": "613"
+    },
+    {
+        "color": "green",
+        "artid": "113688"
+    },
+    {
+        "color": "blue ",
+        "artid": "106354"
+    },
+    {
+        "color": "purple",
+        "artid": "136"
+    },
+    {
+        "color": "red",
+        "artid": "1520"
+    },
+    {
+        "color": "orange",
+        "artid": "98750"
+    },
+    {
+        "color": "green",
+        "artid": "109118"
+    },
+    {
+        "color": "blue ",
+        "artid": "120729"
+    },
+    {
+        "color": "purple",
+        "artid": "111675"
+    },
+    {
+        "color": "red",
+        "artid": "1509"
+    },
+    {
+        "color": "orange",
+        "artid": "2806"
+    },
+    {
+        "color": "green",
+        "artid": "10444"
+    },
+    {
+        "color": "blue ",
+        "artid": "1417"
+    },
+    {
+        "color": "purple",
+        "artid": "774"
+    },
+    {
+        "color": "red",
+        "artid": "802"
+    },
+    {
+        "color": "orange",
+        "artid": "1689"
+    },
+    {
+        "color": "green",
+        "artid": "11956"
+    },
+    {
+        "color": "blue ",
+        "artid": "1655"
+    },
+    {
+        "color": "purple",
+        "artid": "10436"
+    },
+    {
+        "color": "red",
+        "artid": "1738"
+    },
+    {
+        "color": "orange",
+        "artid": "10361"
+    },
+    {
+        "color": "green",
+        "artid": "80860"
+    },
+    {
+        "color": "blue ",
+        "artid": "2035"
+    },
+    {
+        "color": "purple",
+        "artid": "2276"
+    },
+    {
+        "color": "red",
+        "artid": "1633"
+    },
+    {
+        "color": "orange",
+        "artid": "1503"
+    },
+    {
+        "color": "green",
+        "artid": "103800"
+    },
+    {
+        "color": "blue ",
+        "artid": "1277"
+    },
+    {
+        "color": "purple",
+        "artid": "106095"
+    },
+    {
+        "color": "red",
+        "artid": "13190"
+    },
+    {
+        "color": "orange",
+        "artid": "100463"
+    },
+    {
+        "color": "blue ",
+        "artid": "31101"
+    },
+    {
+        "color": "purple",
+        "artid": "30758"
+    },
+    {
+        "color": "red",
+        "artid": "7565"
+    },
+    {
+        "color": "orange",
+        "artid": "125771"
+    },
+    {
+        "color": "blue ",
+        "artid": "20962"
+    },
+    {
+        "color": "purple",
+        "artid": "27228"
+    },
+    {
+        "color": "red",
+        "artid": "1429"
+    },
+    {
+        "color": "orange",
+        "artid": "1411"
+    },
+    {
+        "color": "green",
+        "artid": "1639"
+    },
+    {
+        "color": "blue ",
+        "artid": "1800"
+    },
+    {
+        "color": "purple",
+        "artid": "1356"
+    },
+    {
+        "color": "red",
+        "artid": "95926"
+    },
+    {
+        "color": "orange",
+        "artid": "1857"
+    },
+    {
+        "color": "green",
+        "artid": "27402"
+    },
+    {
+        "color": "blue ",
+        "artid": "125888"
+    },
+    {
+        "color": "purple",
+        "artid": "89597"
+    },
+    {
+        "color": "red",
+        "artid": "1721"
+    },
+    {
+        "color": "orange",
+        "artid": "108666"
+    },
+    {
+        "color": "green",
+        "artid": "115752"
+    },
+    {
+        "color": "blue ",
+        "artid": "12776"
+    },
+    {
+        "color": "purple",
+        "artid": "111576"
+    },
+    {
+        "color": "red",
+        "artid": "1244"
+    },
+    {
+        "color": "orange",
+        "artid": "1354"
+    },
+    {
+        "color": "green",
+        "artid": "1515"
+    },
+    {
+        "color": "blue ",
+        "artid": "1330"
+    },
+    {
+        "color": "purple",
+        "artid": "98513"
+    },
+    {
+        "color": "red",
+        "artid": "1355"
+    },
+    {
+        "color": "orange",
+        "artid": "1555"
+    },
+    {
+        "color": "green",
+        "artid": "1670"
+    },
+    {
+        "color": "blue ",
+        "artid": "5033"
+    },
+    {
+        "color": "purple",
+        "artid": "2241"
+    },
+    {
+        "color": "red",
+        "artid": "10219"
+    },
+    {
+        "color": "orange",
+        "artid": "1274"
+    },
+    {
+        "color": "green",
+        "artid": "1325"
+    },
+    {
+        "color": "blue ",
+        "artid": "1887"
+    },
+    {
+        "color": "purple",
+        "artid": "1427"
+    },
+    {
+        "color": "red",
+        "artid": "116294"
+    },
+    {
+        "color": "orange",
+        "artid": "40979"
+    },
+    {
+        "color": "green",
+        "artid": "119495"
+    },
+    {
+        "color": "blue ",
+        "artid": "33040"
+    },
+    {
+        "color": "purple",
+        "artid": "114549"
+    }
+]
 
 var onboardingtags = {
     "99999999":{"setupcode":1},
