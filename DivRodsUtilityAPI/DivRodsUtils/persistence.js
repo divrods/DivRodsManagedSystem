@@ -1,5 +1,5 @@
 const uuidV4 = require('uuid/v4');
-var _ = require('underscore'), request = require('request'), ClientOAuth2 = require('client-oauth2'), winston = require('winston');
+var _ = require('underscore'), request = require('request'), winston = require('winston');
 var moment = require('moment'), prefclient = require('./prefclient.js');
 
 /**
@@ -56,7 +56,6 @@ class DeviceSession {
             var matchedprefs = _.filter(this.Manager.rules, function(o){
                 return o["ant"] == pref_string;
             });
-            //TODO this filtering is totally in the wrong class. This is something the session dictionary should do.
             if(matchedprefs.length > 1){
                 //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
@@ -213,12 +212,14 @@ class SessionDictionary {
     }
     _update_ruleset(){
         var self = this;
-        prefclient.refresh_ruleset(function(data){
+        self.rules = [];
+        prefclient.refresh_ruleset_all(function(data){
+            //console.log(data);
             if(data){
                 self.rules = [];
                 var all_ids = [];
-                for(var rule in data["results"]){
-                    var _rule = data["results"][rule];
+                for(var rule in data){
+                    var _rule = data[rule];
                     var entry = {
                         "ant":_rule["ant"][0], //see below
                         "con":_rule["con"][0], //just using the first one for now, TODO fork this here
@@ -228,29 +229,11 @@ class SessionDictionary {
                     self.rules.push(entry);
                 }
                 self.rules = _.sortBy(self.rules, "confidence");
-                var uniques = _.uniq(all_ids);
-                //console.log("Unique ids in pref ruleset:");
-                //console.log(uniques);
                 console.log(self.rules);
             }
         });
     }
 };
-
-class PrefEngineWrapper{
-    constructor(host){
-        this.Host = host;
-        console.log("Initializing preference engine wrapper...");
-        this.pref_oauth = new ClientOAuth2({
-            clientId: prefengid,
-            clientSecret: prefengsecret,
-            accessTokenUri: '',
-            authorizationUri: '',
-            redirectUri: '',
-            scopes: []
-        });
-    }
-}
 
 module.exports.SessionDictionary = SessionDictionary;
 module.exports.DeviceSession = DeviceSession;
