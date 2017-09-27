@@ -42,7 +42,7 @@ class DeviceSession {
         if(!this.CurrentPrefTarget){
             _refresh_target(null);
         }
-        if(self.PrefHistory.length > 12){
+        if(self.PrefHistory.length > 5){
             //Temporary...
             self.PrefHistory = [];
         }
@@ -184,11 +184,31 @@ class SessionDictionary {
                 "Started": new Date(session.Opened).toISOString(),
                 "CurrentPath": pretty ? JSON.stringify(session.CurrentPath) : session.CurrentPath,
                 "CurrentTarget": JSON.stringify(session.CurrentPrefTarget),
+                "ScannedTags": session.PrefHistory
+            }
+            out.push(sample);
+        });
+        return out;
+    }
+    _history(){
+        var out = [];
+        this.session_archive.forEach(function(session){
+            var sample = {
+                "ID": session.SessionID,
+                "Location": session.Location,
+                "LocationHistory": session.LocHistory,
+                "Awake": session.Enabled,
+                "Started": new Date(session.Opened).toISOString(),
+                "CurrentPath": session.CurrentPath,
+                "CurrentTarget": session.CurrentPrefTarget,
                 "Status": session.Status,
                 "ScannedTags": session.PrefHistory
             }
             out.push(sample);
         });
+        if(out.length < 1){
+            out[0] = "No sessions in current history.";
+        }
         return out;
     }
     _place(deviceid, location){
