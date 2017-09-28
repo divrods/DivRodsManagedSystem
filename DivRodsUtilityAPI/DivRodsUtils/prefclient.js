@@ -2,6 +2,7 @@ var request = require('request');
 var moment = require('moment');
 var async = require('async');
 
+var max_requests = 10;
 
 function record_preference(session_id, art_id, pref, cb){
     var time = moment().utc().format();
@@ -78,8 +79,9 @@ function refresh_ruleset_all(top_callback) {
         "accept":"application/json",
         "Authorization":"Basic " + _prefauth
     }
+    var i = 0;
     async.whilst(
-        function(){return _more},
+        function(){return _more && i < max_requests;},
         function(cb){
             var _url = _PrefHost + "recommendations";
             if(_cursor){
@@ -102,10 +104,12 @@ function refresh_ruleset_all(top_callback) {
                             _cursor = null;
                             _more = false;
                         }
+                        i++;
                         cb();
                     }else{
                         console.log("Failure " + response.json);
                         cb();
+                        i++;
                     }
                 }
             )
