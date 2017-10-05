@@ -52,33 +52,24 @@ class DeviceSession {
         pref["target"] = correct;
         if(correct){
             var pref_string = (pref["pref"] == "n") ? pref["artid"] + ":0" : pref["artid"] + ":1";
-            //var matchedpref = _.find(this.Manager.rules, {ant:pref["artid"]});
             var matchedprefs = _.filter(this.Manager.rules, function(o){
                 return o["ant"] == pref_string;
             });
-            if(matchedprefs.length > 0){
-                //get hydrated artwork objects for these consequent IDs
+            if(matchedprefs.length > 0){ //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
                 matchedprefs.forEach(function(matched){
-                    var con_id = matched["con"].slice(0,-2);
-                    var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id});
-                    var alreadyscanned = _.find(self.PrefHistory, {artid:con_id});
-                    if(mva && !alreadyscanned) matched_valid_artworks.push(mva);
-                    if(alreadyscanned){
-                        var artobj = _.find(self.Manager.art_filter.taggedworks, {artid:pref["artid"]});
-                        var otherart = self.Manager.art_filter.taggedworks.filter(function(tagged){
-                            return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
-                        });
-                        _next = otherart[Math.floor(Math.random() * otherart.length)];
-                        _next["preftype"] = "random";
-                    }
+                    var con_id = matched["con"].slice(0,-2); //get the consequent id
+                    var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id}); //find the full object for the consequent id
+                    var alreadyscanned = _.find(self.PrefHistory, {artid:con_id}); //see if we've already scanned it
+                    if(mva && !alreadyscanned) matched_valid_artworks.push(mva); //got a winner
                 });
-                if(_next == "") {
-                    _next = matched_valid_artworks[0];
+                if(matched_valid_artworks.length > 0) {
+                    _next = matched_valid_artworks[0]; //presumably the first item is highest confidence.
                     _next["preftype"] = "rule";
                 }
-            } else{
-                //look for a different artid that is in a different gallery.
+            } 
+            if(_next==""){ //still nothing? no rules featuring the artwork that was scanned.
+                //look at random for a different artid that is in a different gallery.
                 var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
                 var otherart = this.Manager.art_filter.taggedworks.filter(function(tagged){
                     return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
