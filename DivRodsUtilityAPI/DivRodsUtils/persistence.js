@@ -91,7 +91,7 @@ class DeviceSession {
         var apipref = (pref["pref"] == "n") ? "0" : "1";
         prefclient.record_preference(this.SessionID, pref["artid"], apipref, function(data){
             if(data){
-                console.log(data);
+                console.log("Successfully wrote preference.");
             }
         });
         self.PrefHistory.push(pref);
