@@ -40,6 +40,7 @@ class ArtworkFilter {
                                         element["_source"]["title"], 
                                         element["_source"]["room"].replace(/[^0-9]/, ''), 
                                         element["_source"]["id"],
+                                        matched_tag["color"],
                                         "3")
                                 )
                             }
@@ -57,11 +58,12 @@ class ArtworkFilter {
     }
     //cheesy function to handle the gallery mergers we had to do to handle some very physicall small galleries.
     //for example g334, which the nav system can't distinguish from the much larger g333.
-    _clean_and_merge(title, room, artid, floor){
+    _clean_and_merge(title, room, artid, color, floor){
         var clean = {
             "title": title, 
             "room": room, 
             "artid": artid,
+            "color": color,
             "available": true
         };
         //var towrap = _.find(museum.map[floor]["wrap"][room]);
