@@ -40,7 +40,7 @@ router.get('/', function(req,res,next){
             });
 
             //override command from device which was probably in fallback mode.
-            if(req.query.oride != 0){
+            if(req.query.oride && req.query.oride != 0){
                 req.device_session._refresh_target(function(){
                     res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
                 });

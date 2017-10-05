@@ -23,8 +23,7 @@ function record_preference(session_id, art_id, pref, cb){
         },
         json: payload
     };
-    //In this GET: get default ruleset from pref engine
-    console.log(JSON.stringify(payload));
+
     request.post(
         options,
         function (error, response, body) {

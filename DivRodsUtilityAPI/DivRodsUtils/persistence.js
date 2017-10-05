@@ -56,7 +56,7 @@ class DeviceSession {
             var matchedprefs = _.filter(this.Manager.rules, function(o){
                 return o["ant"] == pref_string;
             });
-            if(matchedprefs.length > 1){
+            if(matchedprefs.length > 0){
                 //get hydrated artwork objects for these consequent IDs
                 var matched_valid_artworks = [];
                 matchedprefs.forEach(function(matched){
@@ -70,6 +70,7 @@ class DeviceSession {
                             return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
                         });
                         _next = otherart[Math.floor(Math.random() * otherart.length)];
+                        _next["preftype"] = "random";
                     }
                 });
                 if(_next == "") {
@@ -87,14 +88,14 @@ class DeviceSession {
             }
             this.CurrentPrefTarget = _next;  
         }
-        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+        var apipref = (pref["pref"] == "n") ? "0" : "1";
+        prefclient.record_preference(this.SessionID, pref["artid"], apipref, function(data){
             if(data){
                 console.log(data);
             }
-            this.PrefHistory.push(pref);
-            return correct;
         });
-        
+        self.PrefHistory.push(pref);
+        return correct;
     }
     _setup(code){
         //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.
