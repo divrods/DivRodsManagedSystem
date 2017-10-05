@@ -1,7 +1,7 @@
 var request = require('request'), _ = require('underscore'), museum = require('./museum.js');
 
 class ArtworkFilter {
-    constructor(){
+    constructor(cb){
         this.host = _COLLhost3f; //why discriminate between floors here?
         this.currently_up = {};
         this.broken_rules = 0;
@@ -11,6 +11,7 @@ class ArtworkFilter {
         var self = this;
         this._refresh(function(data){
             console.log(data);
+            cb();
         });
     }
     ///Asks the mia's collection what's on the third floor.
@@ -28,19 +29,22 @@ class ArtworkFilter {
                     var _resp = JSON.parse(response.body);
                     _resp.hits.hits.forEach(function(element) {
                         if(element["_id"]){
-                            validworks.push({"title": element["_source"]["title"], "room": element["_source"]["room"], "artid": element["_source"]["_id"]});
+                            //handle merged galleries here.
                             var matched_tag = _.find(museum.idtags, function(o){
                                 return o["artid"] == element["_id"];
                             });
                             if(matched_tag){
                                 var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
-                                _self.taggedworks.push({"artid": element["_id"], "color": matched_tag["color"], "room": gallery, "available": true})
+                                _self.taggedworks.push(
+                                    _self._clean_and_merge(
+                                        element["_source"]["title"], 
+                                        element["_source"]["room"].replace(/[^0-9]/, ''), 
+                                        element["_source"]["id"],
+                                        "3")
+                                )
                             }
                         }
                         works++;
-                        if(works == _resp.hits.hits.length){
-                            _self.validworks = validworks;
-                        }
                     });
                 }
                 else{
@@ -50,6 +54,21 @@ class ArtworkFilter {
                 cb(_self.taggedworks);
             }
         );
+    }
+    //cheesy function to handle the gallery mergers we had to do to handle some very physicall small galleries.
+    //for example g334, which the nav system can't distinguish from the much larger g333.
+    _clean_and_merge(title, room, artid, floor){
+        var clean = {
+            "title": title, 
+            "room": room, 
+            "artid": artid,
+            "available": true
+        };
+        //var towrap = _.find(museum.map[floor]["wrap"][room]);
+        if(museum.map[floor]["wrap"][room]){
+            clean["room"] = museum.map[floor]["wrap"][room];
+        }
+        return clean;
     }
     //TODO this will get overridden on a refresh call. have to persist it.
     _update_galleries(_galleries, _access){

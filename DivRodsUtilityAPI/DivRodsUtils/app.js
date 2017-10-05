@@ -56,8 +56,12 @@ else{
   _COLLhost2f = nconf.get('collection2f');
   _COLLhost3f = nconf.get('collection3f');
 }
-_ArtFilter = new maintain.ArtworkFilter();
-_SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
+_ArtFilter = new maintain.ArtworkFilter(function(){
+  _SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
+  app.set('_DeviceSessions', _SessionMgr);
+  app.set('_ArtFilter', _ArtFilter);
+});
+
 
 
 var cron = require('node-cron');
@@ -69,8 +73,7 @@ cron.schedule('30 11 * * 1,3,5', function(){
   _ArtFilter._refresh();
 });
 
-app.set('_DeviceSessions', _SessionMgr);
-app.set('_ArtFilter', _ArtFilter);
+
 var DeviceSessionManager = function (req, res, next) {
   if(req.query.deviceid){
     if(req.query.status){

@@ -25,7 +25,7 @@ class DeviceSession {
         this.Status = "Normal";
         this.Manager = session_dict;
 
-        var initial_target_id = _.sample(this.Manager.rules)["ant"].slice(0,-2); 
+        var initial_target_id = (this.Manager.rules.length > 0) ? _.sample(this.Manager.rules)["ant"].slice(0,-2) : _.sample(this.Manager.art_filter.taggedworks)["artid"];
         this.CurrentPrefTarget = _.find(this.Manager.art_filter.taggedworks, {artid:initial_target_id}); 
     }
     _refresh_target(cb){ //emergency target grab
@@ -87,15 +87,14 @@ class DeviceSession {
             }
             this.CurrentPrefTarget = _next;  
         }
-        //prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
-        //   console.log(data);
-        //});
-        this.PrefHistory.push(pref);
-        return correct;
-    }
-    _validate(_artid){
-        if(_.find(this.Manager.art_filter.taggedworks, {artid:_artid})) return true;
-        else return false;
+        prefclient.record_preference(this.SessionID, pref["artid"], pref["pref"], function(data){
+            if(data){
+                console.log(data);
+            }
+            this.PrefHistory.push(pref);
+            return correct;
+        });
+        
     }
     _setup(code){
         //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.
@@ -224,6 +223,10 @@ class SessionDictionary {
             }
         }
     }
+    _validate(_artid){
+        if(_.find(this.art_filter.taggedworks, {artid:_artid})) return true;
+        else return false;
+    }
     _update_path(deviceid, path){
         var found = _.find(this.Sessions, {DeviceID:deviceid});
         if(found){
@@ -237,7 +240,6 @@ class SessionDictionary {
             //console.log(data);
             if(data){
                 self.rules = [];
-                var all_ids = [];
                 for(var rule in data){
                     var _rule = data[rule];
                     var entry = {
@@ -245,10 +247,17 @@ class SessionDictionary {
                         "con":_rule["con"][0], //just using the first one for now, TODO fork this here
                         "confidence":_rule["confidence"]
                     };
-                    all_ids.push(_rule["ant"][0]);
-                    self.rules.push(entry);
+                    //make sure the rule actually involves tagged works
+                    if(self._validate(_rule["ant"][0].slice(0,-2)) && self._validate(_rule["con"][0].slice(0,-2))){
+                        self.rules.push(entry);
+                    }
                 }
                 self.rules = _.sortBy(self.rules, "confidence");
+                if(self.rules.length < 1){
+                    for(var x = 0; x<500; x++){
+                        //make up a random rule
+                    }
+                }
                 console.log(self.rules);
             }
         });

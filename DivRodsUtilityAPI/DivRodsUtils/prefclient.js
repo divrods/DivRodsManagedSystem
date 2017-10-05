@@ -93,7 +93,6 @@ function refresh_ruleset_all(top_callback) {
                     headers: _headers
                 },
                 function(error, response, body){
-                    //console.log(response);
                     if (!error && response.statusCode == 200) {
                         var jsonresp = JSON.parse(response.body);
                         all_data = all_data.concat(jsonresp["results"]);

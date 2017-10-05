@@ -33,7 +33,7 @@ router.get('/all', function(req,res,next){
 //This needs a refactor.
 router.get('/', function(req,res,next){
     if(req.query.deviceid && req.query.artid && req.query.pref){
-        if(req.device_session._validate(req.query.artid)){ //got an art tag
+        if(_SessionMgr._validate(req.query.artid)){ //got an art tag
             var is_target = req.device_session._submit_pref({
                 "artid":req.query.artid,
                 "pref":req.query.pref
