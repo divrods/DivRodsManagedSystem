@@ -16,6 +16,8 @@ var basicAuth = require('express-basic-auth');
 var Particle = require('particle-api-js');
 var winston = require('winston');
 var nconf = require('nconf');
+var museum = require('./museum.js');
+var async= require('async');
 particle = new Particle();
 
 var index = require('./routes/index'),
@@ -56,11 +58,15 @@ else{
   _COLLhost2f = nconf.get('collection2f');
   _COLLhost3f = nconf.get('collection3f');
 }
-_ArtFilter = new maintain.ArtworkFilter(function(){
-  _SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
-  app.set('_DeviceSessions', _SessionMgr);
-  app.set('_ArtFilter', _ArtFilter);
-});
+
+museum._start(function(){
+  _ArtFilter = new maintain.ArtworkFilter(function(){
+    _SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
+    app.set('_DeviceSessions', _SessionMgr);
+    app.set('_ArtFilter', _ArtFilter);
+  });
+})
+
 
 
 

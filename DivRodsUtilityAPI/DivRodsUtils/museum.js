@@ -898,19 +898,24 @@ function _groom_maps(data, cb){
     cb();
 }
 
-_groom_maps(map, function(){
-    _prune_map("3", function(error){
-        if(!error){
-            console.log(JSON.stringify(map["3"]["active"]));
-        }else{
-            console.log('error');
-        }
+function _start(top_cb){
+    _groom_maps(map, function(cb){
+        _prune_map("3", function(error){
+            if(!error){
+                console.log(JSON.stringify(map["3"]["active"]));
+                top_cb(); //yuck
+            }else{
+                console.log('error');
+            }
+        });
     });
-});
+}
 
 module.exports.onboardingtags = onboardingtags;
 module.exports.idtags = idtags;
 module.exports.map = map;
     module.exports.get_shortest_path = get_shortest_path;
     module.exports._prune_map = _prune_map;
+    module.exports._groom_maps = _groom_maps;
+    module.exports._start = _start;
 module.exports.black_list = black_list;
