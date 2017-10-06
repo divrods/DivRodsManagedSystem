@@ -1,11 +1,9 @@
 var request = require('request'), _ = require('underscore'), museum = require('./museum.js');
 
+//TODO: parse valid parts of the map with this tagged works call so we don't guide a user to a valid gallery that's in a gallery we haven't mapped.
 class ArtworkFilter {
     constructor(cb){
         this.host = _COLLhost3f; //why discriminate between floors here?
-        this.currently_up = {};
-        this.broken_rules = 0;
-        this.validworks = [];
         this.taggedworks = [];
         this.closed_galleries = [];
         var self = this;
@@ -18,7 +16,6 @@ class ArtworkFilter {
     ///Parses it against what we have tagged, and creates a
     ///list of artworks that are tagged + on display.
     _refresh(cb){
-        var validworks = [];
         var works = 0;
         var _self = this;
         request.get(

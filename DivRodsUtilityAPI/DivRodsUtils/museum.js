@@ -1,3 +1,4 @@
+var request = require('request');
 var black_list = [];
 //The weights here represent the relative difficulty FIND has locating devices in a given gallery.
 var map = {
@@ -739,7 +740,177 @@ var onboardingtags = {
     "99999997":{"setupcode":3}
 }
 
+function get_shortest_path(start, end, weighted_graph){
+    //Calculate the shortest path for a directed weighted graph.
+    nodes_to_visit = {};
+    nodes_to_visit[start] = start;
+    visited_nodes = {};
+    //Distance from start to start is 0
+    distance_from_start = {};
+    distance_from_start[start] = 0
+    tentative_parents = {};
+
+    while(Object.keys(nodes_to_visit).length > 0){
+
+        temp_dists = {};
+        for(node in nodes_to_visit){
+            if(distance_from_start[node] != undefined){
+                temp_dists[node] = distance_from_start[node];
+            }
+        }
+        min_dist = 0;
+        current = {};
+        for(temp_dist in temp_dists){
+            if(min_dist == 0 | temp_dists[temp_dist] <= min_dist){
+                current = temp_dist;
+                min_dist = temp_dists[temp_dist];
+            }
+        }
+
+        //The end was reached
+        if(current == end)
+          break;
+        delete nodes_to_visit[current];
+        visited_nodes[current] = current;
+        edges = {};
+        if(weighted_graph[current]){
+            if(weighted_graph[current]["edges"]){
+                edges = weighted_graph[current]["edges"];
+            }
+            else break;
+        }
+        else{
+            break;
+        }
+        
+        for(unvisited_edge in edges){
+            if(!visited_nodes[unvisited_edge]){
+                neighbor_distance = distance_from_start[current] + edges[unvisited_edge];
+                _dist = 99;
+                if(distance_from_start[unvisited_edge]){
+                    _dist = distance_from_start[unvisited_edge];
+                }
+                if(neighbor_distance < _dist){
+                    distance_from_start[unvisited_edge] = neighbor_distance;
+                    tentative_parents[unvisited_edge] = current;
+                    nodes_to_visit[unvisited_edge] = unvisited_edge;
+                }
+            }
+        }
+    }
+    return _deconstruct_path(tentative_parents, end)
+}
+
+function _deconstruct_path(tentative_parents, end){
+    if(!tentative_parents[end]){
+        return null;
+    }
+
+    cursor = end;
+    path = [];
+    while(cursor){
+        path.push(cursor);
+        cursor = tentative_parents[cursor];
+    }
+    _map = {};
+    _allsteps = [];
+    
+    for(i=0; i<path.length; i++){
+        var _step = {
+            "room": path[i],
+            "coords": map["3"]["active"][path[i]]["loc"]
+        };
+        _allsteps.unshift(_step);
+    }
+    _map["journey"] = _allsteps;
+    _map["steps"] = path.length;
+    return _map;
+}
+
+///"6.g255:100,100."
+///Low-bandwidth option for devices with bad JSON implementations
+function _compress_path(path_obj){
+    var out = path_obj["steps"] + "~";
+    for(var i=0; i< path_obj["journey"].length; i++){
+        out = out + path_obj["journey"][i]["room"] + ":" + path_obj["journey"][i]["coords"][0] + "," + path_obj["journey"][i]["coords"][1] + "~";
+    }
+    return out;
+}
+
+//pull list of mapped locations from FIND and match them to nodes/edges.
+//cull any nodes in the base map that haven't been mapped using FIND.
+//also pull any edges involving that culled node.
+function _prune_map(floor, cb){
+    pruned = {};
+    if(floor == undefined | !floor){
+        floor = "3";
+    }
+    request.get(
+        "http://ec2-52-205-211-230.compute-1.amazonaws.com:18003/locations?group=mia" + floor + "f",
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //loop through mapped galleries, seeing if we have an entry for them
+                var _resp = JSON.parse(response.body);
+                _resp.locations.forEach(function(element) {
+                    _name = element.slice( 1 );
+                    if(black_list.indexOf(_name) != -1){
+                        return;
+                    }
+                    corresponding = map[floor][_name];
+                    if(corresponding){
+                        pruned[_name] = corresponding;
+                    }
+                });
+                Object.keys(pruned).forEach(function(pruned_element){
+                    //prune edges
+                    var _this_element = pruned[pruned_element];
+                    Object.keys(_this_element["edges"]).forEach(function(edge){   
+                        if(!pruned[edge]){
+                            delete _this_element["edges"][edge];
+                        }
+                    });
+                    if(Object.keys(_this_element["edges"]).length == 0){
+                        delete pruned[pruned_element];
+                    }
+                });
+                map[floor]["active"] = pruned;
+                cb(null);
+            }else{cb(error);}
+        }
+    );
+}
+
+function _groom_maps(data, cb){
+    for(var floor in Object.keys(data)){
+        var _floor = Object.keys(data)[floor];
+        for(var node in Object.keys(data[_floor])){
+            if(node == "active") continue;
+            node = Object.keys(data[_floor])[node]; //lel
+            for(var edge in data[_floor][node]["edges"]){
+                var connected = data[_floor][edge];
+                if(connected["edges"] && !connected["edges"].hasOwnProperty(node)){
+                    connected["edges"][node] = 1;
+                    console.log("Repaired a broken link between node " + node + " and " + edge);
+                }
+            }
+        }
+    }
+    cb();
+}
+
+_groom_maps(map, function(){
+    _prune_map("3", function(error){
+        if(!error){
+            console.log(JSON.stringify(map["3"]["active"]));
+        }else{
+            console.log('error');
+        }
+    });
+});
+
 module.exports.onboardingtags = onboardingtags;
 module.exports.idtags = idtags;
 module.exports.map = map;
+    module.exports.get_shortest_path = get_shortest_path;
+    module.exports._prune_map = _prune_map;
 module.exports.black_list = black_list;
