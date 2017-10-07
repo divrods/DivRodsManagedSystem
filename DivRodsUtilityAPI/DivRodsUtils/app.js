@@ -35,7 +35,6 @@ locate = require('./routes/locate');
 //Start command on win: set DEBUG=myapp:* & npm start
 var app = express();
 
-_DefaultFloor = "3";
 _ParticleToken = 0;
 _Timezone = 'America/Chicago';
 if(process.env.pref_host){
@@ -64,8 +63,8 @@ museum._start(function(){
     _SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
     app.set('_DeviceSessions', _SessionMgr);
     app.set('_ArtFilter', _ArtFilter);
-  });
-})
+  }, "3");
+}, "3")
 
 
 

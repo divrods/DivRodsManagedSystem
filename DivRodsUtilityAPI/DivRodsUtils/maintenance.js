@@ -2,17 +2,18 @@ var request = require('request'), _ = require('underscore'), museum = require('.
 
 //TODO: parse valid parts of the map with this tagged works call so we don't guide a user to a valid gallery that's in a gallery we haven't mapped.
 class ArtworkFilter {
-    constructor(cb){
+    constructor(cb, floor= "3"){
         this.host = _COLLhost3f; //why discriminate between floors here?
         this.taggedworks = [];
         this.closed_galleries = [];
+        this.floor = floor;
         var self = this;
         this._refresh(function(data){
             console.log(data);
             cb();
         });
     }
-    ///Asks the mia's collection what's on the third floor.
+    ///Asks the mia's collection what's on a given floor.
     ///Parses it against what we have tagged, and creates a
     ///list of artworks that are tagged + on display.
     _refresh(cb){
@@ -32,14 +33,14 @@ class ArtworkFilter {
                             });
                             if(matched_tag){
                                 var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
-                                if(museum.map["3"]["active"][gallery]){
+                                if(museum.map[_self.floor]["active"][gallery]){
                                     _self.taggedworks.push(
                                         _self._clean_and_merge(
                                             element["_source"]["title"], 
                                             gallery,
                                             element["_source"]["id"],
                                             matched_tag["color"],
-                                            "3")
+                                            _self.floor)
                                     );
                                 }
                             }

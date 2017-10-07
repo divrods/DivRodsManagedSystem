@@ -898,11 +898,11 @@ function _groom_maps(data, cb){
     cb();
 }
 
-function _start(top_cb){
+function _start(top_cb, floor="3"){
     _groom_maps(map, function(cb){
-        _prune_map("3", function(error){
+        _prune_map(floor, function(error){
             if(!error){
-                console.log(JSON.stringify(map["3"]["active"]));
+                console.log(JSON.stringify(map[floor]["active"]));
                 top_cb(); //yuck
             }else{
                 console.log('error');

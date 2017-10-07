@@ -6,7 +6,7 @@ var moment = require('moment'), prefclient = require('./prefclient.js');
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
 class DeviceSession {
-    constructor(DeviceMAC, timestamp, session_dict, floor = _DefaultFloor){
+    constructor(DeviceMAC, timestamp, session_dict, floor = "3"){
         this.DeviceID = DeviceMAC;
         this.SessionID = uuidV4();
         this.Opened = timestamp;
