@@ -129,7 +129,7 @@ var idtags = [
         "artid": "62770"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "19689"
     },
     {
@@ -149,7 +149,7 @@ var idtags = [
         "artid": "108705"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "3321"
     },
     {
@@ -169,7 +169,7 @@ var idtags = [
         "artid": "106831"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "5683"
     },
     {
@@ -189,7 +189,7 @@ var idtags = [
         "artid": "31427"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1263"
     },
     {
@@ -209,7 +209,7 @@ var idtags = [
         "artid": "2421"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "2505"
     },
     {
@@ -225,7 +225,7 @@ var idtags = [
         "artid": "4398"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1227"
     },
     {
@@ -245,7 +245,7 @@ var idtags = [
         "artid": "99368"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "10451"
     },
     {
@@ -265,7 +265,7 @@ var idtags = [
         "artid": "2245"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1487"
     },
     {
@@ -285,7 +285,7 @@ var idtags = [
         "artid": "1375"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "9688"
     },
     {
@@ -305,7 +305,7 @@ var idtags = [
         "artid": "22277"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "90349"
     },
     {
@@ -321,7 +321,7 @@ var idtags = [
         "artid": "49879"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "43605"
     },
     {
@@ -341,7 +341,7 @@ var idtags = [
         "artid": "113261"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "59510"
     },
     {
@@ -357,7 +357,7 @@ var idtags = [
         "artid": "1978"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "6239"
     },
     {
@@ -377,7 +377,7 @@ var idtags = [
         "artid": "689"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "98274"
     },
     {
@@ -397,7 +397,7 @@ var idtags = [
         "artid": "45"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "4763"
     },
     {
@@ -413,7 +413,7 @@ var idtags = [
         "artid": "96502"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "427"
     },
     {
@@ -433,7 +433,7 @@ var idtags = [
         "artid": "2614"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "4248"
     },
     {
@@ -453,7 +453,7 @@ var idtags = [
         "artid": "113688"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "106354"
     },
     {
@@ -473,7 +473,7 @@ var idtags = [
         "artid": "109118"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "120729"
     },
     {
@@ -493,7 +493,7 @@ var idtags = [
         "artid": "10444"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1417"
     },
     {
@@ -513,7 +513,7 @@ var idtags = [
         "artid": "11956"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1655"
     },
     {
@@ -533,7 +533,7 @@ var idtags = [
         "artid": "80860"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "2035"
     },
     {
@@ -553,7 +553,7 @@ var idtags = [
         "artid": "103800"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1277"
     },
     {
@@ -569,7 +569,7 @@ var idtags = [
         "artid": "100463"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "31101"
     },
     {
@@ -585,7 +585,7 @@ var idtags = [
         "artid": "125771"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "20962"
     },
     {
@@ -605,7 +605,7 @@ var idtags = [
         "artid": "1639"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1800"
     },
     {
@@ -625,7 +625,7 @@ var idtags = [
         "artid": "27402"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "125888"
     },
     {
@@ -645,7 +645,7 @@ var idtags = [
         "artid": "115752"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "12776"
     },
     {
@@ -665,7 +665,7 @@ var idtags = [
         "artid": "1515"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1330"
     },
     {
@@ -685,7 +685,7 @@ var idtags = [
         "artid": "1670"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "5033"
     },
     {
@@ -705,7 +705,7 @@ var idtags = [
         "artid": "1325"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "1887"
     },
     {
@@ -725,7 +725,7 @@ var idtags = [
         "artid": "119495"
     },
     {
-        "color": "blue ",
+        "color": "blue",
         "artid": "33040"
     },
     {

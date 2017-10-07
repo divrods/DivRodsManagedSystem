@@ -32,14 +32,16 @@ class ArtworkFilter {
                             });
                             if(matched_tag){
                                 var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
-                                _self.taggedworks.push(
-                                    _self._clean_and_merge(
-                                        element["_source"]["title"], 
-                                        element["_source"]["room"].replace(/[^0-9]/, ''), 
-                                        element["_source"]["id"],
-                                        matched_tag["color"],
-                                        "3")
-                                )
+                                if(museum.map["3"]["active"][gallery]){
+                                    _self.taggedworks.push(
+                                        _self._clean_and_merge(
+                                            element["_source"]["title"], 
+                                            gallery,
+                                            element["_source"]["id"],
+                                            matched_tag["color"],
+                                            "3")
+                                    );
+                                }
                             }
                         }
                         works++;
