@@ -105,9 +105,9 @@ router.get('/open', function(req,res,next){
     router.get('/open/all', function(req,res,next){
         black_list = [];
         _ArtFilter._update_galleries(black_list, true);
-        museum._prune_map("3", function(error){
+        museum._prune_map(req.query.floor, function(error){
             if(!error){
-                res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(museum.map["3"["active"]]));
+                res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(museum.map[req.query.floor]["active"]));
             }
             else res.status(404).send(error);
         });
