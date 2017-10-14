@@ -42,12 +42,11 @@ class DeviceSession {
         if(!this.CurrentPrefTarget){
             _refresh_target(null);
         }
-        if(self.PrefHistory.length > 5){
-            //Temporary...
+        if(self.PrefHistory.length > 25){
             self.PrefHistory = [];
         }
         var _next = "";
-        pref["timestamp"] = moment.now();
+        pref["timestamp"] = moment().utc().format();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
         if(correct){
@@ -60,8 +59,7 @@ class DeviceSession {
                 matchedprefs.forEach(function(matched){
                     var con_id = matched["con"].slice(0,-2); //get the consequent id
                     var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id}); //find the full object for the consequent id
-                    var alreadyscanned = _.find(self.PrefHistory, {artid:con_id}); //see if we've already scanned it
-                    if(mva && !alreadyscanned) matched_valid_artworks.push(mva); //got a winner
+                    if(mva && !self._has_scanned(con_id)) matched_valid_artworks.push(mva); //got a winner
                 });
                 if(matched_valid_artworks.length > 0) {
                     _next = matched_valid_artworks[0]; //presumably the first item is highest confidence.
@@ -72,7 +70,7 @@ class DeviceSession {
                 //look at random for a different artid that is in a different gallery.
                 var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
                 var otherart = this.Manager.art_filter.taggedworks.filter(function(tagged){
-                    return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"];
+                    return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"] && !self._has_scanned(pref["artid"]);
                 });
                 _next = otherart[Math.floor(Math.random() * otherart.length)];
                 _next["preftype"] = "random";
@@ -87,6 +85,11 @@ class DeviceSession {
         });
         self.PrefHistory.push(pref);
         return correct;
+    }
+    _has_scanned(tag){
+        var alreadyscanned = _.find(this.PrefHistory, {artid:tag}); //see if we've already scanned it
+        if(alreadyscanned) return true;
+        return false;
     }
     _setup(code){
         //TODO setup stuff. whatever we want. at first, we're controlling the walking radius.
@@ -150,7 +153,7 @@ class SessionDictionary {
             found.LastTouched = Date.now();
         }
         else{
-            var _time = Date.now();
+            var _time = moment().utc().format();
             var _new = new DeviceSession(reqID, _time, dict);
             _new.LastTouched = Date.now();
             this.Sessions.push(_new);

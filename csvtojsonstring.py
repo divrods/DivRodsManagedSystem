@@ -10,7 +10,7 @@ def intTryParse(value):
 
 entries = []
 
-with open('pieces.csv', 'rb') as csvfile:
+with open('pieces_new.csv', 'rb') as csvfile:
     piecereader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for row in piecereader:
         idnumber = row[-1]
@@ -19,13 +19,13 @@ with open('pieces.csv', 'rb') as csvfile:
             print 'Bad or empty ID'
             continue
         thisone = {
-            'artid': idnumber,
-            'color':  color
+            'artid': idnumber.strip(),
+            'color':  color.strip()
         }
         entries.append(thisone)
         #print row
 
 
-with open('jsonpieces.txt', 'w') as outfile:  
+with open('jsonpieces_new.txt', 'w') as outfile:  
     print len(entries)
     json.dump(entries, outfile)

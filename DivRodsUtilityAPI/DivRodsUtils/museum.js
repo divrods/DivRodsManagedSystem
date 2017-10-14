@@ -144,11 +144,11 @@ var idtags = [
         "color": "orange",
         "artid": "4196"
     },
-    {
+    {        
         "color": "green",
         "artid": "108705"
     },
-    {
+    {  
         "color": "blue",
         "artid": "3321"
     },
@@ -236,7 +236,7 @@ var idtags = [
         "color": "red",
         "artid": "1463"
     },
-    {
+    {        
         "color": "orange",
         "artid": "1629"
     },
@@ -315,6 +315,10 @@ var idtags = [
     {
         "color": "red",
         "artid": "51935"
+    },
+    {
+        "color": "orange",
+        "artid": "120860"
     },
     {
         "color": "green",
@@ -399,6 +403,10 @@ var idtags = [
     {
         "color": "blue",
         "artid": "4763"
+    },
+    {
+        "color": "purple",
+        "artid": "120525"
     },
     {
         "color": "red",
@@ -541,6 +549,58 @@ var idtags = [
         "artid": "2276"
     },
     {
+        "color": "orange",
+        "artid": "121684"
+    },
+    {
+        "color": "green",
+        "artid": "121794"
+    },
+    {
+        "color": "purple",
+        "artid": "121770"
+    },
+    {
+        "color": "red",
+        "artid": "120510"
+    },
+    {
+        "color": "orange",
+        "artid": "120582"
+    },
+    {
+        "color": "green",
+        "artid": "115966"
+    },
+    {
+        "color": "blue",
+        "artid": "121740"
+    },
+    {
+        "color": "purple",
+        "artid": "121632"
+    },
+    {
+        "color": "red",
+        "artid": "121920"
+    },
+    {
+        "color": "orange",
+        "artid": "121719"
+    },
+    {
+        "color": "green",
+        "artid": "99623"
+    },
+    {
+        "color": "blue",
+        "artid": "120500"
+    },
+    {
+        "color": "purple",
+        "artid": "120522"
+    },
+    {
         "color": "red",
         "artid": "1633"
     },
@@ -583,6 +643,10 @@ var idtags = [
     {
         "color": "orange",
         "artid": "125771"
+    },
+    {
+        "color": "green",
+        "artid": "56603"
     },
     {
         "color": "blue",
