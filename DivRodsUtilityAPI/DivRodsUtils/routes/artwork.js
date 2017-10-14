@@ -30,10 +30,11 @@ router.get('/', function(req,res,next){
                 console.log("Got targeted scan");
                 res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
             }
-            else { //scanned something else. fine, but dont send a new goal.
-                console.log("Got unknown scan");
-                var payload = {"status":"success"};
-                res.status(200).send(JSON.stringify(payload));
+            else { //scanned something else. fine, send a new goal.
+                console.log("Got wrong scan");
+                req.device_session._refresh_target(function(){
+                    res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
+                });
             }
         }
         else if(museum.onboardingtags[req.query.artid] | req.query.artid == 0){
@@ -44,8 +45,9 @@ router.get('/', function(req,res,next){
             res.status(200).send(JSON.stringify(payload));
         }
         else { //not one of our tags. could happen.
-            var payload = {"status":"success"};
-            res.status(200).send(JSON.stringify(payload));
+            req.device_session._refresh_target(function(){
+                res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
+            });
         }
     }
     else{
