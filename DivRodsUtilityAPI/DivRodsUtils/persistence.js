@@ -50,34 +50,34 @@ class DeviceSession {
         pref["timestamp"] = moment().utc().format();
         var correct = pref["artid"] == this.CurrentPrefTarget["artid"];
         pref["target"] = correct;
-        if(correct){
-            var pref_string = (pref["pref"] == "n") ? pref["artid"] + ":0" : pref["artid"] + ":1";
-            var matchedprefs = _.filter(this.Manager.rules, function(o){
-                return o["ant"] == pref_string;
+        
+        var pref_string = (pref["pref"] == "n") ? pref["artid"] + ":0" : pref["artid"] + ":1";
+        var matchedprefs = _.filter(this.Manager.rules, function(o){
+            return o["ant"] == pref_string;
+        });
+        if(matchedprefs.length > 0){ //get hydrated artwork objects for these consequent IDs
+            var matched_valid_artworks = [];
+            matchedprefs.forEach(function(matched){
+                var con_id = matched["con"].slice(0,-2); //get the consequent id
+                var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id}); //find the full object for the consequent id
+                if(mva && !self._has_scanned(con_id)) matched_valid_artworks.push(mva); //got a winner
             });
-            if(matchedprefs.length > 0){ //get hydrated artwork objects for these consequent IDs
-                var matched_valid_artworks = [];
-                matchedprefs.forEach(function(matched){
-                    var con_id = matched["con"].slice(0,-2); //get the consequent id
-                    var mva = _.find(self.Manager.art_filter.taggedworks, {artid:con_id}); //find the full object for the consequent id
-                    if(mva && !self._has_scanned(con_id)) matched_valid_artworks.push(mva); //got a winner
-                });
-                if(matched_valid_artworks.length > 0) {
-                    _next = matched_valid_artworks[0]; //presumably the first item is highest confidence.
-                    _next["preftype"] = "rule";
-                }
-            } 
-            if(_next==""){ //still nothing? no rules featuring the artwork that was scanned.
-                //look at random for a different artid that is in a different gallery.
-                var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
-                var otherart = this.Manager.art_filter.taggedworks.filter(function(tagged){
-                    return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"] && !self._has_scanned(pref["artid"]);
-                });
-                _next = otherart[Math.floor(Math.random() * otherart.length)];
-                _next["preftype"] = "random";
+            if(matched_valid_artworks.length > 0) {
+                _next = matched_valid_artworks[0]; //presumably the first item is highest confidence.
+                _next["preftype"] = "rule";
             }
-            this.CurrentPrefTarget = _next;  
+        } 
+        if(_next==""){ //still nothing? no rules featuring the artwork that was scanned.
+            //look at random for a different artid that is in a different gallery.
+            var artobj = _.find(this.Manager.art_filter.taggedworks, {artid:pref["artid"]});
+            var otherart = this.Manager.art_filter.taggedworks.filter(function(tagged){
+                return tagged["artid"] != pref["artid"] && tagged["room"] != artobj["room"] && !self._has_scanned(tagged["artid"]);
+            });
+            _next = otherart[Math.floor(Math.random() * otherart.length)];
+            _next["preftype"] = "random";
         }
+        this.CurrentPrefTarget = _next;  
+
         var apipref = (pref["pref"] == "n") ? "0" : "1";
         prefclient.record_preference(this.SessionID, pref["artid"], apipref, function(data){
             if(data){
