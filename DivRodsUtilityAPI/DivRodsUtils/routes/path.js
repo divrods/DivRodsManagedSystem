@@ -56,15 +56,15 @@ router.get('/close', function(req,res,next){
                     floors_affected.push("2");
                 }
             }
-            var index = black_list.indexOf(gals[gallery]);
+            var index = museum.black_list.indexOf(gals[gallery]);
             if(index == -1){
-                black_list.push(gals[gallery]);
+                museum.black_list.push(gals[gallery]);
             }
         }
         //TODO clean this up so we get a full reply, even though functionality looks good.
         museum._prune_map("3", function(error){
             if(!error){
-                console.log(black_list);
+                console.log(museum.black_list);
                 var reply = {};
                 for(x = 0; x < floors_affected.length; x++){
                     reply[floors_affected[x]] = museum.map[floors_affected[x]]["active"];
@@ -85,14 +85,14 @@ router.get('/open', function(req,res,next){
         var gals = req.query.galleries.split(',');
         _ArtFilter._update_galleries(gals, true);
         for(var gallery in gals){
-            var index = black_list.indexOf(gals[gallery]);
+            var index = museum.black_list.indexOf(gals[gallery]);
             if(index != -1){
-                black_list.splice(index, 1);
+                museum.black_list.splice(index, 1);
             }
         }
         museum._prune_map("3", function(error){
             if(!error){
-                console.log(black_list);
+                console.log(museum.black_list);
                 res.status(200).send("Opened galleries. New map:" + JSON.stringify(museum.map["3"]["active"]));
             }
             else res.status(404).send(error);
@@ -103,8 +103,8 @@ router.get('/open', function(req,res,next){
 });
 
     router.get('/open/all', function(req,res,next){
-        black_list = [];
-        _ArtFilter._update_galleries(black_list, true);
+        museum.black_list = [];
+        _ArtFilter._update_galleries(museum.black_list, true);
         museum._prune_map(req.query.floor, function(error){
             if(!error){
                 res.status(200).send("Cleared closed galleries. New map: " + JSON.stringify(museum.map[req.query.floor]["active"]));
