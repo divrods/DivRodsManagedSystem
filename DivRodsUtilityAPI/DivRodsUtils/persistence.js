@@ -35,7 +35,7 @@ class DeviceSession {
         if(cb) cb();
     }
     //submit a user's expressed preference about an artwork
-    _submit_pref(pref, floor){
+    _submit_pref(pref, floor, cb){
         var self = this;
         if(!floor | floor == undefined){
             floor = this.CurrentFloor;
@@ -85,7 +85,7 @@ class DeviceSession {
             }
         });
         self.PrefHistory.push(pref);
-        return correct;
+        cb();
     }
     _has_scanned(tag){
         var alreadyscanned = _.find(this.PrefHistory, {artid:tag}); //see if we've already scanned it

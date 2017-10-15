@@ -17,25 +17,9 @@ router.get('/', function(req,res,next){
             var is_target = req.device_session._submit_pref({
                 "artid":req.query.artid,
                 "pref":req.query.pref
-            });
-
-            //override command from device which was probably in fallback mode.
-            if(req.query.oride && req.query.oride != 0){
-                console.log("Got wildcard scan");
-                req.device_session._refresh_target(function(){
-                    res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
-                });
-            }
-            else if(is_target){ //scanned the target tag. great!
-                console.log("Got targeted scan");
+            }, "3", function(){
                 res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
-            }
-            else { //scanned something else. fine, send a new goal.
-                console.log("Got wrong scan");
-                req.device_session._refresh_target(function(){
-                    res.status(200).send(JSON.stringify(req.device_session["CurrentPrefTarget"]));
-                });
-            }
+            });
         }
         else if(museum.onboardingtags[req.query.artid] | req.query.artid == 0){
             //var code = onboardingtags[req.query.artid]["setupcode"];
