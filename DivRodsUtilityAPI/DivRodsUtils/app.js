@@ -18,6 +18,7 @@ var winston = require('winston');
 var nconf = require('nconf');
 var museum = require('./museum.js');
 var async= require('async');
+var moment = require('moment');
 particle = new Particle();
 
 var index = require('./routes/index'),
@@ -46,6 +47,7 @@ if(process.env.pref_host){
   _FINDhost = process.env.tracking_host;
   _COLLhost2f = process.env.collection2f_host;
   _COLLhost3f = process.env.collection3f_host;
+  _S3Bucket = process.env.s3bucket;
 }
 else{
   nconf.file('./config.json');
@@ -56,6 +58,7 @@ else{
   _FINDhost = nconf.get('trackinghost');
   _COLLhost2f = nconf.get('collection2f');
   _COLLhost3f = nconf.get('collection3f');
+  _S3Bucket = nconf.get('s3bucket');
 }
 
 museum._start(function(){
@@ -63,6 +66,7 @@ museum._start(function(){
     _SessionMgr = new persist.SessionDictionary(95000, _ArtFilter);
     app.set('_DeviceSessions', _SessionMgr);
     app.set('_ArtFilter', _ArtFilter);
+
   }, "3");
 }, "3")
 
@@ -76,7 +80,10 @@ cron.schedule('*/15 * * * *', function(){
 
 cron.schedule('30 11 * * 1,3,5', function(){
   _ArtFilter._refresh();
-  _SessionMgr._upload_history("report" + moment().format());
+});
+
+cron.schedule('30 5 * * *', function(){
+  _SessionMgr._upload_history("sessions-" + moment().format('MM/DD/YYYY'));
 });
 
 

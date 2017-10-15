@@ -1,6 +1,7 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), winston = require('winston');
 var moment = require('moment'), prefclient = require('./prefclient.js');
+var AWS = require('aws-sdk');
 const s3 = new AWS.S3({region: 'us-east-1'});
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
@@ -136,11 +137,11 @@ class SessionDictionary {
     }
     _upload_history(docname){
         var params = {
-            Bucket: 'divrods',
+            Bucket: _S3Bucket,
             Key: docname,
             ContentType: 'application/json',
             ACL: 'public-read',
-            Body: this._history(true)
+            Body: JSON.stringify(this._history(true))
         };
         s3.putObject(params, function(err){
             if(!err) {
