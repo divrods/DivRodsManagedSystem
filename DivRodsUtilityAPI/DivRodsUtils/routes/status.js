@@ -15,7 +15,7 @@ router.get('/json', function(req,res,next){
 });
 
 router.get('/history', function(req,res,next){
-    var session_history = req.app.get('_DeviceSessions')._history();
+    var session_history = req.app.get('_DeviceSessions')._history(false);
     res.status(200).send(JSON.stringify(session_history));
 });
 

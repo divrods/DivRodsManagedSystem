@@ -1,7 +1,7 @@
 const uuidV4 = require('uuid/v4');
 var _ = require('underscore'), request = require('request'), winston = require('winston');
 var moment = require('moment'), prefclient = require('./prefclient.js');
-
+const s3 = new AWS.S3({region: 'us-east-1'});
 /**
  * A session object to keep track of devices. Handles auth, interactions with pref engine, and report generation.
  */
@@ -114,12 +114,12 @@ class SessionDictionary {
     }
 
     _check_and_clear_expirations(){
-        var _now = Date.now();
+        var _now = moment().format();
         for(var index in this.Sessions){
             var session = this.Sessions[index];
             var _stale = Math.abs(_now - session.LastTouched);
             if(_stale > this.Expiration){
-                session.Enabled = false;
+                session._close("Expired", _now);
             }
         }
         var clear = 0;
@@ -133,6 +133,23 @@ class SessionDictionary {
         }
         var logstring = 'Session cron cleared ' + clear + ' dormant sessions.';
         console.log(logstring);
+    }
+    _upload_history(docname){
+        var params = {
+            Bucket: 'divrods',
+            Key: docname,
+            ContentType: 'application/json',
+            ACL: 'public-read',
+            Body: this._history(true)
+        };
+        s3.putObject(params, function(err){
+            if(!err) {
+                console.log("Successful upload of session archive.");
+            }
+            else{
+                console.log('Error occurred: ' + err);
+            }
+        });
     }
     _cycle(reqID){
         var self = this;
@@ -184,25 +201,25 @@ class SessionDictionary {
         });
         return out;
     }
-    _history(){
+    _history(clear){
         var out = [];
         this.session_archive.forEach(function(session){
             var sample = {
                 "ID": session.SessionID,
                 "Location": session.Location,
                 "LocationHistory": session.LocHistory,
-                "Awake": session.Enabled,
                 "Started": new Date(session.Opened).toISOString(),
                 "CurrentPath": session.CurrentPath,
                 "CurrentTarget": session.CurrentPrefTarget,
-                "Status": session.Status,
-                "ScannedTags": session.PrefHistory
+                "ScannedTags": session.PrefHistory,
+                "Closed": session.Closed
             }
             out.push(sample);
         });
         if(out.length < 1){
             out[0] = "No sessions in current history.";
         }
+        if(clear) this.session_archive = [];
         return out;
     }
     _place(deviceid, location){
@@ -232,7 +249,6 @@ class SessionDictionary {
         var self = this;
         self.rules = [];
         prefclient.refresh_ruleset_all(function(data){
-            //console.log(data);
             if(data){
                 self.rules = [];
                 for(var rule in data){

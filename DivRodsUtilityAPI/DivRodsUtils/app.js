@@ -70,12 +70,13 @@ museum._start(function(){
 
 
 var cron = require('node-cron');
-cron.schedule('*/5 * * * *', function(){
+cron.schedule('*/15 * * * *', function(){
   _SessionMgr._check_and_clear_expirations();
 });
 
 cron.schedule('30 11 * * 1,3,5', function(){
   _ArtFilter._refresh();
+  _SessionMgr._upload_history("report" + moment().format());
 });
 
 
