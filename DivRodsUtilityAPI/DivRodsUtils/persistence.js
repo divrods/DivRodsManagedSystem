@@ -115,12 +115,13 @@ class SessionDictionary {
     }
 
     _check_and_clear_expirations(){
-        var _now = moment().format();
+        var _stamp = moment().format(); //for printing
+        var _now = Date.now(); //still need the unix ts
         for(var index in this.Sessions){
             var session = this.Sessions[index];
             var _stale = Math.abs(_now - session.LastTouched);
             if(_stale > this.Expiration){
-                session._close("Expired", _now);
+                session._close("Expired", _stamp);
             }
         }
         var clear = 0;
@@ -215,7 +216,9 @@ class SessionDictionary {
                 "ScannedTags": session.PrefHistory,
                 "Closed": session.Closed
             }
-            out.push(sample);
+            if(session.PrefHistory.length > 0){
+                out.push(sample);
+            }
         });
         if(out.length < 1){
             out[0] = "No sessions in current history.";
