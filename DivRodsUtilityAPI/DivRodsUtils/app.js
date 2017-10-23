@@ -79,7 +79,7 @@ cron.schedule('30 8 * * 1,3,5', function(){
 });
 
 cron.schedule('30 5 * * *', function(){
-  _SessionMgr._upload_history("sessions-" + moment().format('MM/DD/YYYY'));
+  _SessionMgr._upload_history("sessions-" + moment().format('MM.DD.YYYY'));
 });
 
 
