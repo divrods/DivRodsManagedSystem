@@ -27,10 +27,8 @@ function record_preference(session_id, art_id, pref, cb){
     request.post(
         options,
         function (error, response, body) {
-            console.log(response);
             if (!error && response.statusCode == 200) {
                 var jsonresp = response.body;
-                console.log("Success... " + jsonresp);
                 cb(jsonresp);
             }else{
                 console.log("Failure " + response.json);
@@ -56,7 +54,6 @@ function refresh_ruleset(cb){
     request.get(
         options,
         function(error, response, body){
-            //console.log(response);
             if (!error && response.statusCode == 200) {
                 var jsonresp = JSON.parse(response.body);
                 cb(jsonresp["results"]);

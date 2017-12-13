@@ -22,35 +22,37 @@ class ArtworkFilter {
         request.get(
             this.host,
             function (error, response, body) {
-                if (!error && response.statusCode == 200 && JSON.parse(response.body).hits.hits) {
+                if (!error && response.statusCode == 200 && response.body) {
                     //loop through hits from collection, filter for artids and isondisplay or whatever
                     var _resp = JSON.parse(response.body);
-                    _resp.hits.hits.forEach(function(element) {
-                        if(element["_id"]){
-                            //handle merged galleries here.
-                            var matched_tag = _.find(museum.idtags, function(o){
-                                return o["artid"] == element["_id"];
-                            });
-                            if(matched_tag){
-                                var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
-                                if(museum.map[_self.floor]["active"][gallery]){
-                                    _self.taggedworks.push(
-                                        _self._clean_and_merge(
-                                            element["_source"]["title"], 
-                                            gallery,
-                                            element["_source"]["id"],
-                                            matched_tag["color"],
-                                            _self.floor)
-                                    );
+                    if(_resp.hits.hits){
+                        _self.taggedworks = [];
+                        _resp.hits.hits.forEach(function(element) {
+                            if(element["_id"]){
+                                //handle merged galleries here.
+                                var matched_tag = _.find(museum.idtags, function(o){
+                                    return o["artid"] == element["_id"];
+                                });
+                                if(matched_tag){
+                                    var gallery = element["_source"]["room"].replace(/[^0-9]/, '');
+                                    if(museum.map[_self.floor]["active"][gallery]){
+                                        _self.taggedworks.push(
+                                            _self._clean_and_merge(
+                                                element["_source"]["title"], 
+                                                gallery,
+                                                element["_source"]["id"],
+                                                matched_tag["color"],
+                                                _self.floor)
+                                        );
+                                    }
                                 }
                             }
-                        }
-                        works++;
-                    });
+                            works++;
+                        });
+                    }
                 }
                 else{
                     console.log("No reply from collection API.");
-                    //TODO: logging and notification.
                 }
                 cb(_self.taggedworks);
             }

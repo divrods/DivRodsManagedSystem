@@ -1,10 +1,4 @@
-//Status Code Canon:
-//410 ~ Not yet implemented or feature removed.
-//422 ~ Something wrong with a remote resource (device/file/blob) used by this endpoint
-//301 ~ Resource is returning a backup version of something
-//200 ~ B.A.U. and intact response from a GET
-//201 ~ B.A.U. and intact responde from a PUT
-//204 ~ Successful DELETE or PATCH
+
 var persist = require('./persistence.js'), maintain = require('./maintenance.js');
 var express = require('express');
 var path = require('path');
@@ -78,12 +72,14 @@ cron.schedule('*/15 * * * *', function(){
   _SessionMgr._check_and_clear_expirations();
 });
 
-cron.schedule('30 11 * * 1,3,5', function(){
-  _ArtFilter._refresh();
+cron.schedule('30 8 * * 1,3,5', function(){
+  _ArtFilter._refresh(function(){
+    console.log("Updated collection");
+  });
 });
 
 cron.schedule('30 5 * * *', function(){
-  _SessionMgr._upload_history("sessions-" + moment().format('MM/DD/YYYY'));
+  _SessionMgr._upload_history("sessions-" + moment().format('MM.DD.YYYY'));
 });
 
 
